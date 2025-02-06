@@ -1,0 +1,267 @@
+//- Charges by Quarter --->;
+public final int qTuition      				 = 8715;
+public final int qRoomAndBoard 				 = 2450;
+public final int qHealth       				 = 115;
+public final int qSaFee        				 = 58;
+public final int qRecFee       				 = 70;
+public final int qTechFee      				 = 82;
+public final int qSecurityFee  				 = 40;
+public final int qInternationalInsFee  = 430;
+public final int qFallOrientation      = 220;
+public final int qWinSprOrientation    = 50;
+
+public final int  qTotalTuitionAndFeesDomestic              = qTuition + qHealth + qSaFee + qRecFee + qTechFee + qSecurityFee;
+public final int  qTotalTuitionAndFeesInternational         = qTuition +           qSaFee + qRecFee + qTechFee + qSecurityFee + qInternationalInsFee;
+public final int  qTotalTuitionAndFeesDomesticFrFall        = qTotalTuitionAndFeesDomestic + qFallOrientation;
+public final int  qTotalTuitionAndFeesDomesticFrWinSpr      = qTotalTuitionAndFeesDomestic + qWinSprOrientation;
+public final int  qTotalTuitionAndFeesInternationalFrFall   = qTotalTuitionAndFeesInternational + qFallOrientation;
+public final int  qTotalTuitionAndFeesInternationalFrWinSpr = qTotalTuitionAndFeesInternational + qWinSprOrientation;
+
+public final int  qCoaCommunity   = "13139";
+public final int  qCoaDorm        = "13114";
+public final int  qCoaCommunityFr = "13212.33";
+public final int  qCoaDormFr      = "13180.67";
+
+//- Charges by Year ---;
+public final int  yTuition       = qTuition      * 3;
+public final int  yRoomAndBoard  = qRoomAndBoard * 3  ;
+public final int  yHealth        = qHealth       * 3;
+public final int  ySaFee         = qSaFee        * 3;
+public final int  yRecFee        = qRecFee       * 3;
+public final int  yTechFee       = qTechFee      * 3;
+public final int  ySecurityFee   = qSecurityFee  * 3;
+public final int  yInternationalInsFee = qInternationalInsFee * 4;
+public final int  yFrOrientation = 220;
+
+public final int  yTotalTuitionAndFeesDomestic        = qTotalTuitionAndFeesDomestic            * 3 ;
+public final int  yTotalTuitionAndFeesInternational   = qTotalTuitionAndFeesInternational       * 3 ;
+public final int  yTotalTuitionAndFeesDomesticFr      = qTotalTuitionAndFeesDomestic * 3 + qFallOrientation ;
+public final int  yTotalTuitionAndFeesInternationalFr = qTotalTuitionAndFeesInternational * 3 + qFallOrientation ;
+
+public final int yCoaCommunity   = 39417;
+public final int yCoaDorm        = 39342;
+public final int yCoaCommunityFr = 39637;
+public final int yCoaDormFr      = 39542;
+
+//- Pell Grant ---;
+public final int pellBase = 5500;
+
+//-public final int pellMax4400 = pellBase - round(efc-51/100)*100 + 100>---;
+public final int pellMax0    = 5550;
+public final int pellMax4500 = 1176;
+public final int pellMax4600 = 1176;
+public final int pellMax4700 = 1176;
+public final int pellMax4800 = 800;
+public final int pellMax4900 = 700;
+public final int pellMax5000 = 600;
+public final int pellMax5100 = 555;
+public final int pellMax5200 = 555;
+public final int pellMax5273 = 555;
+public final int pellMaxNone = 0;
+
+//- Cal Grant A ---;
+public final int aCalGrant = 9708;
+public final int aCalGrantMinGPA = 3;
+public final int aCalGrantAssetCeilingInd        = 28800;
+public final int aCalGrantAssetCeilingIndSingle  = 28800;
+public final int aCalGrantAssetCeilingIndMarried = 28800;
+public final int aCalGrantAssetCeilingOther      = 60500;
+
+public final int aCalGrantIncomeCeilingIndSingleFamily1 = 28600;
+public final int aCalGrantIncomeCeilingIndSingleFamily2 = 70200;
+public final int aCalGrantIncomeCeilingIndSingleFamily3 = 71900;
+public final int aCalGrantIncomeCeilingIndSingleFamily4 = 78100;
+public final int aCalGrantIncomeCeilingIndSingleFamily5 = 83800;
+public final int aCalGrantIncomeCeilingIndSingleFamily6 = 90300;
+
+public final int aCalGrantIncomeCeilingIndMarriedFamily1 = 0 //- Impossible ---;
+public final int aCalGrantIncomeCeilingIndMarriedFamily2 = 32800;
+public final int aCalGrantIncomeCeilingIndMarriedFamily3 = 71900;
+public final int aCalGrantIncomeCeilingIndMarriedFamily4 = 78100;
+public final int aCalGrantIncomeCeilingIndMarriedFamily5 = 83800;
+public final int aCalGrantIncomeCeilingIndMarriedFamily6 = 90300;
+
+public final int aCalGrantIncomeCeilingOtherFamily1 = 0 //- Impossible ---;
+public final int aCalGrantIncomeCeilingOtherFamily2 = 70200;
+public final int aCalGrantIncomeCeilingOtherFamily3 = 71900;
+public final int aCalGrantIncomeCeilingOtherFamily4 = 78100;
+public final int aCalGrantIncomeCeilingOtherFamily5 = 83800;
+public final int aCalGrantIncomeCeilingOtherFamily6 = 90300;
+
+//- Cal Grant B ---;
+public final int bCalGrantFr = 1551;
+public final int bCalGrantFr2 = 1551;
+public final int bCalGrantSoJrSr = 11259;
+public final int bCalGrantMaxGPA = 3;
+public final int bCalGrantMinGPA = 2;
+public final int bCalGrantAssetCeilingIndSingle = 28800;
+public final int bCalGrantAssetCeilingIndMarried = 28800;
+public final int bCalGrantAssetCeilingOther = 60500;
+
+public final int bCalGrantIncomeCeilingIndSingleFamily1 = 28600;
+public final int bCalGrantIncomeCeilingIndSingleFamily2 = 32800;
+public final int bCalGrantIncomeCeilingIndSingleFamily3 = 36900;
+public final int bCalGrantIncomeCeilingIndSingleFamily4 = 41100;
+public final int bCalGrantIncomeCeilingIndSingleFamily5 = 46000;
+public final int bCalGrantIncomeCeilingIndSingleFamily6 = 49600;
+
+public final int bCalGrantIncomeCeilingIndMarriedFamily1 = 0  //- Impossible ---;
+public final int bCalGrantIncomeCeilingIndMarriedFamily2 = 32800;
+public final int bCalGrantIncomeCeilingIndMarriedFamily3 = 36900;
+public final int bCalGrantIncomeCeilingIndMarriedFamily4 = 41100;
+public final int bCalGrantIncomeCeilingIndMarriedFamily5 = 46000;
+public final int bCalGrantIncomeCeilingIndMarriedFamily6 = 49600;
+
+public final int bCalGrantIncomeCeilingOtherFamily1 = 0  //- Impossible ---;
+public final int bCalGrantIncomeCeilingOtherFamily2 = 32800;
+public final int bCalGrantIncomeCeilingOtherFamily3 = 36900;
+public final int bCalGrantIncomeCeilingOtherFamily4 = 41100;
+public final int bCalGrantIncomeCeilingOtherFamily5 = 46000;
+public final int bCalGrantIncomeCeilingOtherFamily6 = 49600;
+
+//- FSEOG ---;
+public final int standardFseogEfcSub1000 = 1100;
+public final int standardFseogEfcSub2000 = 350;
+public final int fseogWithCalGrantEdAllowOrNatMeritEfcSub1000 = 350;
+
+//- External Allowance (Typically ~30% of tuition) ---;
+
+//- Outside Scholarship (Flat Entry) ---;
+
+//- Church Matching Amount (Flat Entry, but we match 1:1) ---;
+
+//- LSU Educational Allowance (100% of tuition) ---;
+
+//- SDA Membership ---;
+public final int sdaAward =  1230;
+
+//- LSU Performance Scholarship ---;
+            //- Low Freshmen ---;
+public final int  performanceSubSat950Act18FrSub4617Sub250 = 1760;
+public final int  performanceSubSat950Act18FrSub4617Sub300 = 1760;
+public final int  performanceSubSat950Act18FrSub4617Sub350 = 5270;
+public final int  performanceSubSat950Act18FrSub4617Sub380 = 6440;
+public final int  performanceSubSat950Act18FrSub4617Sub401 = 8790;
+
+public final int  performanceSubSat950Act18FrSub12000Sub250 = 1240;
+public final int  performanceSubSat950Act18FrSub12000Sub300 = 1240;
+public final int  performanceSubSat950Act18FrSub12000Sub350 = 3520;
+public final int  performanceSubSat950Act18FrSub12000Sub380 = 4680;
+public final int  performanceSubSat950Act18FrSub12000Sub401 = 5270;
+
+public final int  performanceSubSat950Act18FrSub100000Sub250 = 870;
+public final int  performanceSubSat950Act18FrSub100000Sub300 = 870;
+public final int  performanceSubSat950Act18FrSub100000Sub350 = 2340;
+public final int  performanceSubSat950Act18FrSub100000Sub380 = 3520;
+public final int  performanceSubSat950Act18FrSub100000Sub401 = 4090;
+
+public final int  performanceSubSat950Act18FrSubNothingSub250 = 590;
+public final int  performanceSubSat950Act18FrSubNothingSub300 = 590;
+public final int  performanceSubSat950Act18FrSubNothingSub350 = 1760;
+public final int  performanceSubSat950Act18FrSubNothingSub380 = 2340;
+public final int  performanceSubSat950Act18FrSubNothingSub401 = 2930;
+            //- High Freshmen ---;
+public final int  performanceMinSat950Act18FrSub4617Sub250 = 1760;
+public final int  performanceMinSat950Act18FrSub4617Sub300 = 4090;
+public final int  performanceMinSat950Act18FrSub4617Sub350 = 5270;
+public final int  performanceMinSat950Act18FrSub4617Sub380 = 6440;
+public final int  performanceMinSat950Act18FrSub4617Sub401 = 8790;
+
+public final int  performanceMinSat950Act18FrSub12000Sub250 = 1240;
+public final int  performanceMinSat950Act18FrSub12000Sub300 = 3520;
+public final int  performanceMinSat950Act18FrSub12000Sub350 = 4680;
+public final int  performanceMinSat950Act18FrSub12000Sub380 = 5270;
+public final int  performanceMinSat950Act18FrSub12000Sub401 = 7610;
+
+public final int  performanceMinSat950Act18FrSub100000Sub250 = 870;
+public final int  performanceMinSat950Act18FrSub100000Sub300 = 2340;
+public final int  performanceMinSat950Act18FrSub100000Sub350 = 3520;
+public final int  performanceMinSat950Act18FrSub100000Sub380 = 4090;
+public final int  performanceMinSat950Act18FrSub100000Sub401 = 6440;
+
+public final int  performanceMinSat950Act18FrSubNothingSub250 = 590;
+public final int  performanceMinSat950Act18FrSubNothingSub300 = 1760;
+public final int  performanceMinSat950Act18FrSubNothingSub350 = 2340;
+public final int  performanceMinSat950Act18FrSubNothingSub380 = 2930;
+public final int  performanceMinSat950Act18FrSubNothingSub401 = 4680;
+            //- Other Demestic ---;
+public final int  performanceSub4617Sub250 = 2930;
+public final int  performanceSub4617Sub300 = 4090;
+public final int  performanceSub4617Sub350 = 5270;
+public final int  performanceSub4617Sub380 = 6440;
+public final int  performanceSub4617Sub401 = 8790;
+
+public final int  performanceSub12000Sub250 = 2340;
+public final int  performanceSub12000Sub300 = 3560;
+public final int  performanceSub12000Sub350 = 4680;
+public final int  performanceSub12000Sub380 = 5270;
+public final int  performanceSub12000Sub401 = 7610;
+
+public final int  performanceSub100000Sub250 = 1760;
+public final int  performanceSub100000Sub300 = 2340;
+public final int  performanceSub100000Sub350 = 3520;
+public final int  performanceSub100000Sub380 = 4090;
+public final int  performanceSub100000Sub401 = 6440;
+
+public final int  performanceSubNothingSub250 = 0;
+public final int  performanceSubNothingSub300 = 1240;
+public final int  performanceSubNothingSub350 = 2340;
+public final int  performanceSubNothingSub380 = 2340;
+public final int  performanceSubNothingSub401 = 4680;
+            //- Other International ---;
+public final int  performanceInternationalFrSub250 = 4680;
+public final int  performanceInternationalFrSub300 = 4680;
+public final int  performanceInternationalFrSub350 = 4680;
+public final int  performanceInternationalFrSub380 = 4680;
+public final int  performanceInternationalFrSub401 = 4680;
+
+public final int  performanceInternationalSub250 = 2340;
+public final int  performanceInternationalSub300 = 3520;
+public final int  performanceInternationalSub350 = 4680;
+public final int  performanceInternationalSub380 = 5270;
+public final int  performanceInternationalSub401 = 7610;
+
+//- Family Discount ---;
+public final int  familyDiscount = 900;
+
+//- Non-Need Scholarship (National Merit: Commended, Semi-finalist, Finalist) ---;
+public final nationalMeritMC = .2;
+public final nationalMeritMS = .5;
+public final nationalMeritMF = 1;
+
+//- Church Matching (LSU Portion) ---;
+
+//- Sub Direct Loan ---;
+public final int  subDirectLoanMaxFr  = 3500;
+public final int  subDirectLoanMaxFr2 = 3500;
+public final int  subDirectLoanMaxSo  = 4500;
+public final int  subDirectLoanMaxJr  = 5500;
+public final int  subDirectLoanMaxSr  = 5500;
+
+//- UnSub Direct Loan ---;
+public final int  unsubDirectLoanMaxDepFr  = 5500;
+public final int  unsubDirectLoanMaxDepFr2 = 5500;
+public final int  unsubDirectLoanMaxDepSo  = 6500;
+public final int  unsubDirectLoanMaxDepJr  = 7500;
+public final int  unsubDirectLoanMaxDepSr  = 7500;
+
+public final int  unsubDirectLoanMaxIndepFr  = 9500;
+public final int  unsubDirectLoanMaxIndepFr2 = 9500;
+public final int  unsubDirectLoanMaxIndepSo  = 10500;
+public final int  unsubDirectLoanMaxIndepJr  = 12500;
+public final int  unsubDirectLoanMaxIndepSr  = 12500;
+
+//- Perkins ---;
+public final int  perkinsSub5274  = 1250;
+public final int  perkinsSub12000 = 2000;
+
+//- Federal Work-study ---;
+public final int  fwsSub2000   = 2000;
+public final int  fwsSub12000  = 2500;
+public final int  fwsSub100000 = 3000;
+
+//- Year-in-Advance Discount ---;
+public final yearInAdvanceDiscount = 0.07;
+
+//- Quarter-in-Advance Discount ---;
+public final quarterInAdvanceDiscount = 0.02;

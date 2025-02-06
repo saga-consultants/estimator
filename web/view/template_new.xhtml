@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"   "http://lestimator.lasierra.edu/loc/xhtml1-strict.dtd">
+<!--
+<f:view xmlns="http://www.w3.org/1999/xhtml" 
+        xmlns:f="http://java.sun.com/jsf/core" 
+        xmlns:h="http://java.sun.com/jsf/html" 
+        xmlns:ui="http://java.sun.com/jsf/facelets" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.w3.org/1999/xhtml http://lestimator.lasierra.edu/loc/xhtml1-transitional.xsd"> -->
+    
+    <!-- Enables CTRL+SHIFT+D default  for activating Facelets debug window 
+     <ui:debug hotkey="x" rendered="#{initParam['javax.faces.FACELETS_DEVELOPMENT']}" /> --> 
+   
+     
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.org/ui">
+    
+     <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    
+    <!-- <ui:debug recordStateSize="false" trace="false" /> -->
+     
+  <f:view contentType="text/html">
+     
+    
+   <h:head>
+      <title>La Sierra University Financial Aid Estimator Web Application</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <h:outputStylesheet library="css" name="screen_new.css"/>      
+      <!--or <link href="#{facesContext.externalContext.requestContextPath}//resources/style/default.css" rel="stylesheet" type="text/css" /> 
+         and in that css file use absolute URL: background-image: /resources/images/someName.png
+        or <img src="${pageContext.request.contextPath}/images/loading.png" />
+      
+      <script src="${pageContext.request.contexNtPath}/javascript/parameterPanel.js" type="text/javascript"/>      -->
+      
+      <!-- Primefaces 301 use jquery 1.6.4, and already included.  ignore the including 1.6.2 here, to avoid conflict and duplication.
+      <h:outputScript library="js" name="jquery.min.js"  />    
+      --><!--jquery.min.js target="body" -->  
+      
+      <h:outputScript library="js" name="jquery.tools.min.js"  />
+     
+   </h:head>
+    
+   <h:body>
+ 
+            
+          
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                 
+         
+            
+    
+   
+
+    
+  
+   </h:body>
+    
+    </f:view>
+</html>
+

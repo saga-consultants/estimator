@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"   
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/view/template.xhtml">
+
+     <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+   <ui:define name="content"> 
+      
+      <h:form id="bv">
+
+        <f:subview id="outview"  rendered="#{!login.loggedIn}">
+         <h2 style="padding-top:8px;">Not Identified</h2>
+         <p>Your session, if any, is closed. Your identity is not known to the system at present.</p>
+         <p>If you need to access the system, click <p:commandLink action="login_new?faces-redirect=true">here</p:commandLink> to sign in.</p>
+                  
+        </f:subview>
+        
+        <f:subview id="inview" rendered="#{login.loggedIn}">
+          <h2 style="padding-top: 8px;">Hi There</h2>
+          <p>Did you open this web page by yourself? If you meant to sign out, click <p:commandLink action="#{login.logout}">here</p:commandLink>.</p>
+        </f:subview>
+          
+      </h:form>
+      
+      <!--
+     <h3>JSF 2.0 and Resource Bundles Examples</h3>
+      <ol>    	
+    	<li><h:outputText value="#{msg['message.test2']}" /></li>
+    	<li><h:outputText value="#{msg['message.test2']}" escape="false" /></li>
+ 
+    	<li><h:outputText value="#{msg['message.test3']}" /></li>
+    	<li><h:outputText value="#{msg['message.test3']}" escape="false" /></li>
+ 
+    	<li>
+             <h:outputFormat value="#{msg['message.param1']}">
+                <f:param value="param0" />
+             </h:outputFormat>
+        </li>
+         <li>
+             <h:outputFormat value="#{msg['message.param2']}">
+                <f:param value="param0" />
+                <f:param value="param1" />
+             </h:outputFormat>
+          </li>
+    	</ol>
+--> 
+<script type="text/javascript">
+//<![CDATA[
+   $(document).ready(function() { resize_height();});
+ //]]>
+</script>             
+   </ui:define>
+</ui:composition>

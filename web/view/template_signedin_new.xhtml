@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"-->
+<!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"    
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"    
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.org/ui" >
+    
+    <!-- http://primefaces.prime.com.tr/ui is before 3.0M3  http://primefaces.org/ui -->
+    
+<!--   <link rel="stylesheet" type="text/css" href="screen_new.css" />-->
+    <f:view contentType="text/html"><!--  contentType="text/html"-->
+    
+   <h:head>
+      <title>La Sierra University --- Financial Aid Estimator Web Application</title>      
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <h:outputStylesheet library="css" name="screen_new.css"/>      
+ <!--  <h:outputScript library="js" name="jquery.min.js"  />  this conflicts with primefaces 2.2.1 bound jquery1.4.4 + jquery UI 1.8.9-->
+      <!--link rel="stylesheet" href="#{request.contextPath}/themes/#{layoutBean.theme}/skin.css" / /Estimator2/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo -->
+   </h:head>
+    
+   <h:body>       
+    <div id="canvas">
+       
+       <div id="topbar"></div>
+       
+       <div id="container2">
+           
+           <div id="header">
+              
+           
+              <script type="text/javascript">
+    //<![CDATA[
+     //no margin, no boarder, no padding
+    function resize_height(){ 
+        //x.style.height= y.offsetHeight+'px';        
+        var foot = $("#footer").height()+126+ 20+10;
+        //var body = $("#container2").height();
+        var content = $("#content2").height(); 
+        var pageHeight = jQuery(window).height();        
+        //jQuery('#sidebar-a #block-book-navigation').css({max-height: navHeight + 'px;' });
+        
+        var offset = $("div#mark").offset();
+   //alert( "mark offset left: " + offset.left + ", top: " + offset.top );
+         var mark = offset.top;
+            
+        if( foot+content < pageHeight){ //need grow bigger
+            $("#content2").height(pageHeight-foot);
+        } else if(foot+content > pageHeight && content+126>mark ){ //need to shrink  
+            if( pageHeight-foot > mark-126){
+                $("#content2").height(pageHeight-foot);
+            }else{
+                $("#content2").height(mark-126);
+            }            
+        }else if(content+126<mark){ //need grow bigger
+            $("#content2").height(mark-126);
+        }
+ 
+    }
+    $(window).load(function() {
+         //alert("SARA3");
+        resize_height(); 
+         //keep invoking server to keep session not expired, since this is a page for non-signed in users/guest
+              //  $(document).ready( function() {
+                    var refreshTime = 600000; // in milliseconds, so 10 minutes
+                    $.ajaxSetup( {cache:false} )
+                    window.setInterval( function() {
+                        var url =  '#{ref.js_keepalive_url}'; //'http://localhost:80/estimator/view/login_new.jsf';
+                        $.get( url );
+                    }, refreshTime );                                       
+                    
+             //   });            
+    });
+    $(window).resize(function() {
+        resize_height();
+        //alert('window.height='+jQuery(window).height()+", while window.innerHeight="+window.innerHeight+", and document.body.height="+document.body.height+" and document.body.clientHeight html page length="+document.body.clientHeight);
+       
+    });    
+    $(window).ready(function(){
+       //if( !sunc_poll.isActive()) sync_poll.start(); 
+    });
+    //]]>
+    </script>
+       
+               
+         
+            
+            
+         
+               
+         <div class="clear"></div>
+                        
+                    
+       </div> <!-- for header -->
+         
+         <!-- old auth f:subview     -->
+      <f:subview id="auth" rendered="#{login.loggedIn}" >     
+           <div id="content2">            
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                <div id="mark" class="clear"></div>                  
+            </div>            
+                      
+      </f:subview> <!-- auth -->       
+            
+          
+
+      
+<f:subview id="guest" rendered="#{!login.loggedIn}" >
+              
+              <div id="content2">            
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                                  
+            </div> 
+             
+          </f:subview>
+                
+           
+
+           
+       
+    
+      </div>
+   </div>
+   </h:body>
+        
+        </f:view>
+</html>
+

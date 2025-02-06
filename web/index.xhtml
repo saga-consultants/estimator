@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+    
+    <h:head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous"/>
+        <title>Estimator</title>
+    <meta http-equiv="REFRESH" content="0;url=./view/login_new.jsf"></meta>
+               
+    </h:head>
+    <h:body>
+        
+        <p>This page shall direct you to the login page. </p>        
+        <p>If your browser doesn't automatically redirect to its new location, click <a href="view/login_new.jsf">here</a>.</p>
+        
+        <h:form rendered="false"><p:commandButton value="Hello from PrimeFaces" onclick="dlg1.show();" type="button" />
+            <p:dialog header="PrimeFaces Dialog" widgetVar="dlg1" width="500">For more information visit <a href="http://primefaces.org">http://primefaces.org</a>.
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+
+<!--
+Implicit navigation
+Ones who have worked with JSF 1.x navigation cases probably know what a hell of maintenance pain they can cause. Although, after all, in properly designed JSF web application their use should have been very minimal. 
+POST form submits should navigate to the same page as the form and any results should be conditionally rendered on the very same page. In other words, the action methods should return an empty string, or null, or void anyway. 
+Page-to-page navigation should take place by pure GET links, not by command links. This all is much better for user experience and SEO.
+However, now JSF2 comes with two new components <h:link> and <h:button> which represents a pure GET link and button which both support the outcome attribute representing the navigation case outcome, the new implicit navigation 
+support is more than welcome. You just have to specify the view ID (basically, just the filename and the folder path, if any) and JSF will take care about prefixing and/or suffixing the proper context path and FacesServlet mapping on 
+the generated link and button in the HTML.
+For example, the following view
+
+    <h:link value="Home" outcome="home" />
+    <h:link value="FAQ" outcome="faq" />
+    <h:link value="Contact" outcome="contact" />
+
+will generate the following HTML
+
+    <a href="/contextname/home.xhtml">Home</a>
+    <a href="/contextname/faq.xhtml">FAQ</a>
+    <a href="/contextname/contact.xhtml">Contact</a>
+
+ 
+Implicit EL objects
+JSF2 EL comes with a bunch of implicit EL objects which you can use in the view next to the managed beans. It are the following:
+#{component}: the current UIComponent
+#{facesContext}: the current FacesContext
+#{view}: the current UIViewRoot
+#{request}: the current HttpServletRequest
+#{session}: the current HttpSession
+#{application}: the ServletContext
+#{flash}: the current Flash (which also implements map)
+#{cc}: the current composite component
+#{requestScope}: the current request attribute map
+#{viewScope}: the current view attribute map
+#{sessionScope}: the current session attribute map
+#{applicationScope}: the application attribute map
+#{initParam}: the current context parameter map
+#{param}: the current request parameter map
+#{paramValues}: the current request parameter values map
+#{header}: the current request header map
+#{headerValues}: the current request header values map
+#{cookie}: the current request cookie map
+Particularly the #{component} one is interesting. It's like this in Java (and JavaScript) code. Below is an usage example:
+
+    <h:inputText value="#{bean.value}" styleClass="#{component.valid ? '' : 'error'}" />
+
+The #{component} of a <h:inputText> component refers to an instance of UIInput class which in turn has an isValid() method. So when you submit the form and a validation error occurs on the particular component, 
+then the #{component.valid} will evaluate false which will then set the error class on the input. This allows you to easily style invalid inputs!
+
+.error {
+    background: #fee;
+}
+
+ 
+Implicit output text
+Since JSF 2.0 / Facelets, it's possible to inline EL in template text without the need to wrap it in a <h:outputText>. This makes the source code better readable. Even more, Facelets will implicitly escape any HTML as well,
+like as in a real <h:outputText>.
+
+    <p>Welcome, #{activeUser.name}!</p>
+
+Only whenever you'd like to disable escaping using escape="false", or would like to assign id, styleClass, onclick, etc programmatically, then you still need <h:outputText>.
+-->

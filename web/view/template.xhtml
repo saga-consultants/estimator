@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"   "http://lestimator.lasierra.edu/loc/xhtml1-strict.dtd">
+<!--
+<f:view xmlns="http://www.w3.org/1999/xhtml" 
+        xmlns:f="http://java.sun.com/jsf/core" 
+        xmlns:h="http://java.sun.com/jsf/html" 
+        xmlns:ui="http://java.sun.com/jsf/facelets" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.w3.org/1999/xhtml http://lestimator.lasierra.edu/loc/xhtml1-transitional.xsd"> -->
+    
+    <!-- Enables CTRL+SHIFT+D default  for activating Facelets debug window 
+     <ui:debug hotkey="x" rendered="#{initParam['javax.faces.FACELETS_DEVELOPMENT']}" /> --> 
+   
+     
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.org/ui">
+    
+     <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    
+    <!-- <ui:debug recordStateSize="false" trace="false" /> -->
+     
+  <f:view contentType="text/html">
+     
+    
+   <h:head>
+      <title>La Sierra University Financial Aid Estimator Web Application</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <h:outputStylesheet library="css" name="screen.css"/>      
+      <!--or <link href="#{facesContext.externalContext.requestContextPath}//resources/style/default.css" rel="stylesheet" type="text/css" /> 
+         and in that css file use absolute URL: background-image: /resources/images/someName.png
+        or <img src="${pageContext.request.contextPath}/images/loading.png" />
+      
+      <script src="${pageContext.request.contextPath}/javascript/parameterPanel.js" type="text/javascript"/>      -->
+      
+      <!-- Primefaces 301 use jquery 1.6.4, and already included.  ignore the including 1.6.2 here, to avoid conflict and duplication.
+      <h:outputScript library="js" name="jquery.min.js"  />    
+      --><!--jquery.min.js target="body" -->  
+      
+      <h:outputScript library="js" name="jquery.tools.min.js"  />
+      <!--
+      <STYLE type="text/css">
+           .ui-helper-clearfix {
+                display: inline-block;
+            }
+      </STYLE>-->
+   </h:head>
+    
+   <h:body>
+     <div id="canvas">
+       
+       <div id="topbar"></div>
+       
+       <div id="container">
+           
+           <div id="header">
+                <h1 id="logo" class="left"><a href="https://www.lasierra.edu/"><span>La Sierra University - Where Academic Investigation, Christian Faith, and Service to Others Unite</span></a></h1>
+               
+                <div id="topBgImg" class="right">  
+                    <div id="veryear2">Estimator<br />#{ref.faid_year}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+           </div>
+           
+            <!--<div id="container"> -->
+          
+          <!--
+          <div id="veryear">#{ref.faid_year}</div>
+            <div id="header"></div>-->
+            
+             <div id="content">
+                    <div id="sidebar">
+                       <h3>Need Help?</h3>
+                       <p>
+                          Knowledge Base and Issue Tracker 
+                       </p>
+                       <ul>
+                          <li><a href="http://199.233.154.145/bugfree">Estimator Online Support</a></li>
+                       </ul>
+                       <p>
+                          Identity is required and you can click the bottom link to request an account.
+                       </p>
+                       
+                       <br/>
+                       
+                       <p>
+                          The site provides a platform for you to post request and view response from developers about:
+                       </p>
+                       <ul>
+                          <li>Issue or bug</li>                          
+                          <li>Change interface</li>
+                          <li>Add new function</li>
+                          <li>Enhance function</li>
+                          <li>Suggestion or Comment</li>
+                          <li>Question</li>                          
+                       </ul>
+                       <p>
+                          If you prefer email software, click <a href="mailto:kwang@lasierra.edu?subject=request_about_estimator&amp;body=Please type in the detail">here</a> to compose email.
+                       </p>
+                    </div>
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                 
+                <div id="mark" class="clear"></div>
+           </div>
+            
+          
+           <div id="footer">
+                <!--h:graphicImage library="gfx"  name="weld.png" alt="Weld logo"/> -->
+                <!--
+                <p>
+                This project, which targets migrating spread sheet version of Estimator to web, is in its public test phase.<br/>
+                When it is fully completed, it will be deployed to counselor's computer  or campus hosted server, and be known as #{ref.verString}.<br/>
+                </p>-->
+                <ui:include src="foot.xml" />
+            </div>
+      
+       
+   
+    <script type="text/javascript">
+    //<![CDATA[
+    
+    function resize_height(){ 
+        var foot = $("#footer").height()+126+ 20+10; //no margin, no boarder, no padding //the padding is 10 each vertical layer
+        
+        var content = $("#content").height(); //ADDED
+        var pageHeight = jQuery(window).height(); 
+         var offset = $("div#mark").offset();     
+         var mark = offset.top;
+            
+        if( foot+content < pageHeight){
+            $("#content").height(pageHeight-foot);
+        } else if(foot+content > pageHeight && content+126>mark ){             
+            $("#content").height(mark-126);
+        }   
+    }
+    $(window).load(function() {
+         //alert("SARA2");
+        resize_height(); 
+         //keep invoking server to keep session not expired, since this is a page for non-signed in users/guest              
+        var refreshTime = 60000000; // in milliseconds, so 10 minutes
+        $.ajaxSetup( {cache:false} );
+        window.setInterval( function() {
+            var url = '#{ref.js_keepalive_url}';//'http://localhost:8080/estimator/view/login.jsf';
+            $.get( url );
+        }, refreshTime );                      
+    });
+    $(window).resize(function() {
+        resize_height();         
+    });    
+    
+    //]]>
+    </script>
+    
+    </div>
+   </div>
+   </h:body>
+    
+    </f:view>
+</html>
+

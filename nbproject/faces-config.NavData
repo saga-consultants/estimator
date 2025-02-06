@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Faces Configuration Only" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="view/estimate-mod.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="view/estimate-show.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="view/estimate-new.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="index.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="view/login.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="view/query.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="view/template.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="view/signout.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="view/estimate-print.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="view/template_signedin.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="view/estimate-list.xhtml" x="650" y="450" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

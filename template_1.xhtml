@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://master.lasierra.edu/master3/loc/xhtml1-strict.dtd">
+
+<f:view xmlns="http://www.w3.org/1999/xhtml" 
+        xmlns:f="http://java.sun.com/jsf/core" 
+        xmlns:h="http://java.sun.com/jsf/html" 
+        xmlns:ui="http://java.sun.com/jsf/facelets" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.w3.org/1999/xhtml http://localhost:8080/estimator/loc/xhtml1-transitional.xsd"> 
+    
+    <!-- Enables CTRL+SHIFT+D default  for activating Facelets debug window --> 
+     <ui:debug />  
+   
+    
+    <html>
+<!--        
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:ui="http://java.sun.com/jsf/facelets">
+    -->
+     <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    
+     
+     <!--
+     <f:view>
+    -->
+    
+   <h:head>
+      <title>La Sierra University Financial Aid Estimate Web Application</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <h:outputStylesheet library="css" name="screen.css"/>      
+      <!--or <link href="#{facesContext.externalContext.requestContextPath}//resources/style/default.css" rel="stylesheet" type="text/css" /> 
+         and in that css file use absolute URL: background-image: /resources/images/someName.png
+        or <img src="${pageContext.request.contextPath}/images/loading.png" />
+      
+      <script src="${pageContext.request.contextPath}/javascript/parameterPanel.js" type="text/javascript"/>      -->
+      <h:outputScript library="js" name="jquery.min.js"  /> <!--jquery.min.js target="body" -->      
+   </h:head>
+    
+   <h:body>
+      <div id="container">
+           <div id="veryear">#{ref.faid_year}</div>
+          
+             <div id="content">
+                    <div id="sidebar">
+                       <h3>Find out more</h3>
+                       <p>
+                          Explore JavaServer Faces.
+                       </p>
+                       <ul>
+                          <li><a href="http://www.javaserverfaces.org">JSF community site</a></li>
+                       </ul>
+                       <p>
+                          Learn more about Java EE 6 and the extensions provided by Weld and Seam.
+                       </p>
+                       <ul>
+                          <li><a href="http://seamframework.org/Weld/JSR299AndWeldOverview">Overview</a></li>
+                          <li><a href="http://seamframework.org">Project site</a></li>
+                          <li><a href="http://seamframework.org/Documentation/SeamDocumentation#H-WeldReferenceDocumentation">Documentation</a></li>
+                          <li><a href="http://seamframework.org/Community/Forums">User forums</a></li>
+                          <li><a href="http://seamframework.org/Community/MailingLists">Mailing lists</a></li>
+                          <li><a href="https://jira.jboss.org/jira/browse/WELD">Issue tracker</a></li>
+                       </ul>
+                       <p>
+                          If you have an add-on, please <a href="http://seamframework.org/Community/Forums">let us know</a> and
+                          consider <a href="http://seamframework.org/Community/Contribute">contributing</a> it back to the
+                          community!
+                       </p>
+                    </div>
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+             </div>
+          
+         
+          
+      </div>
+       <div id="footer">
+             <!--h:graphicImage library="gfx"  name="weld.png" alt="Weld logo"/> -->
+            <p>
+               This project, which targets migrate Excel version to web, is in its initial design and development phase.<br/>
+               When it is fully completed, it will be deployed to counselor's computer, and be known as #{ref.verString}.<br/>
+            </p>
+         </div>
+   
+    <script type="text/javascript">
+    //<![CDATA[
+    var foot = $("#footer").height(); //no margin, no boarder, no padding
+    function resize_height(){ 
+        //x.style.height= y.offsetHeight+'px';
+        var body = $("#container").height();
+        var pageHeight = jQuery(window).height();        
+        //jQuery('#sidebar-a #block-book-navigation').css({max-height: navHeight + 'px;' });
+        //alert("container+footer="+(foot+body)+", while jQuery(window).height()="+jQuery(window).height());
+        if( foot+body+24 < pageHeight){
+            $("#container").height(pageHeight-foot-24);
+        }else if(foot+body+24 > pageHeight && body>500 ){
+            $("#container").height(pageHeight-foot-24);
+        }    
+    }
+    $(window).load(function() {
+        resize_height(); 
+        
+         //keep invoking server to keep session not expired, since this is a page for non-signed in users/guest
+              //  $(document).ready( function() {
+                    var refreshTime = 600000; // in milliseconds, so 10 minutes
+                    $.ajaxSetup( {cache:false} )
+                    window.setInterval( function() {
+                        var url = 'http://localhost:8080/estimator/view/login.jsf';
+                        $.get( url );
+                    }, refreshTime );
+             //   });            
+    });
+    $(window).resize(function() {
+        resize_height();
+        //alert('window.height='+jQuery(window).height()+", while window.innerHeight="+window.innerHeight+", and document.body.height="+document.body.height+" and document.body.clientHeight="+document.body.clientHeight);
+       
+    });    
+    //Window  doesn't have an offsetWidth, to read its width, use $(window).width()   
+    //    var img_y = ($(this).attr('height') + 14) * -0.5;
+    //    var img_x = ($(this).attr('width') + 14) * -0.5;
+    //    $(this).css('margin-top', img_y).css('margin-left', img_x);
+    //]]>
+    </script>
+    </h:body>
+    </html>
+    </f:view>
+
+
+<!--
+<script>
+    function showHeight(ele, h) {
+      $("div").text("The height for the " + ele + 
+                    " is " + h + "px.");
+    }
+    $("#getp").click(function () { 
+      showHeight("paragraph", $("p").height()); 
+    });
+</script>
+
+<script>$("div").one('click', function () {
+      $(this).height(30)
+             .css({cursor:"auto", backgroundColor:"green"});
+    });</script>
+
+
+-->

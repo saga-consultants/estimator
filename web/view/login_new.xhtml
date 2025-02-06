@@ -1,0 +1,258 @@
+<!--<?xml version="1.0" encoding="UTF-8"?> -->
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">  
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"   
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/template_new.xhtml">
+    <h:head>
+        <h:outputStylesheet library="css" name="screen_new.css"/>  
+    </h:head>
+    <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    <ui:define name="content">       
+        <h:form id="bv_">
+            <f:subview id="loginview"  rendered="#{!login.loggedIn}"> 
+
+
+                <f:subview id="valid" rendered="#{ref.clientid gt 0 and ref.sys_blk_ind le 0 and ref.sys_cfg_ind gt 0 and ref.sys_usr_ind gt 0}" >
+                    <p:layout fullPage="true">
+             
+                        <div class="loginCenter">
+                            <p:layoutUnit position="center"  style="position:relative;margin:10px 0px 20px 5px; width: 50% important;background-color:white">
+
+                                <div id="loginView" class="loginView" >
+
+                                    <div id="loginHeader" style="width: 100%;
+                                         position: relative;
+                                         height: 10%;
+                                         ">
+
+                                        <span class="loginTitle" role="img">
+                                            <img src="../resources/img/LSU_banner_white.png" style="    position: relative;
+                                                 width: 86%;
+                                                 padding: 10px 10px 10px 10px;
+                                                 left: 4%;"></img>
+                                        </span>
+
+
+                                    </div>
+                                    <div class="loginTitle_2" >
+                                        Login to continue
+                                    </div>
+
+
+                                    <div id="inputText_username" style="top: 14%;
+                                         position: relative;">
+                                        <div>
+<!--                                            <h:outputLabel id="uname" for="username" value="#{msg['LoginForm.UserNamelabel']}"  title="#{msg['LoginForm.Username.Title']}" style="    left: 6%;
+                                                           position: relative;" />-->
+                                        </div>
+                                        <div>
+                                            <h:inputText id="username" required="true" value="#{credentials.username}"   style=" margin-top: 0px;
+                                                         padding: 3px;
+                                                         position: relative;
+                                                         width: 86%;
+                                                         height: 39px;
+                                                         border: solid #000 2px;
+                                                         left: 6%;
+                                                         top: 18%;
+                                                         border-radius: 5px;" label="#{msg['LoginForm.UserNamelabel']}"  tabindex="1"    />
+                                            <h:message for="username" errorClass="invalid"/>
+                                            <p:watermark for="username" value="Enter your username" />
+                                        </div>
+
+                                    </div>
+
+                                    <div id="inputText_password" style="top: 17%;
+                                         position: relative;">
+                                        <div>
+<!--                                            <h:outputLabel id="upass" for="password" value="#{msg['LoginForm.Passwdlabel']}" title="#{msg['LoginForm.Password.Title']}" style="    left: 6%;
+                                                           position: relative;"/>-->
+                                        </div>
+                                        <div>
+                                            <h:inputSecret id="password" required="true" value="#{credentials.password}" style=" margin-top: 0px;
+                                                           padding: 3px;
+                                                           position: relative;
+                                                           width: 86%;
+                                                           height: 39px;
+                                                           border: solid #000 2px;
+                                                           left: 6%;
+                                                           top: 30%;
+                                                           border-radius: 5px;"  label="#{msg['LoginForm.Passwdlabel']}" tabindex="2"  />
+                                            <p:watermark for="password" value="Enter your password" />
+                                            <h:message for="password" errorClass="invalid"/>
+                                        </div>
+                                    </div>
+
+                                    <div id="loginBtn_" style="position:relative;top:21%;">
+                                        <div>
+                                            <h:commandButton id="btn" type="submit" value="#{msg['LoginForm.SigninButton']}" action="#{login.login}" 
+                                                             rendered="#{!login.loggedIn}"  tabindex="3" 
+                                                             style="position: relative;
+
+                                                             width: 90%;
+                                                             left: 5%;
+                                                             height: 52px;
+                                                             color: white;
+                                                             background-color: #142f46;"/>
+                                        </div>
+                                    </div>
+                                    <div id="guestSection"  style=" position: relative;
+                                         top: 25%;
+                                         left: 40%;
+                                         font-size: small;
+                                         flex-direction: row;
+                                         display: flex;
+                                         justify-content: flex-start;
+                                         align-items: center;
+                                         ">
+                                        <div id="notifier">
+                                            <p:dialog header="Help" widgetVar="hlpdlg">
+                                                <div id="sidebar">
+                                                    <h3>Need Help?</h3>
+                                                    <p>
+                                                        Knowledge Base and Issue Tracker 
+                                                    </p>
+                                                    <ul>
+                                                        <li><a href="http://199.233.154.145/bugfree">Estimator Online Support</a></li>
+                                                    </ul>
+                                                    <p>
+                                                        Identity is required and you can click the bottom link to request an account.
+                                                    </p>
+
+                                                    <br/>
+
+                                                    <p>
+                                                        The site provides a platform for you to post request and view response from developers about:
+                                                    </p>
+                                                    <ul>
+                                                        <li>Issue or bug</li>                          
+                                                        <li>Change interface</li>
+                                                        <li>Add new function</li>
+                                                        <li>Enhance function</li>
+                                                        <li>Suggestion or Comment</li>
+                                                        <li>Question</li>                          
+                                                    </ul>
+                                                    <p>
+                                                        If you prefer email software, click <a href="mailto:kwang@lasierra.edu?subject=request_about_estimator&amp;body=Please type in the detail">here</a> to compose email.
+                                                    </p>
+                                                </div>
+
+                                            </p:dialog></div>
+                                        <!--                                        href="http://localhost:8080/view/estimate-new.jsf" action="login_new?faces-redirect=true"  -->
+                                        <div id="guestLogin" >
+                                            <span >     
+                                                <a href="/view/estimate-new.jsf">Sign in as guest </a>| Can't login
+                                                <!--                                               <p> <p:commandLink action="estimate-new.jsf" >Sign in as guest</p:commandLink> </p>-->
+                                            </span>
+
+                                        </div>
+                                        <div onclick="hlpdlg.show()"><img src="../resources/img/new_help_icon.png"  > </img></div></div>
+
+
+                                    <p:separator style="
+                                                 position: relative;
+                                                 width: 92%;
+                                                 height: 1px;
+                                                 background-color: #aadddd57;
+                                                 top: 38%;
+                                                 left: 0%;
+                                                 opacity: 0.5;" />
+
+                                    <div id="serverStatus" style="position:relative;top:40%">
+                                        <!--                                        <p:panel id="status" header="Server And Estimator Availability and Status "                  
+                                                                                         footer="checking and refreshing serever status every #{ref.seed eq null ? 0 : ref.seed.pollInterval} minutes"
+                                                                                         style="width:70%; margin-top:32px; margin-bottom: 5px;">             
+                                                                                    <span>Master server "#{ref.seed.mastername}" is <b>#{ref.master_up_ind gt 0? 'up':'not reachable at present'}</b>.<br/>             
+                                                                                        Authentication server "#{ref.seed.ldapserver}" is <b>#{ref.ldap_up_ind gt 0? 'up':'not reachable. Will try your last success password'}</b>.<br/>
+                                                                                        Estimator <b>#{ref.seed.clientid gt 0? ref.getVerStr() :"needs initialization"}</b>.        </span>  <br/>  
+                                                                                    <div style="color: red; border:0px; margin:0px; padding:0px;">
+                                                                                        <h:outputText id="clkmsg" value="#{ref.sys_clk_msg}"   escape="false" rendered="#{ref.sys_clk_ind ne 0}"/>
+                                                                                        <h:outputText id="blkmsg" value="#{ref.sys_blk_msg}"   escape="false" rendered="#{ref.sys_blk_ind gt 0}"/>
+                                                                                        <h:outputText id="cfgmsg" value="#{ref.sys_cfg_msg}"   escape="false" rendered="#{ref.sys_cfg_ind le 0}"/>
+                                                                                        <h:outputText id="usrmsg" value="#{ref.sys_usr_msg}"   escape="false" rendered="#{ref.sys_usr_ind le 0}"/>
+                                                                                    </div>
+                                                                                </p:panel>
+                                                                                <p:poll interval="2" update="status"  autoStart="true" /> -->
+                                        <div id="masterServerDetails">
+<!--                                           <p:messages id="message" globalOnly="true" layout="table" styleClass="messages" rendered="true" >  value="#{ref.master_up_ind}" action="#{messageManagedBean.setMessage(ref.master_up_ind gt 0)}" update="message"> </p:messages>-->
+                                        <p:messages id="message" globalOnly="true" autoUpdate="true"  redisplay="false"    />   
+                                          
+                                            <p style="font-size:  x-small;
+                                               text-align: center;
+                                               position: relative;">  <span> Master server "#{ref.seed.mastername}" is #{ref.master_up_ind gt 0? 'up':'not reachable at present'} </span> | <span> Authentication server "#{ref.seed.ldapserver}" is #{ref.ldap_up_ind gt 0? 'up':'not reachable. Will try your last success password'} |</span> <span>Estimator #{ref.seed.clientid gt 0? ref.getVerStr() :"needs initialization"}</span>  </p>
+                                            <p style="font-size:  x-small;
+                                               text-align: center;
+                                               position: relative;"> <span>Checking and refreshing server status every #{ref.seed eq null ? 0 : ref.seed.pollInterval} minutes</span></p>
+
+
+<!--      <span  action="#{messageManagedBean.doSomeAction(ref.seed.mastername,ref.master_up_ind gt 0,'Master')}" >
+          <p:messages for="MessageId" autoUpdate="true"   />
+      </span>-->
+                                            
+                                        </div>
+
+                                    </div>
+                                    <div id="footer_new" style="
+                                         position: relative;
+                                         top: 47%;">
+                                        <ui:include src="foot.xml" />
+                                    </div>
+                                </div>
+
+                            </p:layoutUnit>
+                        </div>
+                    </p:layout>
+
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        //$(document).ready(function() {alert('Hi');});
+                        $(window).load(function () {
+
+                            var obj = $("#loginview-bv-valid-username")[0];//document.getElementById(id) returns raw DOM obj, while $(id)  jQuery object that wraps the DOM object and provides jQuery methods
+        if(obj)
+        {
+            obj.focus()
+        }
+                        });
+                        $(document).ready(function () {
+                            $("#loginview-bv-valid-uname").tooltip({position: "center right", opacity: 0.7, effect: "fade", offset: [0, 0], delay: 0, predelay: 0});
+                            $("#loginview-bv-valid-upass").tooltip({position: "center right", opacity: 0.7, effect: "fade", offset: [0, 0], delay: 0});
+                            $("#loginview-guest-guest").tooltip({position: "bottom center", opacity: 0.9, effect: "fade", offset: [-5, 0], delay: 0, predelay: 0, tipClass: "tooltip2", relative: "true"});
+                            //tip (spec existing element as tip) and tipClass (css style the tip element)  tip:"#guestip", tipClass:"tooltip2", relative:true
+                        });
+                        /*  
+                         $('#clientId').bind('eventname', function(event, ui) { 
+                         wheteveJSFcallsHere(); 
+                         }); */
+                        //unobtrusive. $('#selectlist option:selected').val()
+                        ////$('#'+clientId).closest('tr').toggleClass("selectedRow");
+                        //
+                        /* primefaces also let's you use the attribute widgetvar to tie your component to a javascript object.
+                         so for instance:
+                         <p:inputText widgetvar="tom" id="tom" />
+                         then in your javascript code or some javascript callback you could do:
+                         tom.disable() or tom.focus()
+                         */
+                        //]]>
+                    </script>
+
+                </f:subview>
+            </f:subview >
+
+        </h:form>
+
+        <f:subview id="signedin"   rendered="#{login.loggedIn}">
+            <h2 style="margin-top: 90px;">Sign Out?</h2>
+            <p>You have signed into the system. If you need to sign out, click the button below.</p>
+            <p/>
+            <h:form>
+                <p>
+                    <h:commandButton value="#{msg['SignoutButton']}" action="#{login.logout}" rendered="#{login.loggedIn}"/>
+                </p>
+            </h:form>
+        </f:subview>
+
+    </ui:define>
+</ui:composition>

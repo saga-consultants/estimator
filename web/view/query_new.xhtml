@@ -1,0 +1,764 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"   
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" 
+                template="/view/template_signedin_new.xhtml"> 
+
+    <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    <ui:define name="content">
+        <style type="text/css">
+            table.actions tbody tr td{
+                border:0px;
+            }
+
+            .ui-datatable-even {
+                background: white;
+            }
+            .ui-datatable-odd {
+                background: #f2f5f9;
+            }
+            div.ui-messages-error{
+                margin-top:0px;
+            }
+            hr{
+                margin: 3px;
+            }
+        </style>
+        <div>
+            <f:subview id="sv"  >    
+                <p:layout fullPage="true" id="query_new_page">
+
+                    <p:layoutUnit size="164" position="north" style="border:solid 0px black;">
+                        <div id="headerSection" style="position: relative;left: -2%;">
+                            <div id="new_logo">
+                                <span class="loginTitle" role="img">
+                                    <a href="https://www.lasierra.edu/"/>
+                                    <img src="../resources/img/LSU_banner_white.png" style="    position: relative;
+                                         width: 86%;
+                                         padding: 10px 10px 10px 10px;
+                                         left: 4%;"></img>
+
+                                </span>
+   <!--                            <span><div id="yearID">Estimator<br />#{ref.faid_year}</div>    </span>-->
+                                <!--                         <h1 id="logo" class="left"><a href="https://www.lasierra.edu/"><span>La Sierra University - Where Academic Investigation, Christian Faith, and Service to Others Unite</span></a></h1>-->
+                            </div>
+                            <div id="bannerDetail">
+                                <f:subview id="autheader" rendered="#{login.loggedIn}" >       
+                                    <div id="banner" class="right"  >
+                                        <h:form id="who">
+                                            <div style="color: rgba(255,255,255,0.8);
+                                                 background-color: #143046;"><b>#{login.currentUser.username}</b> since #{sessionScope['logintime']}  |  <b><h:commandLink value="#{msg['SignoutButton']}" action="#{login.logout}" style="color:rgba(255,255,255,0.8);" /></b></div>
+
+                                            <div style="margin-top: 15px;"><b><h:outputText id="news" value="#{info.sumUp()}#{info.newStudsOfUser}"/></b> new estimates since start/last sync  |  <h:commandLink value="#{msg['newEstimationLink']}" action="#{estimator.newEstimate}"/></div>
+                                            <h:outputText id="show" value="#{ref.master_up_ind gt 0? sync.showBaseMsg : msg['MasterIsNotAvailable']}"/> 
+                                            <div style="padding-right: 0px; margin-right: 0px; margin-top: 5px;">
+
+                                                <table border="0"  cellpadding="0" cellspacing="1" align="right"><!-- <f:convertDateTime pattern="M/d/yy h:mm a z"/>-->
+                                                    <tr><th><h:commandLink id="upprt" value="#{info.upprts gt 0 ? '*' : ''}" action="#{estimator.makeuploadprints}"></h:commandLink>Start/Last Sync<h:commandLink id="notprt" value="#{info.nonprts gt 0 ? '*' : ''}" action="#{estimator.makeprints}"></h:commandLink></th>
+                                                        <th>Your Estimates</th><th><b>#{info.otherCounselorNumb}</b> others</th>
+                                                        <th><h:commandButton value="Search"  action="query_new?faces-redirect=true" style="padding:2px 3px 2px 3px; margin:0px; font-size: smaller; vertical-align: middle; text-align: center; "/></th></tr>
+                                                    <tr><td><h:outputText id="last" value="#{ref.showDTShort(info.lastSyncTime)}"></h:outputText></td><td><b><h:outputText id="mine" value="#{info.studsOfUser}" /></b></td><td><h:outputText id="others" value="#{info.otherCounselorStuds}" /></td><td> 
+                                                            <h:commandLink id="tot" value=" #{info.totStuds} " action="query?faces-redirect=true"></h:commandLink> </td>
+                                                    </tr></table>
+                                                <!--  Poll:autheader-j_idt27 needs to be enclosed in a form component -->
+
+
+                                            </div>
+                                            <p:poll interval="#{ref.seed.pollInterval*15 }" update="news show upprt notprt last mine others tot" listener="#{ref.poll2live}"  autoStart="true" /> 
+                                        </h:form>      
+                                    </div>
+                                </f:subview> 
+                            </div>
+
+                        </div>
+                    </p:layoutUnit>
+                    <p:layoutUnit id="filterLayout"  position="west" size="300" style="border:solid 0px white;">
+                        <div id="filterStudentTypes" style="
+                             position: relative;
+                             flex: auto;
+                             display: flex;
+                             flex-direction: column;
+                             align-content: stretch;
+                             justify-content: space-around;
+                             align-items: center;
+                             top: 0.5%;
+                             " >
+                            <p:messages id="querymsgs"  globalOnly="false" style="margin-top: 0px;" />
+                            <h:outputText value="Student Types" style="line-height: 1;position:relative;left: -32%;
+                                          font-size: initial;" />
+                            <div id="studentSelectionData">
+                                <h:form id="stdopt" prependId="false">                     
+
+                                    <!--                      <div id="dyn" style="cursor:pointer; margin-top:0px; padding-top:0px; vertical-align:middle; 
+                                                           background-color: #{querier.optstatus gt 0 ? '#b0c4df':'transparent'};"                       
+                                                           onclick="chkoptstatus(#{querier.optstatus});  resize_height();">
+                                                          <img id="fold" src="#{querier.optstatus gt 0 ? resource['img:minus.png'] : resource['img:plus.png']}" border="0"  
+                                                               style="vertical-align:middle; display:inline; cursor:pointer; padding:0px; margin:0px 3px 0px 1px;"/>
+                                                                                            Options  <h:outputText value="#{querier.typesStr}"/> 
+                                                      </div>-->
+
+
+                                    <div id="opt" style="
+                                         display: block;
+                                         line-height: 1.25;
+                                         font-size: xx-small;
+                                         " > <!--visibility: hidden; border-spacing: 1px;  -->   
+
+                                        <div id="manybox" >
+                                            <h:selectManyCheckbox id="stdtypeopt" layout="pageDirection" value="#{querier.studtypes}" > <!-- onchange="set_optchged();" -->
+                                                <f:ajax event="change" execute="@this" render="optchges" listener="#{querier.optchanged}" />
+                                                <f:selectItems value="#{ref.studtypes}"/>
+                                            </h:selectManyCheckbox>
+                                        </div>
+                                        <div id="querySection1">
+                                            <div >
+
+
+                                                <div id="radioBoxes" >
+                                                    <h:outputText value="Counsellor Query " style="line-height: 4.5;position:relative;left: 2%;
+                                                                  font-size: initial;" /> 
+                                                    <h:selectOneRadio layout="pageDirection"  id="onlyme" value="#{querier.onlybyme}">
+                                                        <f:selectItem itemLabel="#{msg['filtermystud']}" itemValue="my" />
+                                                        <f:selectItem itemLabel="#{msg['filterothers']}" itemValue="others" />
+                                                        <f:selectItem itemLabel="#{msg['filterall']}" itemValue="all" />
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectOneRadio>
+                                                </div>
+                                                <br/>
+                                                <div id="manyCheckBoxes2">
+                                                    <div>
+                                                        <h:outputText value="Students Query " style="line-height: 4.5;position:relative;left: 2%;
+                                                                      font-size: initial;" /> </div>
+                                                    <h:selectBooleanCheckbox  id="onlynew" value="#{querier.onlynew}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="onlynew" value="#{msg['filternewstud']}"/>
+                                                    <br/>
+                                                    <h:selectBooleanCheckbox  id="onlypick" value="#{querier.onlypick}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="onlypick" value="#{msg['filterpickupstud']}"/>
+                                                    <br/>
+                                                    <h:selectBooleanCheckbox  id="onlyprt" value="#{querier.onlyprt}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="onlyprt" value="#{msg['filterprintstud']}"/>
+                                                    <br/>
+                                                    <h:selectBooleanCheckbox  id="onlyclient" value="#{querier.onlyclient}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="onlyclient" value="#{msg['filterclientstud']}"/>
+                                                    <br/>
+                                                    <h:selectBooleanCheckbox  id="allfisy" value="#{querier.allfisy}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="allfisy" value="#{msg['filterfisy']}"/>                        
+                                                    <br/>
+                                                    <h:selectBooleanCheckbox  id="plusclosed" value="#{querier.plusclosed}">                            
+                                                        <f:ajax event="change" execute="@this" render="optchges"  listener="#{querier.optchanged}" />
+                                                    </h:selectBooleanCheckbox>
+                                                    <h:outputLabel for="plusclosed" value="#{msg['filterclosed']}"/>   
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div id="switch" style="     text-align: center;
+                                             padding: 5px 0px;
+                                             bottom: -8%;
+                                             left: 5%;position:absolute ">
+                                            <h:commandButton id="chgopt" value="Change Options"  actionListener="#{querier.checkOpts}"> 
+
+                                                <p:ajax process="@form"  update="@form -auth-sv-querymsgs"  oncomplete="resize_height();"/>  
+
+                                            </h:commandButton> 
+                                            <h:inputText style="display:none;" id="optchges" value="#{querier.optchges}" /> <!-- <h:message id="optmsg" for="chgopt" styleClass="messages"/> -->
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>         
+                        </div>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" style="border:solid 0px black;">
+                        <h:form id="query"  prependId="false">
+                            <script type="text/javascript">
+                                //<![CDATA[         
+                                var rec = "#{empty querier.selectedStud ? 0 : querier.selectedStud.recid}";
+                                function showIdDialog() {
+
+                                    idDialog.show();
+                                    const element = document.getElementById("auth-sv-iddialog_modal");
+                                    element.remove();
+                                }
+                                function showmodaldialog() {
+                                    var obj = document.getElementById("auth-display");
+                                    if (obj) {
+                                        alert("can not find this element and refused to work?");
+                                    }
+
+                                    if (rec && rec != "0") {
+                                        studDialog.show();
+                                        const element = document.getElementById("auth-sv-modaldialog_modal");
+                                        element.remove();
+                                    }
+                                }
+
+                                function showiddialog() {
+                                    if (rec && rec != "0") {
+                                        idDialog.show();
+
+
+                                    }
+                                }
+                                function focuslasuid() {
+                                    var obj = $("#auth-sv-lasuid");
+                                    if (obj) {
+                                        var v = $(obj).val();
+
+                                        $(obj).focus().val("");
+                                        $(obj).focus().val(v);
+                                    }
+                                }
+                                function clearlasuid() {
+                                    var obj = $("#auth-sv-lasuid");
+                                    if (obj) {
+                                        $(obj).val("");
+                                        $(obj).focus();
+                                    }
+                                    obj = $("#auth-sv-okidbtn");
+                                    if (obj) {
+                                        $(obj).prop("disabled", true);
+                                        $(obj).addClass("ui-state-disabled");
+                                    }
+                                }
+                                function addedid() {
+                                    idDialog.hide();
+                                    var obj = $("#auth-sv-searchbtn");
+                                    if (obj)
+                                        window.setTimeout(function () {
+                                            obj.click();
+                                        }, 300);
+
+                                }
+                                //]]>
+                            </script>  
+
+                            <p:focus context="query" for="autoid" />  
+                            <div id="filter" style="top: 5% !important;
+                                 border: 0px solid gray;
+                                 display: flex;
+                                 flex-direction: row;
+                                 flex-wrap: nowrap;
+                                 align-content: stretch;
+                                 justify-content: space-between;
+                                 position: absolute;">
+                                <table id="queryby">
+
+                                    <p:watermark for="autoid" value="#{msg['QueryForm.UserIDlabel']}" />
+                                    <p:watermark for="autofn" value="#{msg['QueryForm.Fnamelabel']}" />
+                                    <p:watermark for="autoln" value="#{msg['QueryForm.Lnamelabel']}" />
+                                    <p:watermark for="autodob" value="#{msg['QueryForm.DOBlabel']}" />
+
+
+                                    <tr id="trbody">
+                                        <td style="position:relative;left:1%;width: 6rem;">
+
+                                            <p:autoComplete id="autoid" styleClass="inputSearch"  queryDelay="100" maxResults="24" value="#{querier.lsuidStr}" completeMethod="#{querier.autolsuidStr}" effect="blind" size="10" >
+
+                                                <p:ajax event="change" process="@this"   update="@this searchbtn newbtn" listener="#{querier.chglsuidStr}"  />
+                                                <!--p:ajax event="blur" process="@this"   update="@this searchbtn newbtn grid" listener="#{querier.chglsuidStr}"  /-->
+                                                <p:ajax event="itemSelect" process="@this"   update="searchbtn newbtn" />
+                                            </p:autoComplete> 
+
+                                            <span class="focus-border-11"></span>
+
+                                        </td>
+
+                                        <td style="position:relative;left:6.25%;width: 7.5rem;">
+                                            <p:autoComplete id="autofn" styleClass="inputSearch"  queryDelay="100" maxResults="24" value="#{querier.fnameStr}" completeMethod="#{querier.autofnameStr}"  effect="blind"  size="27">
+                                                <p:ajax event="change" process="@this"   update="@this searchbtn newbtn" listener="#{querier.chgfnameStr}" />
+                                                 <!--f:ajax event="blur" execute="@this"   render="@this searchbtn newbtn" listener="#{querier.chgfnameStr}" /-->
+                                                <p:ajax event="itemSelect" process="@this"   update="searchbtn newbtn" />
+                                            </p:autoComplete> 
+                                            <span class="focus-border-11"></span>
+                                        </td>
+                                        <td style="position:relative;left:11.6%;width: 7.5rem;">
+                                            <p:autoComplete id="autoln" styleClass="inputSearch"  minQueryLength="1" queryDelay="100" maxResults="24" value="#{querier.lnameStr}" completeMethod="#{querier.autolnameStr}" onselect="this.onchange();"  effect="blind"  size="27">
+                                                <p:ajax event="change" process="@this"   update="@this searchbtn newbtn"  listener="#{querier.chglnameStr}" />
+                                                 <!--f:ajax event="blur" execute="@this"   render="@this searchbtn newbtn"  listener="#{querier.chglnameStr}" /-->
+                                                <p:ajax event="itemSelect" process="@this"   update="searchbtn newbtn" />
+                                            </p:autoComplete>
+                                            <span class="focus-border-11"></span>
+                                        </td>
+                                        <td>
+                                            <span class="inputSearch" > 
+                                                <p:inputMask id="autodob"  style="position:relative;left:84.5%;width: 7.5rem !important;"   mask="99/99/9999"  value="#{querier.dobDate}"  size="27" label="#{msg['QueryForm.DOBlabel']}"  >
+                                                    <p:ajax event="change" process="@this"   update="@this  -auth-sv-querymsgs searchbtn newbtn"  listener="#{querier.dobchanged}" /> 
+
+                                                    <f:convertDateTime type="date" pattern="#{ref.dateInputShowStr}"   timeZone="#{ref.timeZone}" /> 
+
+                                                </p:inputMask> 
+                                            </span>
+                                            <span class="focus-border-11"></span>
+                                        </td>
+
+                                        <td style="vertical-align:middle;position:relative;left:22%;">
+
+                                            <h:commandButton id="searchbtn" value=" #{querier.querychanged gt 0 ? msg['QueryForm.SearchBtn']: msg['QueryForm.ConditionsBtn']}" style=" margin:0px 0px 2px 8px;"  actionListener="#{querier.queryStuds}" >
+
+                                            </h:commandButton>                         
+
+                                            <h:commandButton id="resetbtn" value=" #{msg['QueryForm.ResetBtn']} " style="padding: 4px; margin:0px 20px 2px 10px;" actionListener="#{querier.resetQuery}" />
+
+                                            <h:commandButton id="newbtn" value="#{msg['QueryForm.AddBtn']}" action="#{estimator.newEstimate}" style="padding: 4px 4px 4px 4px; margin-bottom:2px; margin-left: 20px; vertical-align: middle; " /> 
+                                        </td>
+                                    </tr>
+
+                                </table>                    
+                            </div>
+                            <div style="position: absolute;
+                                 top: 15%;
+                                 width: 100%;">
+                                <p:contextMenu id="contextmenu" for="matches" widgetVar="menuDiag">  
+                                    <p:menuitem value="Info" update="display" icon="ui-icon-search" oncomplete="studDialog.show()"/>  
+                                    <p:menuitem value="Estimate" icon="ui-icon-pencil" action="#{estimator.modEstimate(querier.selectedStud)}" />
+                                    <p:menuitem value="Supply ID" update="iddialog" icon="ui-icon-person" oncomplete="idDialog.show()" />
+                                    <!--<p:menuitem value="Supply ID #{querier.selectedStud.recid }"  icon="ui-icon-person" action="#{estimator.addidEstimate(querier.selectedStud)}" rendered="#{querier.selectedStud.pickupInd gt 0  and empty querier.selectedStud.studentALsuid }" />
+                                    <p:menuitem value="Delete" update="cars" icon="ui-icon-close" actionListener="#{tableBean.deleteCar}"/>  -->
+                                </p:contextMenu> 
+
+                                <p:dialog id="iddialog" header="Supply La Sierra ID" widgetVar="idDialog" resizable="false"  showEffect="clip" hideEffect="clip" modal="true" >
+                                      <!--action="#{(querier.selectedStud)}" -->   
+
+                                    <h:panelGrid id="ideditor" columns="2" cellpadding="5" cellspacing="5" style="margin:0 auto;  border: 1px solid silver;  text-align: center; font-size: 0.8em;"
+
+                                                 rendered="#{querier.selectedStud.pickupInd gt 0  and empty querier.selectedStud.studentALsuid }">  
+                                        <h:outputText value="Doc:" style="margin:2px;"/>
+                                        <h:outputText value="#{querier.selectedStud.recid }" />
+
+                                        <h:outputText value="First Name:"  style="margin:2px;" />
+                                        <h:outputText value="#{querier.selectedStud.studentCFirstname }" />
+
+                                        <h:outputText value="Last Name:"  style="margin:2px;" />
+                                        <h:outputText value="#{querier.selectedStud.studentBLastname }" />
+
+                                        <h:outputText value="DoB:"  style="margin:2px;" />
+                                        <h:outputText value="#{querier.selectedStud.studentDDob }" />
+
+                                        <h:outputLabel for="lasuid" value="La Sierra ID:" />  
+                                        <p:inputText id="lasuid" value="#{estimator.addlasuid}" label="La Sierra ID" size="15" maxlength="7" style="margin:10px 2px 10px 0px;" >
+                                            <p:ajax event="keyup" process="@this" update="@this okidbtn"  listener="#{estimator.lasuidchged}" oncomplete="javascript:focuslasuid();" />
+                                        </p:inputText>                          
+
+                                        <f:facet name="footer">  
+                                            <p:commandButton id="okidbtn"  value="Save" icon="ui-icon-check" style="margin:2px;" 
+                                                             disabled="#{estimator.lasuidisok() lt 1}"     
+                                                             actionListener="#{estimator.submitlasuid}"
+                                                             oncomplete="addedid();" 
+                                                             >
+                                                <!-- oncomplete="javascript:doneproc();" action="#{estimator.submitlasuid}" -auth-sv-querymsgs-->
+                                                <!-- <p:ajax event="click"  update="-auth-sv-querymsgs lasuid"  oncomplete="idDialog.hide();" /> --><!-- javascript:doneproc(); idDialog.hide();-->
+                                            </p:commandButton>
+
+                                            <p:commandButton type="button" value="Clear" icon="ui-icon-cancel"  style="margin:2px;" onclick="clearlasuid();">  
+                                                <!--<p:ajax event="click"  update="-lasuid -okidbtn" listener="#{estimator.resetlasuid}" />  -->
+                                            </p:commandButton>
+                                            <!--<p:commandButton type="button" value="Cancel" icon="ui-icon-close" style="margin:2"/> -->
+                                        </f:facet>
+                                    </h:panelGrid>
+
+
+                                    <h:panelGrid id="not4ideditor" columns="1" rendered="#{querier.selectedStud.pickupInd eq 0  or !empty querier.selectedStud.studentALsuid }">
+                                        Doc #{querier.selectedStud.recid } is either inactive or has La Sierra ID assigned already.
+                                    </h:panelGrid>
+
+                                    <h:panelGrid id="norec" columns="1" rendered="#{empty querier.selectedStud}">
+                                        Please choose an active record which does not have La Sierra ID.
+                                    </h:panelGrid>
+
+                                </p:dialog>
+
+                                <div id="list" style="border:1px solid gray; padding:3px;">                    
+                                    <p style="text-align:center; margin-top:10px; display:#{querier.studs.size() gt 0 and querier.dataModel.isAliveFilled() gt 0 ? 'none':'block'};" >No records match the search condition(s). Click search button to show all records in the range. 
+                                        <!-- h:outputText id="x" rendered="#{querier.studs.size() le 0 }">The query returns no records.</h:outputText-->
+                                    </p>
+                                    <!-- rowKey="#{one.studentFisy}#{one.counselorId}#{one.studentNumb}" ############ or use selectableDataModel #########################
+                                    value="#{querier.dataModel}" FacesException: DataModel must implement org.primefaces.model.SelectableDataModel when selection is enabled-->
+                                    <!-- paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  rowsPerPageTemplate="20,35,50" -->
+                                    <p:dataTable id="matches" var="one" value="#{querier.dataModel}" rendered="#{querier.studs.size() gt 0 or querier.dataModel.isAliveFilled() gt 0}"   resizableColumns="true" paginator="true" 
+                                                 rows="#{querier.rowsPerPage}" selectionMode="single" selection="#{querier.selectedStud}" rowKey="#{one.recid}"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                                 rowsPerPageTemplate="12,20,35,50" paginatorAlwaysVisible="true" draggableColumns="false"
+                                                 emptyMessage="Please  click search button to refresh and show result data"                                
+                                                 style="width:100%;font-size:small;" rowIndexVar="order"  >  <!--#{one.studentFisy}.#{one.counselorId}.#{one.studentNumb}"  first="0" #{querier.dataModel.rowIndex} -->
+                                        <!--    emptyMessage="No records found..." loadingMessage="Loading..." errorMessage="Error loading data..."-->
+
+                                        <p:ajax event="rowSelect" listener="#{querier.onRowSelect}"  />    <!--update="@this" oncomplete="menuDiag.show()"  update="contextmenu"  -->
+                                        <!--<p:ajax event="rowUnselect" listener="#{querier.onRowUnselect}" update="contextmenu"/>  -->
+
+                                        <p:ajax event="page"  oncomplete="resize_height();" listener="#{querier.onPaginate}" />
+                                            <!--listener="#{bean.onPaginate}" update="othercomponents"
+                                               public void onPaginate(PageEvent event){
+                                                    logger.info("I am on page:"+event.getPage());
+                                                    logger.info("Rows per page set:"+((org.primefaces.component.datatable.DataTable)event.getSource()).getRows());
+                                                }
+                                        -->
+                                        <!--<p:ajax event="rowSelect" update="info" />-->  <!--   Event:select/onRowSelect is not supported -->
+                                        <!-- <p:ajax event="rowSelect" listener="#{querier.onRowSelect}" update=":form:display" oncomplete="carDialog.show()" /> -->  
+
+                                        <f:facet name="header">  
+                                              Result(s): #{querier.studs.size()}   (click search button above to refresh)<!-- #{querier.studs.size()} #{querier.dataModel.isAliveFilled()}  rows_per_page=#{querier.rowsPerPage}  first=#{querier.dataModel.rowIndex}-->
+                                        </f:facet>  
+
+                                        <p:column  style="margin:0px;padding:1px;width:20px; font-size: smaller;" > 
+                                            <h:outputText value="#{order+1}" style="margin:0px;padding:1px;width:20px; font-size: smaller;" />
+                                        </p:column>
+
+                                        <p:column headerText=" ID" style="width:45px; "  sortBy="#{one.studentALsuid}" sortFunction="#{querier.sortByID}"><!--IdComparator.compare turned to timsort and fail at big set.  if sortfunction is not defined, built-in comparator will be used. 
+                                                                                                                                                           filterBy="#{one.studentALsuid}" footerText="contains" filterMatchMode="contains"-->
+                                            <h:outputText value="#{one.studentALsuid}" />
+                                        </p:column>
+
+                         <p:column headerText="First Name" style="width:140px" sortBy="#{one.studentCFirstname}" > <!-- filterBy="#{one.studentCFirstname}" footerText="contains" filterMatchMode="contains"-->
+                            <!-- sortFunction="#{querier.sortStudByFirstName}"-->  
+                                            <h:outputText value="#{one.studentCFirstname}" /> 
+                                        </p:column>
+
+<p:column headerText="Last Name" style="width:140px" sortBy="#{one.studentBLastname}" ><!--filterBy="#{one.studentBLastname}" footerText="contains" filterMatchMode="contains"-->
+                                            <h:outputText value="#{one.studentBLastname}" /> 
+                                        </p:column>
+
+                                        <p:column headerText="DoB" style="width:65px" sortBy="#{one.studentDDob}">
+                                            <h:outputText value="#{one.studentDDob}" > <f:convertDateTime  type="date" pattern="#{ref.dateInputShowStr}"   timeZone="#{ref.timeZone}"/> </h:outputText> 
+                                        </p:column>
+
+
+                                        <p:column headerText="Phone#" style="width:95px" sortBy="#{one.studentFPhone}">
+                                            <h:outputText value="#{one.studentFPhone}" /> 
+                                        </p:column>
+
+<p:column headerText="Doc" style="width:70px" sortBy="#{one.recid}"><!-- #{one.studentFisy}.#{one.counselorId}.#{one.studentNumb}-->
+    <h:outputText style="#{one.ncStdInd eq 0 ? '':'text-decoration:line-through;' } #{not empty(one.puser_id )? (one.puser_id eq one.studentALsuid? 'color:#e4bd3b;':'color:#68a5cb;'):''} "  value="#{one.recid}" /> <!-- #{one.studentFisy}.#{one.counselorId}.#{one.studentNumb} -->
+                                        </p:column>
+
+                                        <p:column headerText="DoE" style="width:100px" sortBy="#{one.ddom gt 0 ? one.ddom: one.ddoe}"> <!-- one.studentBvDoe -->
+                                            <h:outputText value="#{ref.showDoEMDTShort(one, 1)}#{one.ddom gt 0 ? '*':''}" />
+                                            <!--h:outputText value="#{one.studentByDom gt 0 ? studentByDom: one.studentBvDoe}"  > <f:convertDateTime  type="date" pattern="#{ref.dateInputShowStr}"   timeZone="#{ref.timeZone}"/> </h:outputText --> 
+                                        </p:column>
+
+                                        <p:column headerText="Type" style="width:40px" sortBy="#{one.studentStudType}">
+                                            <h:outputText style="#{ref.fiscal_year eq one.studentFisy ? '':'text-decoration:line-through;' }" value="#{one.studentStudType}#{ref.fiscal_year eq estimator.stud.studentFisy? '':estimator.stud.studentFisy}" /> 
+                                        </p:column>
+
+
+<p:column headerText="Area" style="width:70px" sortBy="#{ref.showStudArea(one)}"> <!-- #{one.studentIState} #{one.studentJZip} -->
+    <h:outputText value="#{ref.showStudArea(one)}" /> <!-- #{one.studentIState} #{one.studentJZip} -->
+                                        </p:column>
+
+                                        <p:column headerText="Prt" style="width:35px" sortBy="#{one.prtTimes}">
+                                            <h:outputText value="#{one.prtTimes eq 0? '':one.prtTimes}" /> 
+                                        </p:column>
+                                        <p:column headerText="Act" style="width:35px" sortBy="#{one.pickupInd}">
+                                            <h:outputText value="#{one.pickupInd le 0? '':'Yes'}" /> 
+                                        </p:column>      
+
+                                        <p:column headerText="Up" style="width:25px" >
+                                            <h:outputText value="#{one.dup eq 0 and one.ddown eq 0 ? 'No':''}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Down" style="width:25px" >
+                                            <h:outputText value="#{ one.ddown gt 0 ? 'Yes':''}"/> 
+                                        </p:column>
+
+
+<!--   <p:ajax event="rowSelect" listener="#{querier.onRowSelect}"  update="-auth-sv-display"  />   oncomplete="carDialog.show()" -->
+                                        <f:facet name="footer">  
+                                            <!--  <p:commandButton value="View1" image="ui-icon ui-icon-search" update="display" oncomplete="carDialog.show()"/>  
+                                              <p:commandButton value="View2" image="ui-icon ui-icon-search" update="-auth-sv-display" oncomplete="carDialog.show()"/> -->
+                                              <!--<p:commandButton id="info" value="Info" icon="ui-icon ui-icon-search" update="auth-sv-display" oncomplete="ifShowInfo(#{empty querier.selectedStud })"/>--> <!--ifShowInfo2(xhr, status, args)  carDialog.show() -->
+                                            <p:commandButton id="infobtn" value="info" icon="ui-icon-search"  update="@form" actionListener="#{querier.procInfoBtn}" oncomplete="javascript:showmodaldialog();" />  
+
+                                            <p:commandButton id="estbtn" value="Estimate" icon="ui-icon-pencil" action="#{estimator.modEstimate(querier.selectedStud)}"    /> 
+                                            <p:commandButton id="idbtn" value="Supply ID" icon="ui-icon-person"  update="@form"  actionListener="#{querier.procIdBtn}" oncomplete="javascript:showIdDialog();" />  <!--javascript:showiddialog() idDialog.show();"-->
+
+                                        </f:facet>  
+
+                                    </p:dataTable>
+                                </div> 
+
+
+                                <p:dialog id="modaldialog" header="Information" widgetVar="studDialog" resizable="false"  showEffect="clip" hideEffect="clip" modal="true" style="visibility:visible;
+                                          display:none; width:900px;"  >  <!--dynamic="true" -->
+                                    <h:panelGrid id="display" columns="4" cellpadding="4" cellspacing="0" 
+                                                 style="margin:0 auto; margin-left:5px; margin-right:5px; border: 1px solid silver; width: 99%; text-align: center; font-size: 0.8em;" 
+                                                 rowClasses="oddrow,evenrow"  >  
+                                        <!--style="margin:0 auto; margin-left:10px; margin-right:10px; border: 1px solid silver; width: 98%; text-align: center; font-size: 0.8em; visibility:visible; display:none;"-->   
+                                        <f:facet name="header">  
+                                               <!--p:graphicImage value="/images/cars/#{tableBean.selectedCar.manufacturer}.jpg"/-->  
+                                            <ui:param name="stuidheader" value="#{empty querier.selectedStud.studentALsuid ? '':' (ID: '}" />
+                                            <ui:param name="stuidtail" value="#{empty querier.selectedStud.studentALsuid ? '':')'}" />
+                                            <!-- The + operator is in EL ultimately to sum numbers only. not for string concating    #{querier.selectedStud eq null ? 'none':'selected'}-->
+                                            <h:outputText value="  #{querier.selectedStud.studentCFirstname}  #{querier.selectedStud.studentBLastname} #{stuidheader}#{querier.selectedStud.studentALsuid}#{stuidtail} --- doc #{querier.selectedStud.recid}  #{ref.fiscal_year eq querier.selectedStud.studentFisy? '':querier.selectedStud.studentFisy} #{querier.selectedStud.returnStdInd gt 0 ? ' --Returning Student':'' }#{querier.selectedStud.ncStdInd gt 0 ? ' --Not Coming':''}"/>
+                                        </f:facet>  
+
+                                        <h:outputText value="DoB:"  styleClass="listTH"   />  
+                                        <h:outputText value="#{querier.selectedStud.studentDDob}"  >
+                                            <f:convertDateTime  type="date" pattern="#{ref.dateInputShowStr}"   timeZone="#{ref.timeZone}"/>
+                                        </h:outputText>                 
+                                        <h:outputText value="Data Entry:"  styleClass="listTH" />  
+                                        <h:panelGroup> 
+                                            <!-- h:outputText value="#{querier.selectedStud.counselorId}  "   /-->
+                                            <h:outputText value="#{ref.showDoEMDTShort(querier.selectedStud, 0)}"  >
+                                            <!-- h:outputText value="#{ref.showDTShort(querier.selectedStud.studentBvDoe)}"  -->
+                                                <!--f:convertDateTime  type="both" dateStyle="short" timeStyle="short" pattern="#{ref.timeShowFmtStr}"    timeZone="#{ref.timeZone}"/-->
+                                                 <!--f:convertDateTime  type="both" pattern="MM/dd/yy hh:mm"   timeZone="#{ref.timeZone}"/-->
+                                            </h:outputText> 
+                                        </h:panelGroup> 
+
+                                        <h:outputText value="Street:" styleClass="listTH"   />  
+                                        <h:outputText value="#{querier.selectedStud.studentGStreet}" />                 
+                                        <h:outputText value="APT:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.homeAddrApt}"   />
+
+                                        <h:outputText value="City:"  styleClass="listTH"/>  
+                                        <h:outputText value="#{querier.selectedStud.studentHCity}"  />                 
+                                        <h:outputText value="State:"   styleClass="listTH"/>  
+                                        <h:outputText value="#{querier.selectedStud.studentIState}"   />
+
+                                        <h:outputText value="Zip:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentJZip}"  />                 
+                                        <h:outputText value="Country:"  styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentKCountry}"   />
+
+                                        <h:outputText value="Telephone#:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentFPhone}"  />                 
+                                        <h:outputText value="E-mail:"   styleClass="listTH"/>  
+                                        <h:outputText value="#{querier.selectedStud.studentEEmail}"   />
+
+                                        <h:outputText value="Married:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentMMarry}"  />                 
+                                        <h:outputText value="Independent:"  styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentYIndept}"   />  
+
+                                        <h:outputText value="International:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentLIntlStud}"  />                 
+                                        <h:outputText value="SDA Member:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentNSda}"   /> 
+
+
+
+                                        <h:outputText value="Live in Dorm:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentWDorm}"  />                 
+                                        <h:outputText value="Previous School:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentOLastSchool}"   /> 
+
+                                        <h:outputText value="GPA:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentPGpa}"  />                 
+                                        <h:outputText value="ACT Composite:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentRAct}"   /> 
+
+                                        <h:outputText value="SAT Composite:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentQSat}"  />                 
+                                        <h:outputText value=" "   styleClass="listTH" />  
+                                        <h:outputText value=" "   /> <!--#{querier.selectedStud.studentQSatV}-->
+
+                                        <h:outputText value="National Merit:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showMerits( querier.selectedStud.studentSMerit)}"  />                 
+                                        <h:outputText value="La Sierra Major:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentTMajor}"   /> 
+
+                                        <h:outputText value="Family in La Sierra:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentVFamily}"  />                 
+                                        <h:outputText value="Academic Level:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentUAcademic}"   /> 
+
+                                        <h:outputText value="FAFSA Eligible:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentXFafsa}"  />                 
+                                        <h:outputText value="CalGrant Eligible:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentZCalgrant}"   /> 
+
+                                        <h:outputText value="La Sierra EA:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAhLsuAllowrance}"  />                 
+                                        <h:outputText value="Non-La Sierra EA:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAgNonlsuAllowrance gt 0 ? 'Yes':'No'}"   /> 
+
+<!--                                        <h:outputText value="Has EFC quote:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.indEfc}"  />                 
+                                        <h:outputText value="EFC Amount:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAfFamilyContrib)}"   /> -->
+
+                                        <h:outputText value="Has SAI quote:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.indEfc}"  />                 
+                                        <h:outputText value="SAI Amount:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAfFamilyContrib)}"   /> 
+
+                                        
+                                        <h:outputText value="Family Size:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAcFamilySize}"  />                 
+                                        <h:outputText value="Family Income:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAdFamilyIncome)}"   /> 
+
+                                        <h:outputText value="Family Asset:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAeFamilyAsset)}"  />                 
+                                        <h:outputText value="No Loans:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.indExcloans}"   /> 
+
+                                        <h:outputText value="Non-CA Grant:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAjHomeState}"  />                 
+                                        <h:outputText value="Non-CA Grant Amt.:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAkNoncalGrant)}"   /> 
+
+                                        <h:outputText value="Non-La Sierra Award:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAlOutScholarships}"  />                 
+                                        <h:outputText value="Non-La Sierra Award Amt.:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ref.showAmt( querier.selectedStud.studentAmOutScholarshipAmt)}"   />
+
+                                        <h:outputText value="Adj CalGrant Amt.:"   styleClass="listTH" />  
+                                        <h:outputText value="#{ querier.selectedStud.adjCalgrantInd}"  />                 
+                                        <h:outputText value="Incl Sub Loans:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentApSubLoans}"   /> 
+
+                                        <h:outputText value="Incl Unsub Loans:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentAqUnsubLoans}"  />                 
+                                        <h:outputText value="Incl FWS:"   styleClass="listTH" />  
+                                        <h:outputText value="#{querier.selectedStud.studentArFws}"   />             
+
+
+                                        <h:outputText value="Origin:"   styleClass="listTH"   rendered="#{querier.selectedStud.ddom gt 0}" />  
+                                        <h:outputText value="Doc #{querier.selectedStud.modRoot} (by #{querier.selectedStud.studentBuOrigCounselor})"    rendered="#{querier.selectedStud.ddom gt 0}" />                 
+                                        <h:outputText value="Base:"   styleClass="listTH"   rendered="#{querier.selectedStud.ddom gt 0}" />  
+                                        <h:outputText value="Doc #{querier.selectedStud.modPre} (by #{ref.getDocCounselorName(querier.selectedStud.modPre)})"    rendered="#{querier.selectedStud.ddom gt 0}" />
+
+                                    </h:panelGrid>
+                                </p:dialog>
+                            </div>
+                        </h:form>
+                    </p:layoutUnit>
+                    
+                    <p:layoutUnit position="south" size="100" style="border:solid 0px black;">
+                           <div id="footer_new" style="
+                                         ">
+                                        <ui:include src="foot.xml" />
+                                    </div>
+                    </p:layoutUnit>
+                </p:layout>
+                <script type="text/javascript">
+                    //<![CDATA[    
+                    function chkoptstatus(num) {
+                        var times = document.getElementById("auth-sv-optchges").value;
+                        //     alert("status="+num+" changed="+ times);
+                        var status = num;
+                        //if( opt_chged >0){    
+                        if (times > '0') {
+                            //$("#auth-sv-chgopt").click(); 
+                            //document.getElementById("auth-sv-chgopt").click(); 
+                            var btn = $("#auth-sv-chgopt");
+                            if (btn) {
+                                //alert("found button");
+                                btn.click();
+                            } else {
+                                alert(" can not find obj #auth-sv-chgopt");
+                            }
+                        } else {
+                            //           alert(" changes <=0");
+                            if (status > 0) {//is open/err, or to open
+                                //document.getElementById('opt').style.display = 'none';
+                                var opt = document.getElementById('opt');
+                                $(opt).hide('slow');
+                                document.getElementById('dyn').style['background-color'] = "transparent";
+                                document.getElementById('fold').src = "#{resource['img:plus.png']}";
+                                /*
+                                 $("#fold").attr("src","#{resource['img:minus.png']}");            
+                                 $("#dyn").css({"background-color":"#b0c4df"});            
+                                 //$("#opt").css({display:block}); //.css("display") == "none")
+                                 $("#opt").css("display", "block");            
+                                 //$("#opt").show(slow); //### is not working           
+                                 //$("#opt").css({border:"1px solid gray"});
+                                 //$("#opt").height( $("#dyn").height() + $("#manybox").height() + $("#switch").height());top -d 1
+                                 //
+                                 //  $("#fold").unbind("click");   
+                                 */
+                            } else {//init or closed or to be closed
+                                var opt = document.getElementById('opt');
+                                if (opt) {
+                                    var show = opt.style.display;
+                                    if (show == "none") {
+                                        //opt.style.display = 'block';
+                                        $(opt).show('slow');
+                                        document.getElementById('dyn').style['background-color'] = "#b0c4df";
+                                        document.getElementById('fold').src = "#{resource['img:minus.png']}";
+                                    } else {
+                                        //opt.style.display = 'none';
+                                        $(opt).hide('slow');
+                                        document.getElementById('dyn').style['background-color'] = "transparent";
+                                        document.getElementById('fold').src = "#{resource['img:plus.png']}";
+                                    }
+                                }
+
+                                /****** $("#opt") or jQuery("#opt") just die ***********            
+                                 $("#opt").css({"display": "none"});               
+                                 $("#dyn").css({"background-color":"transparent"});                
+                                 $("#fold").bind("click", function() {
+                                 $("#fold").attr("src","#{resource['img:minus.png']}");
+                                 $("#dyn").css({"background-color":"#b0c4df"});
+                                 $("#opt").css("display", "block");
+                                 //     $("#fold").unbind("click");
+                                 //$("#opt").css({border:"0px"}); // $(this).addClass("swap");  $(this).removeClass("swap");
+                                 //$("#opt").height($("#dyn").height());
+                                 });    
+                                 
+                                 $("#fold").attr("src","#{resource['img:plus.png']}");             
+                                 //$("#opt").css({display:none}); //### x.css(attr,val), or x.css("attr 1":val1, "attr-2":"val 2");
+                                 */
+                            }
+                            window.setTimeout(function () {
+                                resize_height();
+                            }, 500);
+                            //resize_height();
+                        }
+                    }
+
+
+                    function ifShowInfo(empty) {
+                        alert("ifshow() invoked with para " + chosen);
+                        if (chosen == false)
+                            carDialog.show();
+
+                    }
+
+                    function show() {
+
+                    }
+                    function ifShowInfo2(xhr, status, args) {
+                        var btn = $("#auth-sv-searchbtn");
+                        btn.click();
+
+                        if (args.validationFailed) {
+                            alert("Validation Failed");
+                        } else {
+                            //alert("save" + args.saved);  
+                            //alert("FirstName: " + args.user.firstname + ", Lastname: " + args.user.lastname);   
+                            //alert("select" + args.select);
+                            if (args.select == true)
+                                carDialog.show();
+                        }
+                    }
+
+                    //]]>
+                </script>
+
+            </f:subview>
+
+        </div>
+
+
+    </ui:define>
+
+
+</ui:composition>
+
+<!-- xmlns:o="http://openfaces.org/" -->

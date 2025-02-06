@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://lestimator.lasierra.edu/loc/persistence_2_0.xsd">
+  <persistence-unit name="estimator" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <jta-data-source>jdbc/__postgresql</jta-data-source>
+    <class>edu.lsu.estimator.Counselor</class>
+    <class>edu.lsu.estimator.Fund</class>
+    <class>edu.lsu.estimator.Student</class>
+    <class>edu.lsu.estimator.Print</class>
+    <class>edu.lsu.estimator.Version</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <validation-mode>AUTO</validation-mode>
+    <!--<shared-cache-mode>ALL</shared-cache-mode> -->
+    <properties>
+      <property name="eclipselink.target-server" value="SunAS9Server"/>
+      <property name="eclipselink.target-database" value="PostgreSQL"/>
+      <property name="eclipselink.jdbc.platform" value="oracle.toplink.platform.database.PostgreSQLPlatform"/>
+      <property name="eclipselink.weaving" value="true"/>
+      <!--
+            <property name="eclipselink.persistence-context.close-on-commit"  value="true" /> -->
+      <property name="eclipselink.persistence-context.persist-on-commit" value="true"/>
+      <!-- Avoids flush being triggered before every query execution.    -->
+      <property name="eclipselink.persistence-context.flush-mode" value="commit"/>
+      <!-- enable SQL parameter binding visibility logging to override ER 329852 -->
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <!-- If desired, this option would disable caching. -->
+      <!-- property name="eclipselink.cache.shared.default" value="false"         / -->
+      <!-- If desired, this option would force a JDBC connection to be held  for the duration of an EntityManager, 
+            instead of returned to the pool in between queries/transactions.  -->
+      <property name="eclipselink.jdbc.exclusive-connection.mode" value="Always"/>
+      <!-- Transactional:connection is exclusive for the duration of transactiion. Transactional is default value for that property   -->
+      <!-- need RESOURCE_LOCAL to create the data bases.       
+    eclipselink.ddl-generation=drop-and-create-tables 
+    eclipselink.ddl-generation.output-mode=database  -->
+      <!--  <property name="eclipselink.orm.throw.exceptions" value="true" /> -->
+      <!-- Configure simple SQL logging for demonstration. -->
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.thread" value="false"/>
+      <property name="eclipselink.logging.session" value="false"/>
+      <property name="eclipselink.logging.exceptions" value="true"/>
+      <property name="eclipselink.logging.timestamp" value="false"/>
+      <!-- <property name="eclipselink.logging.file" value="../logs/eclipselink.log" />    -->
+      <property name="eclipselink.jdbc.native-sql" value="true"/>
+      <property name="eclipselink.show-sql" value="true"/>
+      <!-- -->
+      <property name="eclipselink.jdbc.cache-statements" value="true"/>
+      <property name="eclipselink.jdbc.cache-statements.size" value="800"/>
+      <!-- cache : NONE, Full, HardWeak, SoftWeak, Weak : -->
+      <property name="eclipselink.cache.type.default" value="Weak"/>
+      <property name="eclipselink.cache.size.default" value="30000"/>
+      <property name="eclipselink.cache.shared.default" value="true"/>
+      <property name="eclipselink.ddl-generation" value="create-tables"/>
+    </properties>
+  </persistence-unit>
+</persistence>

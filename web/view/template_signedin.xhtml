@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"-->
+<!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"    
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"    
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:p="http://primefaces.org/ui" >
+    
+    <!-- http://primefaces.prime.com.tr/ui is before 3.0M3  http://primefaces.org/ui -->
+    
+    <f:view contentType="text/html"><!--  contentType="text/html"-->
+    
+   <h:head>
+      <title>La Sierra University --- Financial Aid Estimator Web Application</title>      
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+      <h:outputStylesheet library="css" name="screen.css"/>      
+ <!--  <h:outputScript library="js" name="jquery.min.js"  />  this conflicts with primefaces 2.2.1 bound jquery1.4.4 + jquery UI 1.8.9-->
+      <!--link rel="stylesheet" href="#{request.contextPath}/themes/#{layoutBean.theme}/skin.css" / /Estimator2/javax.faces.resource/theme.css.jsf?ln=primefaces-aristo -->
+   </h:head>
+    
+   <h:body>       
+    <div id="canvas">
+       
+       <div id="topbar"></div>
+       
+       <div id="container2">
+           
+           <div id="header">
+                <h1 id="logo" class="left"><a href="https://www.lasierra.edu/"><span>La Sierra University - Where Academic Investigation, Christian Faith, and Service to Others Unite</span></a></h1>
+                          
+            <!--<div id="container"> -->          
+          
+          <!--<div id="veryear">#{ref.faid_year}</div>
+            <div id="header"></div>-->
+          
+          <!--<div id="veryear">#{ref.faid_year} </div>  can read from a global obj, which dynamic calculate current time and get the current fiscal year code -->
+          
+          <!-- ============possible client-side timer or refreshing =============
+  <h:commandButton id="dome" value="提交" action="#{uInfo.doMe}">
+  <f:ajax execute="@form" render="@form"/>
+ </h:commandButton>
+ ...
+ <script type="text/javascript">
+ function refresh() {
+  jQuery("input#dome").click();
+ }
+ var t=setInterval('refresh()', 5000);
+ </script>-->
+          
+              <script type="text/javascript">
+    //<![CDATA[
+     //no margin, no boarder, no padding
+    function resize_height(){ 
+        //x.style.height= y.offsetHeight+'px';        
+        var foot = $("#footer").height()+126+ 20+10;
+        //var body = $("#container2").height();
+        var content = $("#content2").height(); 
+        var pageHeight = jQuery(window).height();        
+        //jQuery('#sidebar-a #block-book-navigation').css({max-height: navHeight + 'px;' });
+        
+        var offset = $("div#mark").offset();
+   //alert( "mark offset left: " + offset.left + ", top: " + offset.top );
+         var mark = offset.top;
+            
+        if( foot+content < pageHeight){ //need grow bigger
+            $("#content2").height(pageHeight-foot);
+        } else if(foot+content > pageHeight && content+126>mark ){ //need to shrink  
+            if( pageHeight-foot > mark-126){
+                $("#content2").height(pageHeight-foot);
+            }else{
+                $("#content2").height(mark-126);
+            }            
+        }else if(content+126<mark){ //need grow bigger
+            $("#content2").height(mark-126);
+        }
+  //      alert("delayResizeHeight() invoked and finished. mark offset top="+mark);
+        /*
+        var bar = $("#sidebar2").height()+128+4; //+128
+        var frm = $("#content2").height()+123+4; //+123
+        //alert("container="+body+" footer="+foot+", while jQuery(window).height()="+pageHeight+" frm="+frm+" bar="+bar);
+        if( foot+body+24 < pageHeight){
+            body = pageHeight-foot-24;            
+            if( bar > frm){
+                if( body<bar) body= bar ;
+            }else{
+                if( body < frm) body= frm;
+            }            
+            $("#container2").height(body); 
+        }else if(body>600){// if(foot+body+24 > pageHeight && body>600 ){
+            var tobe = pageHeight-foot-24;           
+            if( bar > frm){
+                if( tobe<bar) tobe= bar;
+            }else{
+                if( tobe < frm) tobe= frm;                     
+            }       
+            if( tobe<600) tobe=600;
+            //alert("tobe="+tobe+" bar="+bar+" content2="+frm);
+            $("#container2").height(tobe);
+        }    */
+    }
+    $(window).load(function() {
+         //alert("SARA3");
+        resize_height(); 
+         //keep invoking server to keep session not expired, since this is a page for non-signed in users/guest
+              //  $(document).ready( function() {
+                    var refreshTime = 600000; // in milliseconds, so 10 minutes
+                    $.ajaxSetup( {cache:false} )
+                    window.setInterval( function() {
+                        var url =  '#{ref.js_keepalive_url}'; //'http://localhost:80/estimator/view/login_new.jsf';
+                        $.get( url );
+                    }, refreshTime );                                       
+                    
+             //   });            
+    });
+    $(window).resize(function() {
+        resize_height();
+        //alert('window.height='+jQuery(window).height()+", while window.innerHeight="+window.innerHeight+", and document.body.height="+document.body.height+" and document.body.clientHeight html page length="+document.body.clientHeight);
+       
+    });    
+    $(window).ready(function(){
+       //if( !sunc_poll.isActive()) sync_poll.start(); 
+    });
+    //]]>
+    </script>
+       
+               
+         <f:subview id="autheader" rendered="#{login.loggedIn}" >       
+          <div id="banner" class="right"  >
+                  <h:form id="who">
+                      <div style="color:black;"><b>#{login.currentUser.username}</b> since #{sessionScope['logintime']}  |  <b><h:commandLink value="#{msg['SignoutButton']}" action="#{login.logout}" style="color:black;" /></b></div>
+                     
+                      <div style="margin-top: 15px;"><b><h:outputText id="news" value="#{info.sumUp()}#{info.newStudsOfUser}"/></b> new estimates since start/last sync  |  <h:commandLink value="#{msg['newEstimationLink']}" action="#{estimator.newEstimate}"/></div>
+                      
+                     
+                  <!--
+                            <h:outputText id="up" rendered="#{ref.master_up_ind gt 0}" value="#{msg['MasterIsConnected']}"/>   |  <h:commandLink value="#{msg['SyncNow']}" action="#{sync.handsync}"/> 
+                            <h:outputText id="down" rendered="#{ref.master_up_ind le 0}" value="#{msg['MasterIsNotAvailable']}"/>         -->             
+                            <h:outputText id="show" value="#{ref.master_up_ind gt 0? sync.showBaseMsg : msg['MasterIsNotAvailable']}"/> 
+                            
+                            <!-- sync.sync() #{sync.sync( login.getCurrentUser().getUserid() )}-->
+                            <!--
+                            <h:outputText id="sync" value="#{sync.showSyncMsg}"/> 
+                            <p:poll interval="#{ref.seed.pingInterval* 60}" update="sync"  autoStart="false" widgetVar="sync_poll" /> 
+                            -->
+                           
+                     
+                            
+                  <!-- read attr of SyncWorker, which shall do time checking master and then update attr -->
+                  <!-- another div to show msg: Master server is not available, or is not ready -->
+                  <div style="padding-right: 0px; margin-right: 0px; margin-top: 5px;">
+                      
+                      <table border="0"  cellpadding="0" cellspacing="1" align="right"><!-- <f:convertDateTime pattern="M/d/yy h:mm a z"/>-->
+                          <tr><th><h:commandLink id="upprt" value="#{info.upprts gt 0 ? '*' : ''}" action="#{estimator.makeuploadprints}"></h:commandLink>Start/Last Sync<h:commandLink id="notprt" value="#{info.nonprts gt 0 ? '*' : ''}" action="#{estimator.makeprints}"></h:commandLink></th>
+                              <th>Your Estimates</th><th><b>#{info.otherCounselorNumb}</b> others</th>
+                              <th><h:commandButton value="Search"  action="query_new?faces-redirect=true" style="padding:2px 3px 2px 3px; margin:0px; font-size: smaller; vertical-align: middle; text-align: center; "/></th></tr>
+                          <tr><td><h:outputText id="last" value="#{ref.showDTShort(info.lastSyncTime)}"></h:outputText></td><td><b><h:outputText id="mine" value="#{info.studsOfUser}" /></b></td><td><h:outputText id="others" value="#{info.otherCounselorStuds}" /></td><td> 
+                                  <h:commandLink id="tot" value=" #{info.totStuds} " action="query_new?faces-redirect=true"></h:commandLink> </td>
+                          </tr></table>
+                          <!--  Poll:autheader-j_idt27 needs to be enclosed in a form component -->
+                          
+                      
+                  </div>
+                  <p:poll interval="#{ref.seed.pollInterval*15 }" update="news show upprt notprt last mine others tot" listener="#{ref.poll2live}"  autoStart="true" /> 
+                  </h:form>      
+           </div>
+           </f:subview> 
+            
+            
+          <div id="topBgImg" class="right" >  
+              <div id="veryear2">Estimator<br />#{ref.faid_year}</div>
+            <div class="clear"></div>
+         </div>
+               
+         <div class="clear"></div>
+                        
+                    
+       </div> <!-- for header -->
+         
+         <!-- old auth f:subview     -->
+      <f:subview id="auth" rendered="#{login.loggedIn}" >     
+           <div id="content2">            
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                <div id="mark" class="clear"></div>                  
+            </div>            
+                      
+      </f:subview> <!-- auth -->       
+            
+          
+          
+<!--          
+      <f:subview id="guest" rendered="#{!login.loggedIn}" >
+              
+              <div id="content2"> 
+                <h2 style="padding-top:8px;">Protected page</h2>
+                <p>
+                This web page needs user identification and authentication, but can not get your identity.<br/><br/>
+                If you need to access the protected page, please <a href="/estimator/view/login.jsf">sign in</a> first.<br/>
+                </p>
+                <div id="mark" class="clear"></div>  
+              </div>  
+             
+          </f:subview>-->
+      
+<f:subview id="guest" rendered="#{!login.loggedIn}" >
+              
+              <div id="content2">            
+                <ui:insert name="content">
+                   [Template content will be inserted here]
+                </ui:insert>
+                <div id="mark" class="clear"></div>                  
+            </div> 
+             
+          </f:subview>
+                
+           
+           <div id="footer">
+                <!--h:graphicImage library="gfx" name="weld.png" alt="Weld logo"/-->
+                <ui:include src="foot.xml" />
+                <!--
+                <p>
+                This project, which targets migrating spread sheet version of Estimator to web, is in its public test phase.<br/>
+                When it is fully completed, it will be deployed to counselor's computers or campus hosted server.<br/>
+                </p> -->
+            </div>
+           
+       
+    
+      </div>
+   </div>
+   </h:body>
+        
+        </f:view>
+</html>
+

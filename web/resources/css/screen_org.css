@@ -1,0 +1,352 @@
+body {
+   margin: 0;
+   padding: 0;
+   background-color: #EAECEE;
+   font-family: Verdana, sans-serif;
+   font-size: 0.9em;
+}
+table{
+    display:table;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+tr{    
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+td, th {
+    display: table-cell;
+    vertical-align: inherit;
+}
+body, input, select, textarea, button {
+    font-family: Arial,Helvetica,FreeSans,"Luxi-sans","Nimbus Sans L",sans-serif;
+}
+
+#container {
+   margin: 0 auto;
+   padding: 0 10px 10px 10px;
+   border: 1px solid #666666;
+   width: 1280px; /* subtract 40px from banner width for padding */
+   min-width: 950px;
+   background: #FFFFFF url('#{resource["img/estimator_banner.png"]}') no-repeat;
+   background-size: 100%;    
+   min-height: 600px;
+   position:relative;
+}
+#container2 {
+   margin: 0 auto;
+   padding: 0 10px 10px 10px;
+   border: 1px solid #666666;
+   width: 1280px; /* subtract 40px from banner width for padding */
+   min-width: 950px;
+   background: #FFFFFF url('#{resource["img:estimator_banner.png"]}') no-repeat;
+   background-size: 100%;   
+   min-height: 600px;
+   position:relative;
+     
+}
+
+#content{
+    border: 0px solid #666666;
+    margin-top: 123px; 
+    margin-left:0px;
+    margin-right:0px;
+}
+
+
+#content2{
+    border: 0px solid #666666;
+    margin-top: 123px; 
+    margin-left:0px;
+    margin-right:0px;
+    padding-top: 0px;
+}
+#content2 H2,h2{
+    margin-top:0px;
+    padding-top: 0px;
+}
+
+#veryear{    
+    position:absolute;
+    top:95px;
+    left:98px;
+    width:90px;
+    height:20px;
+    margin: 0px;    
+    padding: 0px;
+    border: green solid 0px;
+    color:red;
+    font-weight: bold;
+    font-style: italic;
+    background:  transparent;
+}
+
+#banner{
+    position:absolute;
+    top:0;
+    right:0;
+    width:450px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    padding: 10px;
+    margin-bottom: 5px;
+    height:80px;
+    border: green solid 0px;
+    font: tahoma, verdana;
+    font-size: 1em;
+    color: white;
+    text-align: right;  
+    background:  transparent;
+}
+
+#banner div{
+    color: gray;
+}
+#banner a{
+    color: gray;
+}
+
+#banner table{
+     border: 1px solid #50647F;     
+     padding: 0px;
+     margin: 0px;
+     text-align: right;
+     background-color:transparent; 
+} 
+#banner table th{       
+    text-align: center;    
+    border: #50647F solid 0px;
+    border-right: #50647F solid 1px;
+    font-weight:bold;
+    padding: 0px 2px 0px 2px;    
+     margin: 0px;     
+    background-color:#B0C4DF;
+     opacity: 0.20;
+     filter: alpha(opacity=20);
+}
+#banner table td{
+    text-align: center;  
+    background-color:transparent; 
+    border: #50647F solid 0px;
+    border-right: #50647F solid 1px;
+    border-top: #50647F solid 1px;
+    padding: 0px 2px 0px 2px;  
+     margin: 0px;
+    opacity: 0.80;
+    filter: alpha(opacity=80);
+}
+
+#footer {
+   clear: both;
+   text-align: center;
+   color: white;
+   font-size: 0.85em;
+   background-color:steelblue;
+   border: 1px solid #666666;
+   margin: 0 auto;
+   margin-top: 0px;
+   min-width: 950px;
+   width: 1280px;
+   padding: 0 10px 10px 10px;
+}
+code {
+   font-size: 1.1em;
+}
+span.invalid {
+   padding-left: 3px;
+   color: red;
+}
+
+span.mark{
+    color:red;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    vertical-align: middle;
+    text-align: center;
+    padding-left: 2px;
+    height: 8px;
+}
+.messages{
+    color: red;
+}
+
+div#auth-sv-ptab table td input{
+    margin-top:0px;
+    padding-top: 0px;
+}
+
+input{
+    border:1px solid;
+    vertical-align: middle;
+    background-color: #EAECEE;
+}
+input:focus{
+    background-color: #B5CFE0;    
+    border: 1px solid #003B62;
+}
+
+input.ui-input-invalid {
+    background-color:lightpink;
+    border:1px solid red;
+}
+
+table#queryby  #trhead, th{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    text-align: left;
+}
+table#queryby  #trbody, td{
+    margin-top: 0px;
+    padding-top: 0px;
+}
+tr#trbody td input{
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+    margin-bottom: 2px;
+}
+
+/* display: block; will make it  outline, like div */
+input[type="button"], input[type="submit"], input[type="reset"]{
+    cursor: pointer;
+    background-color: #e4e4e4;
+    border-radius: 8px;
+    box-shadow: rgba(0,0,0,1) 0 1px 0;
+    padding: 3px 8px;
+    border: 1px solid #d2d2d2;
+}
+input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:focus, input[type="submit"]:focus{
+    background-color: #85b2cb;    
+    border: 1px solid #7096ab;
+    color: #white;
+}
+/*4c97d1 338b03*/
+input[type="button"]:active, input[type="submit"]:active  {
+    background-color: #1b435e; 
+    color:white;
+}
+input[type="reset"]:active, input[type="reset"]:focus{
+    background-color: #eb8522; 
+    color:white;
+}
+
+/* width: 225px; */
+#sidebar {
+   margin-top: 10px;
+   font-size: 0.9em;
+   width: 300px;
+   float: right;   
+   border: 1px solid #666666;
+   background: #EAECEE;
+   padding: 0 15px 5px 15px;
+}
+#sidebar ul {
+   padding-left: 30px;
+}
+/* width: 350px; */
+#sidebar2 {
+    margin-top: 10px;
+   font-size: 0.9em;
+   width: 430px;
+   float: right;   
+   border: 1px solid #666666;
+   background: #EAECEE;
+   padding: 0px;
+}
+#sidebar2 table{
+    margin:0px;
+    padding:0px;
+}
+#sidebar2 table,tr,th,td{
+    margin:0px;
+    padding:0px;    
+    text-align: left;
+    border:0px;    
+}
+#sidebar2 table th{    
+    background-color: #b0c4df;
+    border-top: 1px solid #666666;
+    border-bottom: 1px solid #666666;    
+}
+#sidebar2 table th,td{ 
+    padding:0px 2px 0px 2px;
+}
+th#title{    
+    text-align: center;
+    border-top: 0px;    
+}
+.item{
+    padding-left: 15px;    
+}
+.itemt{
+    padding-left: 1px;    
+     font-family:  Courier, Courier New;
+}
+ .numb{
+    text-align: right;    
+}
+ .tot{
+    text-align: right;
+    border-top: 1px solid #666666;
+    margin-left: 60px;
+}
+
+tbody.holder{
+     padding:10px 15px 15px 10px; 
+     width:100%; 
+     margin-right:0px; 
+}
+tbody.holder:hover{
+    background-color:#C7DEEF;
+}
+
+tbody.highlighted{
+    background-color:#b5c8ea;
+}
+
+tbody.holder input:focus{
+    background-color: silver;     
+    border: 2px solid #DD4814;    
+}
+/*outline: 1px solid #DD4814;*/
+
+.actions td {
+    border: 0px none !important;
+    padding: 2px !important;
+}
+tr.ui-state-hover{
+    border:0px;
+}
+div#auth-sv-matches > table{
+    width: 100%;
+}
+
+div#auth-sv-carDlg div.ui-dialog-content{
+    width:1050px;
+}
+
+table#auth-sv-display  td{
+    border-bottom: 1px solid silver;   
+    text-align: left;
+}
+table#auth-sv-display  td span.listTH{
+    color: silver;    
+}
+table#auth-sv-display  th{
+    border-bottom: 1px solid silver;    
+    text-align: center;
+}
+table#auth-sv-display tbody tr:hover{
+    background-color: #85b2cb;
+    cursor:pointer;
+    color:white;
+}

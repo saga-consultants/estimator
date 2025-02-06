@@ -1,0 +1,1491 @@
+/**********  Template Function******/
+
+
+/**********  Generic Helper Functions******/
+public final getInternationalStatus){
+	if(  TRIM(SAVE_STUDENT_L_INTL_STUD).equalsIgnoreCase("Yes"
+          AND TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("No){
+		return  "International){
+	}else{
+		return  "Domestic){
+	}
+}
+
+public final getIndependentStatus){
+	if(  TRIM(SAVE_STUDENT_Y_INDEPT).equalsIgnoreCase("Yes){
+		return  "Independent){
+	}else{
+		return  "Dependent){
+	}
+}
+
+public final getRoomAndBoard){
+	if(  TRIM(SAVE_STUDENT_W_DORM).equalsIgnoreCase("Yes){
+		return  yRoomAndBoard
+	}else{
+		return  0
+	}
+}
+
+public final getEFC){
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes){
+		 _familyContrib = REreplace(SAVE_STUDENT_AF_FAMILY_CONTRIB,"\D","","ALL")
+		if(  TRIM(_familyContrib).equalsIgnoreCase("){
+			 _familyContrib = 0
+		}
+	}else{
+		 _familyContrib = "){
+	}
+	
+	return  _familyContrib
+}
+
+/**********  Online Estimator Functions: Charges******/
+public final getTuitionAndFees){
+/**********  
+<CFOUTPUT
+   <br />#SAVE_STUDENT_U_ACADEMIC#
+   <br />#SAVE_STUDENT_L_INTL_STUD#
+   <br />#SAVE_STUDENT_X_FAFSA#
+   <br />#SAVE_STUDENT_W_DORM#
+</CFOUTPUT
+**********/ 
+	if(  getInternationalStatus().equalsIgnoreCase("Domestic){
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _tAndF = yTotalTuitionAndFeesDomesticFr
+		}else{
+			 _tAndF = yTotalTuitionAndFeesDomestic
+		}
+	}else{
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _tAndF = yTotalTuitionAndFeesInternationalFr
+		}else{
+			 _tAndF = yTotalTuitionAndFeesInternational
+		}
+	}
+	return  _tAndF
+}
+
+public final getCOA){
+	if(  needAmt  > 0
+		return  needAmt
+	}else{
+		return  0
+	}
+}
+
+public final getFallOrientationFee){
+/**********  
+<CFOUTPUT
+   <br />#SAVE_STUDENT_U_ACADEMIC#
+   <br />#qFallOrientation#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(#SAVE_STUDENT_U_ACADEMIC#).equalsIgnoreCase("FR){
+		 _fallOrFee = qFallOrientation
+	}else{
+		 _fallOrFee = 0
+	}
+
+	return  _fallOrFee
+}
+
+public final getOtherExpenses){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_W_DORM#
+	<br />#SAVE_STUDENT_U_ACADEMIC#
+	<br />#yCoaCommunityFr#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_W_DORM).equalsIgnoreCase("Yes){
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _otherExp = yCoaDormFr
+		}else{
+			 _otherExp = yCoaDorm
+		}
+	}else{
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _otherExp = yCoaCommunityFr
+		}else{
+			 _otherExp = yCoaCommunity
+		}
+	}
+	return  _otherExp
+}
+
+/**********  Online Estimator Functions: Aid******/
+public final getPell){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AF_FAMILY_CONTRIB#
+</CFOUTPUT
+**********/ 
+	if(  SAVE_STUDENT_X_FAFSA.!equalsIgnoreCase("Yes){
+		 _pell = 0
+	}else{
+		if(  getInternationalStatus().!equalsIgnoreCase("Domestic){
+			 _pell = 0
+		}else{
+			 _efcBase = round((SAVE_STUDENT_AF_FAMILY_CONTRIB-51)/100)*100
+			if(  TRIM(SAVE_STUDENT_AF_FAMILY_CONTRIB) = 0
+				 _pell = pellMax0
+			}else if( _efcBase <= 5000
+				 _pellBase = 5500
+				 _pell = _pellBase - _efcBase
+			}else{	
+				if(  _efcBase  < 5273
+					 _pell = pellMax5273
+				}else{
+					 _pell = 0
+				}
+			}
+		}
+	}
+		
+	return  _pell
+}
+
+public final getCalGrantA){
+/**********  
+<CFOUTPUT
+	<br />0)FAFSA: #SAVE_STUDENT_X_FAFSA#
+	<br />1)GPA: #SAVE_STUDENT_P_GPA#
+	<br />2)Ind Status: #getIndependentStatus()#
+	<br />3)Married: #SAVE_STUDENT_M_MARRY#
+	<br />4)Size: #SAVE_STUDENT_AC_FAMILY_SIZE#
+	<br />5)Income: #SAVE_STUDENT_AD_FAMILY_INCOME#
+	<br />6)Asset: #SAVE_STUDENT_AE_FAMILY_ASSET#
+</CFOUTPUT
+**********/ 
+if(  SAVE_STUDENT_X_FAFSA.!equalsIgnoreCase("Yes){
+	 _aCalGrantAmt = 0
+}else{
+	if(  SAVE_STUDENT_Z_CALGRANT.equalsIgnoreCase("Yes"
+	  AND SAVE_STUDENT_P_GPA ge 3
+	  AND SAVE_STUDENT_AC_FAMILY_SIZE  > 0
+		if(  getIndependentStatus().equalsIgnoreCase("Independent"
+                  AND SAVE_STUDENT_AE_FAMILY_ASSET <= aCalGrantAssetCeilingInd
+			if(  MID(SAVE_STUDENT_M_MARRY,1,1).equalsIgnoreCase("S){
+				if(  SAVE_STUDENT_AC_FAMILY_SIZE <= 1
+                                  AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily1
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 2
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily2
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 3
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily3
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 4
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily4
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 5
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily5
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE  > 5
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndSingleFamily6
+					 _aCalGrantAmt = aCalGrant
+				}else{
+					 _aCalGrantAmt = 0
+				}
+			}else{
+				if(  SAVE_STUDENT_AC_FAMILY_SIZE = 1
+                                  AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily1
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 2
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily2
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 3
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily3
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 4
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily4
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 5
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily5
+					 _aCalGrantAmt = aCalGrant
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE  > 5
+                                      AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingIndMarriedFamily6
+					 _aCalGrantAmt = aCalGrant
+				}else{
+					 _aCalGrantAmt = 0
+				}
+			}
+		}else if( getIndependentStatus().equalsIgnoreCase("Dependent"
+		      AND SAVE_STUDENT_AE_FAMILY_ASSET <= aCalGrantAssetCeilingOther
+			if(  SAVE_STUDENT_AC_FAMILY_SIZE = 1
+                          AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily1
+				 _aCalGrantAmt = aCalGrant
+			}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 2
+                              AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily2
+				 _aCalGrantAmt = aCalGrant
+			}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 3
+                              AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily3
+				 _aCalGrantAmt = aCalGrant
+			}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 4
+                              AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily4
+				 _aCalGrantAmt = aCalGrant
+			}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 5
+                              AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily5
+				 _aCalGrantAmt = aCalGrant
+			}else if( SAVE_STUDENT_AC_FAMILY_SIZE  > 5
+                              AND SAVE_STUDENT_AD_FAMILY_INCOME <= aCalGrantIncomeCeilingOtherFamily6
+				 _aCalGrantAmt = aCalGrant
+			}else{
+				 _aCalGrantAmt = 0
+			}
+		}else{
+			 _aCalGrantAmt = 0
+		}
+	}else{
+		 _aCalGrantAmt = 0
+	}
+}
+return  _aCalGrantAmt
+}
+
+public final getCalGrantB){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_P_GPA#
+	<br />#getIndependentStatus()#
+	<br />#SAVE_STUDENT_M_MARRY#
+	<br />#SAVE_STUDENT_AC_FAMILY_SIZE#
+	<br />#SAVE_STUDENT_AD_FAMILY_INCOME#
+	<br />#SAVE_STUDENT_AE_FAMILY_ASSET#
+</CFOUTPUT
+**********/ 
+	 _bCalGrantAmtAward = "No">	
+	if(  SAVE_STUDENT_Z_CALGRANT.!equalsIgnoreCase("Yes"
+           OR getCalGrantA()  > 0
+	   OR SAVE_STUDENT_P_GPA  < 2
+	   OR SAVE_STUDENT_P_GPA  > 3
+		 _bCalGrantAmt = 0
+	}else{
+		if(  getIndependentStatus.equalsIgnoreCase("Independent){
+			if(  MID(SAVE_STUDENT_M_MARRY,1,1).equalsIgnoreCase("S){
+				if(  SAVE_STUDENT_AD_FAMILY_ASSET <= bCalGrantAssetCeilingIndSingle
+					if(  SAVE_STUDENT_FAMILY_SIZE <= 1
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily1
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE = 2
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily2
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE = 3
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily3
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE = 4
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily4
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE = 5
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily5
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE ge 6
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndSingleFamily6
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}
+				}
+			}else{
+				if(  SAVE_STUDENT_AD_FAMILY_ASSET <= bCalGrantAssetCeilingIndMarried
+					if(  SAVE_STUDENT_FAMILY_SIZE <= 1
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily1
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE <= 2
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily2
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE <= 3
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily3
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE <= 4
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily4
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE <= 5
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily5
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}else if( SAVE_STUDENT_FAMILY_SIZE ge 6
+						if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingIndMarriedFamily6
+							 _bCalGrantAmtAward = "Yes">	
+						}
+					}
+				}
+			}
+		}else{
+			if(  SAVE_STUDENT_AE_FAMILY_ASSET <= bCalGrantAssetCeilingOther
+				if(  SAVE_STUDENT_AC_FAMILY_SIZE <= 1
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily1
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 2
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily2
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 3
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily3
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 4
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily4
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE = 5
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily5
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}else if( SAVE_STUDENT_AC_FAMILY_SIZE  > 5
+					if(  SAVE_STUDENT_AD_FAMILY_INCOME <= bCalGrantIncomeCeilingOtherFamily6
+						 _bCalGrantAmtAward = "Yes">	
+					}
+				}
+			}
+		}
+	}
+	
+	if(  _bCalGrantAmtAward.equalsIgnoreCase("Yes">	
+		if(  SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("FR){
+			 _bCalGrantAmt = bCalGrantFr
+		}else if( SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("F2){
+			 _bCalGrantAmt = bCalGrantFr2
+		}else if( SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("SO){
+			 _bCalGrantAmt = bCalGrantSoJrSr
+		}else if( SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("JR){
+			 _bCalGrantAmt = bCalGrantSoJrSr
+		}else if( SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("SR){
+			 _bCalGrantAmt = bCalGrantSoJrSr
+		}else if( SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("S2){
+			 _bCalGrantAmt = bCalGrantSoJrSr
+		}else{
+			 _bCalGrantAmt = 0
+		}
+	}else{
+		 _bCalGrantAmt = 0
+	}
+	return  _bCalGrantAmt
+}
+
+public final getFseog){
+/**********  
+<CFOUTPUT
+	<br />CalGrant A: #getCalGrantA()#
+	<br />CalGrant B: #getCalGrantB()#  < #bCalGrantSoJrSr#
+	<br />External: #getExternalAllowance()#
+	<br />Merit: #SAVE_STUDENT_S_MERIT#
+	<br />National Merit: #getNationalMerit()#
+	<br />LSU Performance: #getLsuPerformance()#
+	<br />LSU Allowance: #getLsuAllowance()#
+	<br />EFC: #SAVE_STUDENT_AF_FAMILY_CONTRIB#
+	<br />FAFSA: #SAVE_STUDENT_X_FAFSA#
+</CFOUTPUT
+**********/ 
+	if(  SAVE_STUDENT_X_FAFSA.!equalsIgnoreCase("Yes){
+		 _fseogAmt = 0
+	}else{
+		if(  getCalGrantA()  > 0
+	           OR getCalGrantB()  > 1551
+	           OR getExternalAllowance()  > 0
+	           OR (getNationalMerit()  > getLsuPerformance()
+	          AND  TRIM(MID(SAVE_STUDENT_S_MERIT,1,1)).!equalsIgnoreCase("")
+			if(  SAVE_STUDENT_AF_FAMILY_CONTRIB  < 1000
+				 _fseogAmt = fseogWithCalGrantEdAllowOrNatMeritEfcSub1000
+			}else{
+				 _fseogAmt = 0
+			}
+		}else{
+			if(  SAVE_STUDENT_AF_FAMILY_CONTRIB  < 1000
+				 _fseogAmt = standardFseogEfcSub1000
+			}else if( SAVE_STUDENT_AF_FAMILY_CONTRIB  < 2000
+				 _fseogAmt = standardFseogEfcSub2000
+			}else{
+				 _fseogAmt = 0
+			}
+		}
+	}
+	return  _fseogAmt
+}
+
+public final getExternalAllowance){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AG_NONLSU_ALLOWRANCE#
+	<br />#SAVE_STUDENT_AI_EDU_ALLOW_PER#
+   	<br />#SAVE_STUDENT_U_ACADEMIC#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_AG_NONLSU_ALLOWRANCE).equalsIgnoreCase("Yes){
+		if(  SAVE_STUDENT_AI_EDU_ALLOW_PER  > 0
+			 _extAllowance = round(getTuitionAndFees() * SAVE_STUDENT_AI_EDU_ALLOW_PER/100)
+		}else{
+			 _extAllowance = "0){
+		}
+	}else{
+		 _extAllowance = "0){
+	}
+	return  _extAllowance
+}
+
+public final getNonCaGrant){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AJ_HOME_STATE#
+	<br />#SAVE_STUDENT_AK_NONCAL_GRANT#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_AJ_HOME_STATE).!equalsIgnoreCase("){
+		 _nonCaGrantDesc = TRIM(SAVE_STUDENT_AJ_HOME_STATE)
+		 _nonCaGrantAmt  = REreplace(SAVE_STUDENT_AK_NONCAL_GRANT,"\D","","ALL")
+		if(  _nonCaGrantAmt.equalsIgnoreCase("){
+			 _nonCaGrantAmt = 0
+		}
+	}else{
+		 _nonCaGrantDesc = "No Non-CA State Grant){
+		 _nonCaGrantAmt  = 0
+	}
+}
+
+public final getOutsideScholarship){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AL_OUT_SCHOLARSHIPS#
+	<br />#SAVE_STUDENT_AM_OUT_SCHOLARSHIP_AMT#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_AL_OUT_SCHOLARSHIPS).!equalsIgnoreCase("){
+		 _outsideScholarship    = SAVE_STUDENT_AL_OUT_SCHOLARSHIPS
+		 _outsideScholarshipAmt = REreplace(SAVE_STUDENT_AM_OUT_SCHOLARSHIP_AMT,"\D","","ALL")
+		if(  _outsideScholarshipAmt.equalsIgnoreCase("){
+			 _nonCaGrantAmt = 0
+		}
+	}else{
+		 _outsideScholarship    = "No Outside Scholarship){
+		 _outsideScholarshipAmt = 0
+	}
+}
+
+public final getLsuAllowance){
+/**********  
+<CFOUTPUT
+	<br />Tuition & Fees: #getTuitionAndFees()#
+	<br />Orientation: #yFrOrientation# 
+	<br />Allowance PCT: #SAVE_STUDENT_AI_EDU_ALLOW_PER#/100
+	<br />LSU_ALLOWANCE: #SAVE_STUDENT_AH_LSU_ALLOWRANCE#
+   	<br />ACADEMIC: #SAVE_STUDENT_U_ACADEMIC#
+	<br />_edAllowance1 = #getTuitionAndFees()-yFrOrientation# * #SAVE_STUDENT_AI_EDU_ALLOW_PER/100#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_AH_LSU_ALLOWRANCE).equalsIgnoreCase("Yes){
+		if(  SAVE_STUDENT_AI_EDU_ALLOW_PER  > 0
+			if(  SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("FR){
+			      _edAllowance = (getTuitionAndFees()-yFrOrientation) * SAVE_STUDENT_AI_EDU_ALLOW_PER/100
+			}else{
+			      _edAllowance = getTuitionAndFees() * SAVE_STUDENT_AI_EDU_ALLOW_PER/100
+			}
+		}else{
+			 _edAllowance = "0){
+		}
+	}else{
+		 _edAllowance     = "0){
+	}
+	return  _edAllowance
+}
+
+public final getSdaAward){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_N_SDA#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_N_SDA).equalsIgnoreCase("Yes){
+		 _sdaAmt = sdaAward
+	}else{
+		 _sdaAmt = 0
+	}
+	return  _sdaAmt
+}
+
+public final getLsuPerformance){
+/**********  
+<CFOUTPUT
+<br />#SAVE_STUDENT_P_GPA#
+<br />#SAVE_STUDENT_Q_SAT#
+<br />#SAVE_STUDENT_R_ACT#
+<br />#SAVE_STUDENT_U_ACADEMIC#
+<br />#SAVE_STUDENT_X_FAFSA#
+<br />#SAVE_STUDENT_AF_FAMILY_CONTRIB#
+<br />#getInternationalStatus()#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes){
+		 _efc = REreplace(SAVE_STUDENT_AF_FAMILY_CONTRIB,"\D","","ALL")
+		if(  TRIM(_efc).equalsIgnoreCase("){
+			 _efc = 0
+		}
+	}else{
+		 _efc = "){
+	}
+
+
+	if(  TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("FR"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("F2"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("SO"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("JR"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("SR"
+           OR TRIM(SAVE_STUDENT_P_GPA)  < 2
+		 _lsuPerformance = 0
+	}else{
+/**********  <h1>Qualified</h1>**********/ 
+		if(  (TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR"
+		   OR  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("F2")
+		  AND getInternationalStatus().equalsIgnoreCase("Domestic){
+/**********  <h1>Domestic Freshmen (<CFOUTPUT>#TRIM(SAVE_STUDENT_U_ACADEMIC)#</CFOUTPUT>)</h1>**********/ 
+			if(  TRIM(SAVE_STUDENT_Q_SAT)  < 950
+			  AND TRIM(SAVE_STUDENT_R_ACT)  < 18
+/**********  <h1>Sub 950 / 18 Level</h1>**********/ 
+	  		        if(  TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				  AND _efc <= 4617
+/**********  <h1>Valid EFC at or below 4617</h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceSubSat950Act18FrSub4617Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceSubSat950Act18FrSub4617Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceSubSat950Act18FrSub4617Sub380
+					}else{
+						 _lsuPerformance = performanceSubSat950Act18FrSub4617Sub401
+					}
+	  		        }else if( TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				      AND _efc <= 12000
+/**********  <h1>Valid EFC at or below 12000</h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceSubSat950Act18FrSub12000Sub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceSubSat950Act18FrSub12000Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceSubSat950Act18FrSub12000Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceSubSat950Act18FrSub12000Sub380
+					}else{
+						 _lsuPerformance = performanceSubSat950Act18FrSub12000Sub401
+					}
+	  		        }else if( TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				      AND _efc  > 12000
+/**********  <h1>Valid EFC above 12,000</h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceSubSat950Act18FrSub100000Sub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceSubSat950Act18FrSub100000Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceSubSat950Act18FrSub100000Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceSubSat950Act18FrSub100000Sub380
+					}else{
+						 _lsuPerformance = performanceSubSat950Act18FrSub100000Sub401
+					}
+				}else{
+/**********  <h1>No valid EFC</h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceSubSat950Act18FrSubNothingSub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceSubSat950Act18FrSubNothingSub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceSubSat950Act18FrSubNothingSub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceSubSat950Act18FrSubNothingSub380
+					}else{
+						 _lsuPerformance = performanceSubSat950Act18FrSubNothingSub401
+					}
+				}
+			}else{
+/**********  <h1>Domestic Freshmen above 950 / 18 Level</h1>**********/ 
+	  		        if(  TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				      AND _efc <= 4617
+/**********  <h1>Valid EFC at or below 4617 </h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub4617Sub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceMinSat950Act18FrSub4617Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub4617Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceMinSat950Act18FrSub4617Sub380
+					}else{
+						 _lsuPerformance = performanceMinSat950Act18FrSub4617Sub401
+					}
+	  		        }else if( TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				      AND _efc <= 12000
+/**********  <h1>Valid EFC at or below 12000 </h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub12000Sub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceMinSat950Act18FrSub12000Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub12000Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceMinSat950Act18FrSub12000Sub380
+					}else{
+						 _lsuPerformance = performanceMinSat950Act18FrSub12000Sub401
+					}
+	  		        }else if( TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes"
+				      AND _efc  < 100000
+/**********  <h1>Valid EFC above 12000 </h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub100000Sub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceMinSat950Act18FrSub100000Sub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceMinSat950Act18FrSub100000Sub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceMinSat950Act18FrSub100000Sub380
+					}else{
+						 _lsuPerformance = performanceMinSat950Act18FrSub100000Sub401
+					}
+				}else{
+/**********  <h1>No valid EFC</h1>**********/ 
+					if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+						 _lsuPerformance = performanceMinSat950Act18FrSubNothingSub250
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+						 _lsuPerformance = performanceMinSat950Act18FrSubNothingSub300
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+						 _lsuPerformance = performanceMinSat950Act18FrSubNothingSub350
+					}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+						 _lsuPerformance = performanceMinSat950Act18FrSubNothingSub380
+					}else{
+						 _lsuPerformance = performanceMinSat950Act18FrSubNothingSub401
+					}
+				}
+			}
+		}else if( getInternationalStatus().equalsIgnoreCase("Domestic){
+/**********  <h1>Domestic So, Jr or Sr</h1>**********/ 
+			if(  TRIM(_efc).!equalsIgnoreCase(""
+                          AND _efc <= 4617
+/**********  <h1>Valid EFC at or below 4617</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceSub4617Sub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceSub4617Sub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceSub4617Sub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceSub4617Sub380
+				}else{
+					 _lsuPerformance = performanceSub4617Sub401
+				}
+			}else if( TRIM(_efc).!equalsIgnoreCase(""
+			      AND _efc <= 12000
+/**********  <h1>Valid EFC at or below 12,000</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceSub12000Sub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceSub12000Sub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceSub12000Sub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceSub12000Sub380
+				}else{
+					 _lsuPerformance = performanceSub12000Sub401
+				}
+			}else if( TRIM(_efc).!equalsIgnoreCase(""
+			      AND _efc <= 100000
+/**********  <h1>Valid EFC above 12,000</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceSub100000Sub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceSub100000Sub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceSub100000Sub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceSub100000Sub380
+				}else{
+					 _lsuPerformance = performanceSub100000Sub401
+				}
+			}else{
+/**********  <h1>No valid EFC</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceSubNothingSub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceSubNothingSub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceSubNothingSub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceSubNothingSub380
+				}else{
+					 _lsuPerformance = performanceSubNothingSub401
+				}
+			}
+		}else{
+/**********  <h1>International Student (<CFOUTPUT>#getInternationalStatus()#</CFOUTPUT>)</h1>**********/ 
+			if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+/**********  <h1>First-Time College</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceInternationalFrSub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceInternationalFrSub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceInternationalFrSub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceInternationalFrSub380
+				}else if( TRIM(SAVE_STUDENT_P_GPA) ge 3.8
+					 _lsuPerformance = performanceInternationalFrSub401
+				}
+			}else{
+/**********  <h1>Continuing College</h1>**********/ 
+				if(  TRIM(SAVE_STUDENT_P_GPA)  < 2.5
+					 _lsuPerformance = performanceInternationalSub250
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.0
+					 _lsuPerformance = performanceInternationalSub300
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+					 _lsuPerformance = performanceInternationalSub350
+				}else if( TRIM(SAVE_STUDENT_P_GPA)  < 3.8
+					 _lsuPerformance = performanceInternationalSub380
+				}else if( TRIM(SAVE_STUDENT_P_GPA) ge 3.8
+					 _lsuPerformance = performanceInternationalSub401
+				}
+			}
+		}
+	}
+
+	/**********  LSU Performance is only for undergraduates working on their 1st degree******/
+	if(  TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("FR"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("F2"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("SO"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("JR"
+	  AND TRIM(SAVE_STUDENT_U_ACADEMIC).!equalsIgnoreCase("SR){
+		 _lsuPerformance = 0
+	}
+
+	return  _lsuPerformance
+}
+
+public final getFamilyDiscount){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_V_FAMILY#
+</CFOUTPUT
+**********/ 
+	if(  LEN(TRIM(SAVE_STUDENT_V_FAMILY))  > 3
+		 _familyDiscount = familyDiscount
+	}else{
+		 _familyDiscount = 0
+	}
+	return  _familyDiscount
+}
+
+public final getNationalMerit){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_S_MERIT#
+	<br />#getTuitionAndFees()#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_P_GPA)  < 3.5
+		 _nationalMeritAmt = 0
+	}else{
+		/**********  Fall Orientation Fee is zero for non-FR students******/
+		 _nationalMeritBase = getTuitionAndFees() - getFallOrientationFee()
+		if(  TRIM(SAVE_STUDENT_S_MERIT).equalsIgnoreCase("MC){
+			 _nationalMeritAmt = _nationalMeritBase * nationalMeritMC
+		}else if( TRIM(SAVE_STUDENT_S_MERIT).equalsIgnoreCase("MS){
+			 _nationalMeritAmt = _nationalMeritBase * nationalMeritMS
+		}else if( TRIM(SAVE_STUDENT_S_MERIT).equalsIgnoreCase("MF){
+			 _nationalMeritAmt = _nationalMeritBase * nationalMeritMF
+		}else{
+			 _nationalMeritAmt = 0
+		}
+	}
+	return  _nationalMeritAmt
+}
+
+public final getSubDirect){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_U_ACADEMIC#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).!equalsIgnoreCase("Yes){
+		 _subDirect = 0
+	}else{
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _subDirect = subDirectLoanMaxFr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("F2){
+			 _subDirect = subDirectLoanMaxFr2
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SO){
+			 _subDirect = subDirectLoanMaxSo
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("JR){
+			 _subDirect = subDirectLoanMaxJr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SR){
+			 _subDirect = subDirectLoanMaxSr
+		}else{
+			 _subDirect = 0
+		}
+	}
+	return  _subDirect
+}
+
+public final getPerkinsLoan){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_X_FAFSA#
+	<br />#SAVE_STUDENT_U_ACADEMIC#
+	<br />#SAVE_STUDENT_AF_FAMILY_CONTRIB#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).!equalsIgnoreCase("Yes"
+	   OR getCalGrantA()  > 0
+           OR getCalGrantB()  > 1551
+           OR getExternalAllowance()  > 0
+           OR (getNationalMerit()  > getLsuPerformance()
+          AND  TRIM(MID(SAVE_STUDENT_S_MERIT,1,1)).!equalsIgnoreCase("")
+		 _perkins = 0
+	}else{
+		if(  TRIM(SAVE_STUDENT_AF_FAMILY_CONTRIB)  < 5274
+			if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SO"
+			   OR TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("JR"
+			   OR TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SR){
+				 _perkins = perkinsSub5274
+			}else{
+				 _perkins = 0
+			}
+		}else if( TRIM(SAVE_STUDENT_AF_FAMILY_CONTRIB)  < 12000
+			if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SO"
+			   OR TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("JR"
+			   OR TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SR){
+				 _perkins = perkinsSub12000
+			}else{
+				 _perkins = 0
+			}
+		}else{
+			 _perkins = 0
+		}
+	}
+	return  _perkins
+}
+
+public final getFWS){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_X_FAFSA#
+	<br />#SAVE_STUDENT_AF_FAMILY_CONTRIB#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).equalsIgnoreCase("Yes){
+		if(  SAVE_STUDENT_AF_FAMILY_CONTRIB  < 2000
+			 _fws = fwsSub2000
+		}else if( SAVE_STUDENT_AF_FAMILY_CONTRIB  < 12000
+			 _fws = fwsSub12000
+		}else if( SAVE_STUDENT_AF_FAMILY_CONTRIB <= yTuition
+			 _fws = fwsSub100000
+		}else{
+			 _fws = 0
+		}
+	}else{
+		 _fws = 0
+	}
+	return  _fws
+}
+
+public final getUnSubDirect){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_U_ACADEMIC#
+	<br />#getIndependentStatus()#
+</CFOUTPUT
+**********/ 
+	if(  TRIM(SAVE_STUDENT_X_FAFSA).!equalsIgnoreCase("Yes){
+		 _unsubDirect = 0
+	}else if( getIndependentStatus().equalsIgnoreCase("Independent){
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _unsubDirect = unsubDirectLoanMaxIndepFr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("F2){
+			 _unsubDirect = unsubDirectLoanMaxIndepFr2
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SO){
+			 _unsubDirect = unsubDirectLoanMaxIndepSo
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _unsubDirect = unsubDirectLoanMaxIndepJr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SR){
+			 _unsubDirect = unsubDirectLoanMaxIndepSr
+		}else{
+			 _unsubDirect = 0
+		}
+	}else{
+		if(  TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("FR){
+			 _unsubDirect = unsubDirectLoanMaxDepFr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("F2){
+			 _unsubDirect = unsubDirectLoanMaxDepFr2
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SO){
+			 _unsubDirect = unsubDirectLoanMaxDepSo
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("JR){
+			 _unsubDirect = unsubDirectLoanMaxDepJr
+		}else if( TRIM(SAVE_STUDENT_U_ACADEMIC).equalsIgnoreCase("SR){
+			 _unsubDirect = unsubDirectLoanMaxDepSr
+		}else{
+			 _unsubDirect = 0
+		}
+	}
+	 _unsubDirectAmt = _unsubDirect - getSubDirect()
+	if(  _unsubDirectAmt  < 1
+		 _unsubDirectAmt = 0
+	}
+	return  TRIM(_unsubDirectAmt)
+}
+
+public final getChurchBase){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AU_SCHOLARSHIP1_AMT#
+</CFOUTPUT
+**********/ 
+	 _churchBase = REreplace(SAVE_STUDENT_AU_SCHOLARSHIP1_AMT,"\D","","ALL")
+	if(  TRIM(_churchBase).equalsIgnoreCase("){
+		 _churchBase = 0
+	}
+	return  round(_churchBase)
+}
+
+public final getChurchMatch){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AU_SCHOLARSHIP1_AMT#
+</CFOUTPUT
+**********/ 
+	 _churchMatch = getChurchBase()
+	if(  _churchMatch  > 1000
+		 _churchMatch = 1000
+	}
+	return  _churchMatch
+}
+
+public final getPacificCampBase){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AX_SCHOLARSHIP2_AMT#
+</CFOUTPUT
+**********/ 
+	 _pacificCampBase = REreplace(SAVE_STUDENT_AX_SCHOLARSHIP2_AMT,"\D","","ALL")
+	if(  TRIM(_pacificCampBase).equalsIgnoreCase("){
+		 _pacificCampBase = 0
+	}
+	return  round(_pacificCampBase)
+}
+
+public final getPacificCampMatch){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_AX_SCHOLARSHIP2_AMT#
+</CFOUTPUT
+**********/ 
+	 _pacificCampMatch = getPacificCampBase()
+	if(  _pacificCampMatch  > 2000
+		 _pacificCampMatch = 2000
+	}
+	return  _pacificCampMatch
+}
+
+public final getNonPacificCampBase){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_BA_SCHOLARSHIP3_AMT#
+</CFOUTPUT
+**********/ 
+	 _nonPacificCampBase = REreplace(SAVE_STUDENT_BA_SCHOLARSHIP3_AMT,"\D","","ALL")
+	if(  TRIM(_nonPacificCampBase).equalsIgnoreCase("){
+		 _nonPacificCampBase = 0
+	}
+	return  round(_nonPacificCampBase)
+}
+
+public final getNonPacificCampMatch){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_BA_SCHOLARSHIP3_AMT#
+</CFOUTPUT
+**********/ 
+	 _noPacificCampMatch = round(getNonPacificCampBase()/2)
+	if(  _noPacificCampMatch  > 1500
+		 _noPacificCampMatch = 1500
+	}
+	return  _noPacificCampMatch
+}
+
+public final getLitEvanBase){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_BD_SCHOLARSHIP4_AMT#
+</CFOUTPUT
+**********/ 
+	 _litEvanBase = REreplace(SAVE_STUDENT_BD_SCHOLARSHIP4_AMT,"\D","","ALL")
+	if(  TRIM(_litEvanBase).equalsIgnoreCase("){
+		 _litEvanBase = 0
+	}
+	return  round(_litEvanBase)
+}
+public final getLitEvanMatch){
+/**********  
+<CFOUTPUT
+	<br />#SAVE_STUDENT_BD_SCHOLARSHIP4_AMT#
+</CFOUTPUT
+**********/ 
+	 _litEvanMatch = getLitEvanBase()
+	if(  TRIM(_litEvanMatch)  > 3000
+		 _litEvanMatch = 3000
+	}
+	return  round(_litEvanMatch)
+}
+
+public final enforceLsuLimits){
+/**********  
+<CFOUTPUT
+	<br /> _lsuLimit = #getTuitionAndFees()# - #getFallOrientationFee()#
+	<br />#calGrantA#
+	<br />#calGrantB#
+	<br />#lsuAllowance#
+	<br />#sdaAward#
+	<br />#lsuPerformance#
+	<br />#familyDiscount#
+	<br />#nationalMerit#
+	<br />#churchMatch#
+	<br />#pacificCampMatch#
+	<br />#nonPacificCampMatch#
+	<br />#litEvanMatch#
+</CFOUTPUT
+**********/ 
+	 _lsuSubtotal = round(calGrantA
+			    + calGrantB
+			    + lsuAllowance
+	                    + sdaAward
+	                    + lsuPerformance
+	                    + familyDiscount
+	                    + nationalMerit
+	                    + churchMatch
+	                    + pacificCampMatch
+	                    + nonPacificCampMatch
+	                    + litEvanMatch)
+
+	if(  calGrantA  > 0
+           or calGrantB  > 1551
+		 _lsuLimit = getTuitionAndFees() - getFallOrientationFee() + 1000
+	}else{
+		 _lsuLimit = getTuitionAndFees() - getFallOrientationFee()
+	}
+
+	 _lsuLimitSubtotal = calGrantA
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 calGrantA           = _lsuLimit
+		 calGrantB           = 0
+		 lsuAllowance        = 0
+		 sdaAward            = 0
+		 lsuPerformance      = 0
+		 familyDiscount      = 0
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + calGrantB
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 calGrantB           = calGrantB - (_lsuLimitSubtotal - _lsuLimit)
+		 lsuAllowance        = 0
+		 sdaAward            = 0
+		 lsuPerformance      = 0
+		 familyDiscount      = 0
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + lsuAllowance
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 lsuAllowance        = lsuAllowance - (_lsuLimitSubtotal - _lsuLimit)
+		 sdaAward            = 0
+		 lsuPerformance      = 0
+		 familyDiscount      = 0
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + sdaAward
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 sdaAward            = sdaAward - (_lsuLimitSubtotal - _lsuLimit)
+		 lsuPerformance      = 0
+		 familyDiscount      = 0
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + lsuPerformance
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 lsuPerformance      = lsuPerformance - (_lsuLimitSubtotal - _lsuLimit)
+		 familyDiscount      = 0
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + familyDiscount
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 familyDiscount       = familyDiscount - (_lsuLimitSubtotal - _lsuLimit)
+		 nationalMerit       = 0
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + nationalMerit
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 nationalMerit       = nationalMerit - (_lsuLimitSubtotal - _lsuLimit)
+		 churchMatch         = 0
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + churchMatch
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 churchMatch         = churchMatch - (_lsuLimitSubtotal - _lsuLimit)
+		 pacificCampMatch    = 0
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + pacificCampMatch
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 pacificCampMatch    = pacificCampMatch - (_lsuLimitSubtotal - _lsuLimit)
+		 pacificCampMatch    = _lsuLimit         
+					   - lsuAllowance 
+					   - sdaAward 
+					   - lsuPerformance 
+					   - familyDiscount 
+					   - nationalMerit
+					   - churchMatch
+		 nonPacificCampMatch = 0
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + nonPacificCampMatch
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 nonPacificCampMatch = nonPacificCampMatch - (_lsuLimitSubtotal - _lsuLimit)
+		 litEvanMatch        = 0
+		return  _lsuSubtotal
+	}
+
+	 _lsuLimitSubtotal = _lsuLimitSubtotal + litEvanMatch
+	if(  _lsuLimitSubtotal  > _lsuLimit
+		 litEvanMatch        = litEvanMatch - (_lsuLimitSubtotal - _lsuLimit)
+		return  _lsuSubtotal
+	}
+
+	return  _lsuLimitSubtotal
+}
+
+public final enforceOverallLimits){
+/**********  
+<CFOUTPUT
+	<br />Pell: #pellGrant#
+        <br />CalGrantA: #calGrantA#
+        <br />CalGrantB: #calGrantB#
+        <br />FSEOG: #fseogAmt#
+	<br />External %: #extAllowance#
+        <br />Non CA State Grant: #nonCaGrantAmt#
+	<br />Ouside Subsidy: #outsideAmt#
+	<br />Church: #churchBase#
+	<br />LSU Allowance: #lsuAllowance#
+	<br />SDA Membership: #sdaAward#
+	<br />LSU Performance: #lsuPerformance#
+	<br />Family Disc: #familyDiscount#
+	<br />National Merit: #nationalMerit#
+	<br />Church Match: #churchMatch#
+	<br />Pacific Camp Match: #pacificCampMatch#
+	<br />Non-Pacific Camp Match: #nonPacificCampMatch#
+	<br />Lit Evan Match: #litEvanMatch#
+	<br />SubDirect: #subDirect#
+	<br />Perkins: #perkinsLoan#
+	<br />UnsubDirect: #unsubDirect#
+	<br />Need Amt: #getCOA()#
+</CFOUTPUT
+**********/ 
+	 _lsuOverallLimit = getCOA()
+	if(  _lsuOverallLimit <= 0.01
+		 _lsuOverallLimit = 0
+	}
+
+	 _lsuOverallSubtotal = pellGrant
+				   + calGrantA
+				   + calGrantB
+				   + fseogAmt
+				   + extAllowance
+				   + nonCaGrantAmt
+				   + outsideAmt
+				   + churchBase
+				   + lsuAllowance
+				   + sdaAward
+				   + lsuPerformance
+				   + familyDiscount
+				   + nationalMerit
+				   + churchMatch
+				   + pacificCampMatch
+				   + nonPacificCampMatch
+				   + litEvanMatch
+				   + subDirect
+				   + perkinsLoan
+				   + fwsAmount
+				   + unsubDirect
+<CFOUTPUT
+/**********  <h1>LSU Overall Limit: #_lsuOverallLimit#</h1>**********/ 
+/**********  <h1>LSU Overall Subtotal: #_lsuOverallSubtotal#</h1>**********/ 
+</CFOUTPUT
+	
+	 reducedAid = false
+	 _lsuOverallLimitCheck = pellGrant
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 pellGrant = pellGrant - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('2')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + calGrantA
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 calGrantA = calGrantA - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('3')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + calGrantB
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 calGrantB = calGrantB - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('4')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + fseogAmt
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 fseogAmt = fseogAmt - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('5')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + extAllowance
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 extAllowance = extAllowance - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('6')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + nonCaGrantAmt
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 nonCaGrantAmt = nonCaGrantAmt - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('7')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + outsideAmt
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 outsideAmt = outsideAmt - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('8')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + churchBase
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 churchBase = churchBase - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('9')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + lsuAllowance
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 lsuAllowance = lsuAllowance - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('10')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + sdaAward
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 sdaAward = sdaAward - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('11')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + lsuPerformance
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 lsuPerformance = lsuPerformance - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('12')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + familyDiscount
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 familyDiscount = familyDiscount - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('13')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + nationalMerit
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 nationalMerit = nationalMerit - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('14')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + churchMatch
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 churchMatch = churchMatch - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('15')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + pacificCampMatch
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 pacificCampMatch = pacificCampMatch - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('16')
+		return  true
+	}
+<CFOUTPUT
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + nonPacificCampMatch
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 nonPacificCampMatch = nonPacificCampMatch - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('17')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + litEvanMatch
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 litEvanMatch = litEvanMatch - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('18')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + subDirect
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 subDirect = subDirect - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('19')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + perkinsLoan
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 perkinsLoan = perkinsLoan - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('20')
+		return  true
+	}
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + fwsAmount
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 fwsAmount = fwsAmount - (_lsuOverallLimitCheck - _lsuOverallLimit)
+		 _reduceRemaining = reduceAid('21')
+		return  true
+	}
+
+	 _lsuOverallLimitCheck = _lsuOverallLimitCheck + unsubDirect
+	if(  _lsuOverallLimitCheck  > _lsuOverallLimit
+		 _efcAmount = getEFC()
+		if(  reducedAid is false
+			if(  TRIM(_efcAmount).!equalsIgnoreCase("){
+				 unsubDirect = unsubDirect - (_lsuOverallLimitCheck - _lsuOverallLimit - _efcAmount)
+			}else{
+				 unsubDirect = unsubDirect - (_lsuOverallLimitCheck - _lsuOverallLimit)
+			}
+		}else{
+			if(  TRIM(_efcAmount).!equalsIgnoreCase("){
+				if(  unsubDirect  > _efcAmount
+					 unsubDirect = _efcAmount
+				}
+			}
+		}
+		if(  unsubDirect  > getUnSubDirect()
+			 unsubDirect = getUnSubdirect()
+		}
+	}
+</CFOUTPUT
+	return  _lsuOverallSubtotal
+}
+
+public final reduceAid){
+<CFARGUMENT NAME="_clearVar" REQUIRED="true){
+	 reducedAid = true
+	if(  _clearVar <= 1
+		 pellGrant = 0
+	}
+	if(  _clearVar <= 2
+        	 calGrantA = 0
+	}
+	if(  _clearVar <= 3
+        	 calGrantB = 0
+	}
+	if(  _clearVar <= 4
+        	 fseogAmt = 0
+	}
+	if(  _clearVar <= 5
+		 extAllowance = 0
+	}
+	if(  _clearVar <= 6
+        	 nonCaGrantAmt = 0
+	}
+	if(  _clearVar <= 7
+		 outsideAmt = 0
+	}
+	if(  _clearVar <= 8
+		 churchBase = 0
+	}
+	if(  _clearVar <= 9
+		 lsuAllowance = 0
+	}
+	if(  _clearVar <= 10
+		 sdaAward = 0
+	}
+	if(  _clearVar <= 11
+		 lsuPerformance = 0
+	}
+	if(  _clearVar <= 12
+		 familyDiscount = 0
+	}
+	if(  _clearVar <= 13
+		 nationalMerit = 0
+	}
+	if(  _clearVar <= 14
+		 churchMatch = 0
+	}
+	if(  _clearVar <= 15
+		 pacificCampMatch = 0
+	}
+	if(  _clearVar <= 16
+		 nonPacificCampMatch = 0
+	}
+	if(  _clearVar <= 17
+		 litEvanMatch = 0
+	}
+	if(  _clearVar <= 18
+		 subDirect = 0
+	}
+	if(  _clearVar <= 19
+		 perkinsLoan = 0
+	}
+	if(  _clearVar <= 20
+		 fwsAmount = 0
+	}
+	if(  _clearVar <= 21
+		 _efcAmount = getEFC()
+		if(  TRIM(_efcAmount).!equalsIgnoreCase("){
+			if(  unsubDirect  > _efcAmount
+				 unsubDirect = _efcAmount
+			}else{
+				 unsubDirect = unsubDirect + _efcAmount
+			}
+		}
+	}
+	if(  unsubDirect  > getUnSubDirect()
+		 unsubDirect = getUnSubdirect()
+	}
+	return  true
+}

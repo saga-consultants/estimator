@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://lestimator.lasierra.edu/estimator/loc/web-app_3_0.xsd">
+    <!-- The form component needs to have a UIForm in its ancestry. Suggestion: enclose the necessary components within <h:form>-->
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>SystemTest</param-value>
+        <!-- or Production Development UnitTest SystemTest -->
+    </context-param>
+    <!-- This is an optional parameter, but it makes troubleshooting errors much easier.  -->
+    <!-- You may want to delete it before final deployment -->
+    <context-param>
+        <description>JSF2.x</description>
+        <param-name>facelets.DEVELOPMENT</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>
+        Enables the ui:debug facelets tag for JSF2.
+       [ui:debug hotkey="x" rendered="@{initParam['javax.faces.FACELETS_DEVELOPMENT']}" ]
+    </description>
+        <param-name>javax.faces.FACELETS_DEVELOPMENT</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+        <param-value>3</param-value>
+        <!-- '-1' in production no checking web page updates -->
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!-- you can disable partial state saving for specified views 
+   javax.faces.FULL_STATE_SAVING_VIEW_ID -->
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+        <param-value>auto</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+        <param-value>100000</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.responseBufferSize</param-name>
+        <param-value>100000</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.defaultResourceMaxAge</param-name>
+        <param-value>604800</param-value>
+        <!-- default val in ms -->
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.resourceUpdateCheckPeriod</param-name>
+        <param-value>10</param-value>
+        <!-- default val is 5 min -->
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.writeStateAtFormEnd</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- mojarra properties -->
+    <context-param>
+        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
+        <param-value>50</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
+        <param-value>800</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.verifyObjects</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.validateXml</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.displayConfiguration</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.responseBufferSize</param-name>
+        <param-value>81920</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.preferXHTML</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.compressViewState</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.compressJavaScript</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.externalizeJavaScript</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.enableMultiThreadedStartup</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.enableThreading</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--Generally when you use the JSF framework and look inside the HTML output you will find that clientId is separated by a colon sign ":". 
+   Unfortunately this sign is not allowed when you use the jQuery library because it is reserved for jQuery selectors. 
+   JavaServer Faces 2.0 comes with a parameter: javax.faces.SEPARATOR_CHAR. 
+   In this case you should change default separator to another one which is accepted by jQuery. For example '-' -->
+    <context-param>
+        <param-name>javax.faces.SEPARATOR_CHAR</param-name>
+        <param-value>-</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>aristo</param-value>
+    </context-param>
+    <resource-ref>
+        <description>Postgresql</description>
+        <res-ref-name>jdbc/__postgresql</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <persistence-unit-ref>
+        <persistence-unit-ref-name>estimator/pu</persistence-unit-ref-name>
+        <persistence-unit-name>estimator</persistence-unit-name>
+    </persistence-unit-ref>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Hook</servlet-name>
+        <servlet-class>edu.lsu.estimator.Hook</servlet-class>
+    </servlet>
+     
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Hook</servlet-name>
+        <url-pattern>/rphook</url-pattern>
+    </servlet-mapping>
+<servlet>
+            <servlet-name>javax.ws.rs.core.Application</servlet-name>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>javax.ws.rs.core.Application</servlet-name>
+            <url-pattern>/api/*</url-pattern>
+        </servlet-mapping>
+
+    <session-config>
+        <session-timeout>
+            300
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.xhtml</welcome-file>
+        <welcome-file>index.jsf</welcome-file>
+    </welcome-file-list>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/timeout.html</location>
+    </error-page>
+    <error-page>
+        <error-code>408</error-code>
+        <location>/timeout.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>com.sun.faces.context.FacesFileNotFoundException</exception-type>
+        <location>/404.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500.xhtml</location>
+    </error-page>
+<!--        <security-constraint>
+            <display-name>SecurityConstraint</display-name>
+            <web-resource-collection>
+                <web-resource-name>SecureConnection</web-resource-name>
+                <url-pattern>/view/login.jsf</url-pattern>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>
+            </web-resource-collection>
+            <web-resource-collection>
+                <web-resource-name>RPHOOK</web-resource-name>
+                <description>RP SIGNIN</description>
+                <url-pattern>/rphook</url-pattern>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>
+            </web-resource-collection>
+            <user-data-constraint>
+                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            </user-data-constraint>
+        </security-constraint>
+     <auth-constraint/> will popup for user authentication  -->
+</web-app>
+<!--
+ <session-config>
+        <session-timeout>
+            30
+        </session-timeout>     
+ </session-config>
+ 
+    <security-constraint>
+        <display-name>Admin Pages</display-name>
+        <web-resource-collection>
+            <web-resource-name>Administrative Pages</web-resource-name>
+            <description/>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>admin</description>
+            <role-name>AdminRole</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>file</realm-name>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>
+            <form-error-page>/loginerror.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+    
+    <security-role>
+        <description>Administrators</description>
+        <role-name>AdminRole</role-name>
+    </security-role>
+    
+    <security-role>
+        <description>Users</description>
+        <role-name>UserRole</role-name>
+    </security-role>
+-->

@@ -1,0 +1,1857 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"           
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/view/template_signedin.xhtml"> 
+    
+    <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+    
+    <ui:define name="content">
+        <div id="sidebar2">
+            
+            
+            <!-- <h:graphicImage library="img" name="ui-anim_basic_16x16.gif"  />-->
+ <!--src="${pageContext.request.contextPath}/images/ui-anim_basic_16x16.gif" library="primefaces" name="jquery/ui/ui-anim_basic_16x16.gif"-->
+            <p:outputPanel id="bar"  style="margin:0px; padding:0px;border:0px;" >
+            <table id="estimatebar" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <th id="title" colspan="2">                        
+                     
+                        <h:form id="pdfrm">
+                            <table width="100%"><tr>
+                                    <td align="left">
+                                        <h:commandButton id="topdf" action="#{estimator.toPDF}"  style="padding:5px;  font-size: smaller; vertical-align: middle; " value="Save and Print"  > <!--immediate="false"-->
+                                            <p:ajax onstart="this.disable();" oncomplete="this.enable(); window.location.reload('/estimator/view/estimate-new.jsf'); location.reload(true); alert('done!');" /> <!-- javascript reload page? javascript:location.reload(true) -->
+                                        </h:commandButton>
+                                     </td>   
+                                    <th style="border:0px;"><center>Estimate Summary <br/>(Rule Version #{ref.clientverions})</center></th>
+                                    <td  style="text-align: right;">
+                                        <h:commandButton id="toemail" action="#{estimator.toEmail}" style="padding:5px;    background: #e4e4e4;    border: 0.5px solid #e4e4e4;color: #0000002e; font-size: smaller;vertical-align: middle; " disabled="true"  value="Save and Email" > <!-- global="true"   -->
+                                            <!--<p:ajax onstart="this.disable();" oncomplete="this.enable();" /> -->
+                                        </h:commandButton>
+                                    </td>
+                          </tr></table></h:form></th>
+                </tr>
+                <tr class="#{estimator.sumrow(1)}">
+                    <td>#{estimator.showStudName(32)} </td><td>GPA: #{estimator.stud.studentPGpa}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td>ID:#{empty estimator.stud.studentALsuid ? 'n/a': estimator.stud.studentALsuid}  (#{estimator.std_indept eq false?'Dependent':'Independent'} #{estimator.std_sex})</td><td>SAT: #{estimator.stud.studentQSat + estimator.stud.studentQSatV}</td>
+                </tr>
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td>#{estimator.stud.studentUAcademic}, #{estimator.std_marry eq false? 'Single':'Married'}, #{estimator.std_intl eq false?'Domestic':'International'} </td>
+                    <td>ACT: #{estimator.stud.studentRAct}</td>
+                </tr>
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td>#{estimator.stud.studentFPhone}</td><td>#{estimator.stud.studentIState} #{estimator.stud.studentJZip} </td>
+                </tr>
+                
+                <tr>
+                    <th  colspan="2">Maximum Possible Aid</th><!-- =====================(living cost: #{estimator.calc.COL})============ -->
+                </tr>                
+                <tr class="#{estimator.sumrow(1)}">
+                    <td class="item">Tuition &amp; Fees:</td><td class="numb">#{estimator.calc.init()}#{estimator.calc.showTuitionFees()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">+Additional Expenses</td><td class="numb">#{estimator.calc.showAddlExpense()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+<!--                    <td class="item">-Expected Family Contribution (EFC)</td><td class="numb">#{estimator.calc.showEFC()}</td>-->
+                     <td class="item">-Student Aid Index (SAI)</td><td class="numb">#{estimator.calc.showEFC()}</td>
+                </tr>
+                <tr>
+                    <td class="item">&nbsp;</td><td class="tot">#{estimator.calc.showNeedAmt()}</td>
+                </tr>
+                
+                <tr>
+                    <th  colspan="2">Financial Aid   #{estimator.calc.refreshCalc(estimator.stud)}(#{estimator.calc.use_need_ind gt 0 ? 'need-based':'non-need based'}. top aid: #{estimator.calc.showMPA()})</th><!-- ===================================================================================== -->
+                </tr>
+                <tr class="subheader">
+                    <td class="itemt">#{ref.padStr("External Grants","-",-1,2,35)}</td><td class="numb"></td> <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </tr>
+                <tr class="#{estimator.sumrow(1)}">
+                    <td class="item">PELL Grant</td><td class="numb">#{estimator.calc.showPellGrantAmt()}</td> <!--.initAndShowPellGrantAmt()-->
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">Cal Grant A</td><td class="numb">#{estimator.calc.showCalGrantA()}</td> <!--<h:outputText value="#{estimator.stud.studentAaCalgrantA}"><f:convertNumber pattern="$#,###" /></h:outputText> -->
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">Cal Grant B</td><td class="numb">#{estimator.calc.showCalGrantB()}</td> <!--<h:outputText value="#{estimator.stud.studentAbCalgrantB}"><f:convertNumber pattern="$#,###" /></h:outputText> -->
+                </tr><!-- faces-config.xml has default-local setting. type="currency" will gen '$0.00' -->
+                
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">FSEOG</td><td class="numb">#{estimator.calc.showFseogAmt()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">External Educational Allowance</td><td class="numb">#{estimator.calc.showExtAllowanceAmt()}</td>
+                </tr>
+                
+                <f:subview id="opt_noncagrant" rendered="#{estimator.calc.getNonCalGrantAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.getNonCalGrantDesc()}</td>
+                        <td class="numb">#{estimator.calc.showNonCalGrantAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_outside" rendered="#{estimator.calc.getOutsideAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.getOutsideDesc()}</td>
+                        <td class="numb">#{estimator.calc.showOutsideAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_churchbase" rendered="#{estimator.calc.getChurchBaseAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showChurchBaseDesc()}</td>
+                        <td class="numb">#{estimator.calc.showChurchBaseAmt()}</td>
+                    </tr>
+                </f:subview>
+                
+                <!--<tr><td colspan="2">&nbsp;</td></tr>-->
+                
+                <tr class="subheader">
+                    <td class="itemt">#{ref.padStr(estimator.calc.show_sum_lasu_aid(),"-",-1,2,35)}</td><td class="numb"></td><!-- ~~~~"La Sierra Awards"~~~#{estimator.calc.sum_lasu_aid}~~~~~ -->
+                </tr>
+                <tr class="#{estimator.sumrow(1)}">
+                    <td class="item">La Sierra Educational Allowance</td><td class="numb">#{estimator.calc.showLsuAllowanceAmt()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">SDA Award</td><td class="numb">#{estimator.calc.showSdaAwardAmt()}</td>
+                </tr>
+                <!-- Commented Univ Grant for 2025-->
+<!--                <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra Univ. Grant</td><td class="numb">#{estimator.calc.showLasuGrantAmt()}</td>
+                </tr>-->
+                <!--
+                <tr>
+                    <td class="item">La Sierra Performance</td><td class="numb">#{estimator.calc.showLsuPerformanceAmt()}</td>
+                </tr>-->
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra Need Grant</td><td class="numb">#{estimator.calc.showLsuNeedGrantAmt()}</td>
+                </tr>
+                
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">Family Discount</td><td class="numb">#{estimator.calc.showFamilyDiscountAmt()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">National Merit Scholarship</td><td class="numb">#{estimator.calc.showNationalMeritAmt()}</td>
+                </tr>
+                
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra Achievement Award</td><td class="numb">#{estimator.calc.showLsuAchievementAmt()}</td>
+                </tr>
+<!--                <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra 4-year Renewable Scholarship</td><td class="numb">#{estimator.calc.showLsu4yRenewableAmt()}</td>
+                </tr>-->
+<!--                 <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra Merit (FR)</td><td class="numb">#{estimator.calc.showLsuMeritFR()}</td>
+                </tr>-->
+                 <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra U Grant (FR)</td><td class="numb">#{estimator.calc.showLsuMeritFR()}</td>
+                </tr>
+                
+                
+<!--                 <tr class="#{estimator.sumrow()}">
+                    <td class="item"> La Sierra Merit (TF)</td><td class="numb">#{estimator.calc.showLsuMeritTF()}</td>
+                </tr>-->
+                    <tr class="#{estimator.sumrow()}">
+                    <td class="item"> La Sierra U Grant (TF) </td><td class="numb">#{estimator.calc.showLsuMeritTF()}</td>
+                </tr>
+                
+                 <tr class="#{estimator.sumrow()}">
+                    <td class="item">La Sierra U Grant (R)</td><td class="numb">#{estimator.calc.showLsuMeritR()}</td>
+                </tr>
+                
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">University House Grant</td><td class="numb">#{estimator.calc.showUnivHouseGrant()}</td>
+                </tr>
+                
+                <f:subview id="opt_award1" rendered="#{estimator.calc.getScholarship1Amt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showScholarship1Desc()}</td>
+                        <td class="numb">#{estimator.calc.showScholarship1Amt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_award2" rendered="#{estimator.calc.getScholarship2Amt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showScholarship2Desc()}</td>
+                        <td class="numb">#{estimator.calc.showScholarship2Amt()}</td>
+                    </tr>
+                </f:subview>
+                
+                
+                
+                <f:subview id="opt_churchmatch" rendered="#{estimator.calc.getChurchMatchAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showChurchMatchDesc()}</td>
+                        <td class="numb">#{estimator.calc.showChurchMatchAmt()}</td>
+                    </tr>
+                </f:subview>
+                
+                <f:subview id="opt_litEvan" rendered="#{estimator.calc.getLitEvanMatchAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showLitEvanMatchDesc()}</td>
+                        <td class="numb">#{estimator.calc.showLitEvanMatchAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_pacCampMatch" rendered="#{estimator.calc.getPacificCampMatchAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showPacificCampMatchDesc()}</td>
+                        <td class="numb">#{estimator.calc.showPacificCampMatchAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_nonPacCampMatch" rendered="#{estimator.calc.getNonPacificCampMatchAmt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showNonPacificCampMatchDesc()}</td>
+                        <td class="numb">#{estimator.calc.showNonPacificCampMatchAmt()}</td>
+                    </tr>
+                </f:subview>
+                
+                
+                <f:subview id="opt_award7" rendered="#{estimator.calc.getScholarship7Amt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showScholarship7Desc()}</td>
+                        <td class="numb">#{estimator.calc.showScholarship7Amt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_award8" rendered="#{estimator.calc.getScholarship8Amt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showScholarship8Desc()}</td>
+                        <td class="numb">#{estimator.calc.showScholarship8Amt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_award9" rendered="#{estimator.calc.getScholarship9Amt() gt 0 }">
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showScholarship9Desc()}</td>
+                        <td class="numb">#{estimator.calc.showScholarship9Amt()}</td>
+                    </tr>
+                </f:subview>
+                
+                <!--<tr><td colspan="2">&nbsp;</td></tr> #{estimator.std_fafsa}#{estimator.std_noloans}#{estimator.in_unsubloan}-->
+                
+                <tr class="subheader">
+                    <td class="itemt">#{ref.padStr("Loans","-",-1,2,35)}</td><td class="numb"></td><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </tr>
+                <f:subview id="exlude_loans" rendered="#{estimator.std_fafsa eq false or estimator.std_noloans eq true }">
+                    <tr class="#{estimator.sumrow(1)}">
+                        <td  class="item">#{estimator.std_fafsa eq false ? "not FAFSA eligible":"Option [exclude loans] is checked"}</td>
+                        <td class="numb">n/a</td>
+                    </tr>
+                </f:subview>
+                
+                                
+                <f:subview id="include_loans" rendered="#{estimator.std_noloans eq false and estimator.std_fafsa eq true}">
+                    <tr class="#{estimator.sumrow(1)}">
+                        <td class="item">Subsidized Direct Loan (borrow #{estimator.calc.showAmt( estimator.calc.getOrg_loan_amt_sub() )})</td><td class="numb">#{estimator.in_subloan eq true or estimator.stud.studentApSubLoans eq 'yes'? estimator.calc.showSubdirectAmt() : 'excluded'}</td>
+                    </tr>
+<!--                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">Perkins Loan (borrow #{estimator.calc.showAmt( estimator.calc.getOrg_loan_amt_perkins() )})</td><td class="numb">#{estimator.calc.showPerkinLoanAmt()}</td>
+                    </tr>-->
+<!--                    La Sierra Loan-to-Scholarship-->
+<tr class="#{estimator.sumrow()}">
+                        <td class="item">La Sierra Loan-to-Scholarship (borrow #{estimator.calc.showAmt( estimator.calc.getOrg_loan_amt_perkins() )})</td><td class="numb">#{estimator.calc.showAmt( estimator.calc.getOrg_loan_amt_perkins() )}</td>
+                    </tr>
+                    <tr class="#{estimator.sumrow()}">
+                        <td class="item">Unsubsidized Direct Loan (borrow #{estimator.calc.showAmt( estimator.calc.getOrg_loan_amt_unsub() )})</td><td class="numb">#{estimator.in_unsubloan eq true or estimator.stud.studentAqUnsubLoans eq 'yes'? estimator.calc.showUnsubdirectAmt() : 'excluded'}</td>
+                    </tr>
+                </f:subview>                
+                                
+                
+                <f:subview id="opt_fws" rendered="#{estimator.in_fws eq true and estimator.calc.getFwsAmt() gt 0}" >  
+                    <!--<tr><td colspan="2">&nbsp;</td></tr> -->
+                    <tr class="subheader">
+                        <td class="itemt">#{ref.padStr("Federal Work-study","-",-1,2,35)}</td><td class="numb"></td><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                    </tr>
+                    <tr class="#{estimator.sumrow(1)}">
+                        <td class="item">Federal Work-study</td><td class="numb">#{estimator.calc.showFwsAmt()}</td>
+                    </tr>                    
+                </f:subview>
+                
+                <tr>
+                    <td class="item">&nbsp;</td><td class="tot">#{estimator.calc.showMaxAidAmt()}</td>
+                </tr>
+                
+                
+                <!-- #{estimator.calc.showSubdirectAmt()}/#{estimator.calc.showPerkinLoanAmt()}/#{estimator.calc.showUnsubdirectAmt()} -->
+                <tr>
+                    <th  colspan="2">Amount Due Calculation </th><!-- ===================================================================================== -->
+                </tr>
+                <tr class="#{estimator.sumrow(1)}">
+                    <td class="item">Tuition &amp; Fees</td><td class="numb">#{estimator.calc.showTuitionFees()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+<!--                    <td class="item">+Room &amp; Board</td><td class="numb">#{estimator.calc.initAndShowRoomBoardAmt()}</td>-->
+                    <td class="item">+Room &amp; Meal Plan</td><td class="numb">#{estimator.calc.initAndShowRoomBoardAmt()}</td>
+                </tr>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">-Financial Aid <font size="smaller">#{estimator.calc.showFaidExtDesc()}</font></td><td class="numb">#{estimator.calc.showFaidAmt()}</td>
+                </tr>
+                
+                
+                <f:subview id="opt_duePacCampBase" rendered="#{estimator.calc.getPacificCampBase() gt 0}" >
+                     <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showPacificCampBaseDesc()}</td>
+                        <td class="numb">#{estimator.calc.showPacificCampBaseAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_dueNonPacCampBase" rendered="#{estimator.calc.getNonPacificCampBaseAmt() gt 0}" >
+                     <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showNonPacificCampBaseDesc()}</td>
+                        <td class="numb">#{estimator.calc.showNonPacificCampBaseAmt()}</td>
+                    </tr>
+                </f:subview>
+                <f:subview id="opt_dueLitEvanBase" rendered="#{estimator.calc.getLitEvanBaseAmt() gt 0}" >
+                     <tr class="#{estimator.sumrow()}">
+                        <td class="item">#{estimator.calc.showLitEvanBaseDesc()}</td>
+                        <td class="numb">#{estimator.calc.showLitEvanBaseAmt()}</td>
+                    </tr>
+                </f:subview>
+                
+                
+                <tr>
+                    <td class="item">&nbsp;</td><td class="tot">#{estimator.calc.showDueAmt()}</td>
+                </tr>
+                
+                
+                <tr>
+                    <th  colspan="2">Payment Options</th><!-- ===================================================================================== -->
+                </tr>
+                <tr class="#{estimator.sumrow(1)}">
+                    <td class="item">Year in Advance option <font size="smaller">(5% off)</font></td><td class="numb">#{estimator.calc.initAndShowYIA()}</td>
+                </tr>
+                <f:subview id="cj_quarter_in_adv" rendered="#{estimator.stud.studentUAcademic ne 'CJ'}">
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">Quarterly in Advance option <font size="smaller">(2% off)</font></td><td class="numb">#{estimator.calc.showQIA()}</td>
+                </tr>
+                </f:subview>
+                <tr class="#{estimator.sumrow()}">
+                    <td class="item">Monthly option <font size="smaller">($135 annual fee included)</font></td><td class="numb">#{estimator.calc.showMonthlyOption()}</td>
+                </tr>
+                <!--tr><td colspan="2">&nbsp;</td></tr-->
+            </table>
+            </p:outputPanel>          
+         </div>
+        
+        
+        
+        <f:subview id="sv" >
+            <script type="text/javascript">
+                 //<![CDATA[
+                //$("input.myClass[type=checkbox]") $("input.myClass:checkbox")   $(".blah\\.blah\\.blah")    $(".a.b") and $(".a, .b")  $(".class2") and $("[class=class2]") 
+                function adjustHeight(){ 
+                $("ul.ui-tabs-nav").css("height", "41px");
+
+                }
+                
+                function delayResizeHeight( mode){
+  //                  alert("delayResizeHeight() invoked with mode="+mode);
+                    if( mode && mode==1){
+                        window.setTimeout(function() {
+                            adjustHeight();
+                            resize_height();
+                        }, 300);
+  
+                    }else{
+                        window.setTimeout(function() {
+                            adjustHeight();
+                            resize_height();
+                        }, 200);
+                    }
+                    //to bind js onfocus() func to primefaces inputmask fields
+                   // $("input.ui-inputmask").onfocus=function () {this.select();}
+                    //$("input.ui-inputmask").on("focus", function(event){ this.select(); });
+             //       $("input.ui-inputmask").bind("focus", function(event){ this.select(); this.doubleclick();  });
+                }     
+                
+                $(window).load(function() {                    
+                    adjustHeight();
+                    //resize_height(); 
+                    delayResizeHeight();
+                }); 
+                
+    var el_array = new Array;
+    var former_hl;
+    
+    function bindEventx() {
+        
+        elements = getElementsByClassName(document, "*", "element");
+        for (i = 0; i < elements.length; i++) {
+            if (elements[i].type == "checkbox" ||  elements[i].type == "radio" || elements[i].type == "file") {
+                elements[i].onclick = function () {safari_reset();addClassName(getSpecParentNode(this, 'tbody'), "highlighted", true);}; // this.parentNode.parentNode
+                elements[i].onfocus = function () {safari_reset();addClassName(getSpecParentNode(this, 'tbody'), "highlighted", true);};
+                el_array.splice(el_array.length, 0, elements[i]);
+            } else {
+                elements[i].onfocus = function () {safari_reset();addClassName(getSpecParentNode(this, 'tbody'), "highlighted", true);};
+                elements[i].onblur = function () {removeClassName(getSpecParentNode(this, 'tbody'), "highlighted");};
+            }
+        }
+      
+    }
+
+
+    function safari_reset() {
+        for (var i = 0; i < el_array.length; i++) {
+            removeClassName(getSpecParentNode(el_array[i], 'tbody') , "highlighted"); //el_array[i].parentNode.parentNode
+        }
+    }
+
+
+    function getElementsByClassName(_6, _7, _8) {
+        var _9 = _7 == "*" && _6.all ? _6.all : _6.getElementsByTagName(_7);
+        var _a = new Array;
+        _8 = _8.replace(/\-/g, "\\-");
+        var _b = new RegExp("(^|\\s)" + _8 + "(\\s|$)");
+        var _c;
+        for (var i = 0; i < _9.length; i++) {
+            _c = _9[i];
+            if (_b.test(_c.className)) {
+                _a.push(_c);
+            }
+        }
+        return _a;
+    }
+
+
+    function removeClassName(_e, _f) {
+        if (_e.className) {
+            var _10 = _e.className.split(" ");
+            var _11 = _f.toUpperCase();
+            for (var i = 0; i < _10.length; i++) {
+                if (_10[i].toUpperCase() == _11) {
+                    _10.splice(i, 1);
+                    i--;
+                }
+            }
+            _e.className = _10.join(" ");
+        }
+    }
+
+
+    function addClassName(_13, _14, _15) {
+        if (_13.className) {
+            var _16 = _13.className.split(" ");
+            if (_15) {
+                var _17 = _14.toUpperCase();
+                for (var i = 0; i < _16.length; i++) {
+                    if (_16[i].toUpperCase() == _17) {
+                        _16.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            _16[_16.length] = _14;
+            _13.className = _16.join(" ");
+        } else {
+            _13.className = _14;
+        }
+    }
+    
+    function getSpecParentNode( point  ){        
+        var specTag = "tbody";
+        var node = point;
+        while(node!=null){  //do while          
+            if( node && node.tagName.toLowerCase()==specTag){
+               // alert('found matching parent node');
+               return node;
+                 
+            }else{
+    //            alert(node.tagName);
+            }
+            node = node.parentNode;            
+        }
+        return null;
+        //alert('no matching parent node');
+    }
+    function setSpecParentNode(point){
+        unsetSpecParentNode();
+        var node = getSpecParentNode(point);
+        if(node){
+            //node.style.className ="highlighted";
+            //node.className = "highlighted";
+            //node.style.border = "1px solid red";
+            addClassName(node, "highlighted", true);
+            former_hl = node;
+        }
+    }
+    function unsetSpecParentNode(point){
+        if( former_hl){
+            removeClassName( former_hl, "highlighted");
+        }        
+    }
+    
+    function popup(){
+        var popind = document.getElementById("auth-sv-ptab-popind");
+        if (popind ){
+ 
+            
+            if(popind.value=="0"){
+                popind.style.visibility="hidden";//style.display="none";
+                auto.hide();                 
+            }else{                
+                auto.show(); 
+                popind.style.visibility="visible";//style.display="block";
+                 
+            }
+        }               
+    }
+    function popdown(   dialog){ 
+        var popind = document.getElementById("auth-sv-ptab-popind");
+        if (popind ){
+            popind.style.visibility="hidden";//style.display="none";
+        }
+        //auto.hide(); //already hide 
+        //auto = dialog;
+    }
+    function popdown2(popind){ 
+        popind.style.visibility="hidden";//style.display="none";        
+        auto.hide(); //or dialog.hide();        
+    }
+    function popdown3(popind){ /*
+      
+        
+        if( keynum ==9){ */
+            var ind = popind;//document.getElementById("auth-sv-ptab-popind");
+            if (ind ){  /*              
+                var inputs = document.getElementsByTagName('input');
+                var index;
+                for (var i = 0; i < inputs.length; ++i) {
+                    if( inputs[i]==ind){
+                        //inputs[i+1].focus();
+                        index = i;
+                        break;
+                    }
+                }
+                //ind.blur();
+            */
+                ind.style.visibility="hidden";//:display="none";
+                //if( index)inputs[index].focus();                
+            }                  
+            //ind = document.getElementById("auth-sv-ptab-std_street");
+            //if( ind)ind.focus();
+            var element = document.querySelector(":focus");
+            if( element==null) element = document.activeElement;
+            alert(element);
+            if($('input:focus').size() == 0){
+                //alert("none is focused");                
+            }
+            alert($("*:focus").attr("id"));
+            alert($('* :focused').length);
+            //ind = document.getElementById("auth-sv-ptab-std_street");
+            alert(ind.gotFocus);//focuspop);//ind.focused);
+            alert( $("*:focus").size() );
+            auto.hide(); //or dialog.hide();        
+        //}
+    }
+    function popdown4(popind, e){        
+        popind.style.visibility="hidden";
+        auto.hide();
+        
+        if( document.activeElement)return;
+        var ind = document.getElementById("auth-sv-ptab-std_phone");
+        if( ind)ind.focus();
+    }
+    function keyHandler(e) {
+        var TABKEY = 9;
+        if(e.keyCode == TABKEY) {            
+            auto.hide();/*
+            if(e.preventDefault) {
+                e.preventDefault();
+            }
+            return false; */
+        }
+    }
+    function adjustPositionning(sourceElement, dialog) {
+        var x = sourceElement.offset().left;
+        var y = sourceElement.offset().top;
+        //var width = sourceElement.width();
+        var padding = 27;
+        //dialog.parent().offset({ top: y, left: x + width + padding });
+        dialog.offset({ top: y+ padding, left: x-8  });
+        focuspop = false;
+ //       alert("src element x="+x + " y="+y); //651 336
+        /*
+        s.style.position = "relative";
+        s.style.left = dialog_x + "px";
+        s.style.top = dialog_y + "px";
+        */
+    }
+    function delayfocus(){
+        //if( document.activeElement)return;
+        var popind = document.getElementById("auth-sv-ptab-popind");
+        if (popind ){
+            if( popind.style.visibility=="visible"){                
+                //if( !document.activeElement)
+                    popind.focus();            
+            }else{
+                var ind = document.getElementById("auth-sv-ptab-std_phone");
+                if( !document.activeElement)
+                 if( ind)ind.focus();
+            }
+        }else{
+            var ind = document.getElementById("auth-sv-ptab-std_phone");
+            if( !document.activeElement)
+             if( ind)ind.focus();
+        }
+    }
+    function chg_efc_ind(){
+        resize_height(); 
+        //var ind = $('input#auth-sv-ptab-std_efc').val();
+        //if(ind ==defined){
+        if( $('input#auth-sv-ptab-std_efc').prop('checked')){
+           // alert('checked');
+            var amt = $('input#auth-sv-ptab-efc_amt');
+            if(amt){
+                amt.removeAttr("disabled"); //.attr("disabled", "disabled");  //or use class:  .removeClass('disabled'); .addClass('disabled');
+                amt.select();
+            }            
+        }      
+     
+        
+    /* jQuery docs say to use prop() for things like disabled, checked, etc
+to disable all form elements in a div or form parent:
+$myForm.find(':input:not(:disabled)').prop('disabled',true);
+
+And to enable again:
+$myForm.find(':input:disabled').prop('disabled',false)
+*/
+    //below jquery functions return true or false
+    //var checked = $('input[type=checkbox]').is(':checked');
+    //var checked = $('input[type=checkbox]').attr('checked');
+    //starting from jquery version 1.6 it's better to use prop and not attr
+    //var checked = $('input[type=checkbox]').prop('checked');
+    }
+        
+    function chg_ealsu_ind(){
+        resize_height(); 
+       //var ind = $('input#auth-sv-ptab-std_efc').val();
+       //if(ind ==defined){
+       if( $('input#auth-sv-ptab-std_ealsu').prop('checked')){
+          // alert('checked');
+           var amt = $('input#auth-sv-ptab-ealsu_perc');
+           if(amt){
+               amt.removeAttr("disabled"); //.attr("disabled", "disabled");  //or use class:  .removeClass('disabled'); .addClass('disabled');
+               amt.focus();
+               amt.select();
+           }            
+       } 
+    }   
+     
+    var focuspop = false;
+            var ss_sex      ;
+            var ss_intl     ;
+            var ss_marry    ;
+            var ss_sda      ;
+            var ss_indept   ;
+            var ss_indepts  ;
+             
+            var ss_merit    ;
+            var ss_academic ;
+             
+            var ss_fafsa    ;
+            var ss_calgrant ;
+            var ss_ealsu    ;
+            var ss_eanonlsu ;
+            var ss_efc      ;
+            var ss_noloans  ;
+            var ss_dorm     ;
+            
+            var ss_awd7     ;
+            var ss_awd8     ;
+            var ss_awd9     ;
+            
+            var ss_adjcal   ;
+            var ss_subloan  ;
+            var ss_unsubloan;
+            var ss_fws      ;
+            
+            var ss_return   ;
+            var ss_nc       ;
+            
+            var ss_ptab     =0;
+    function sync_ss1(xhr, status, args){       
+        if(args.validationFailed   ) {   
+ //           alert("failed");        
+        } else if(!(typeof args.ss_sex === "undefined")){   
+            
+             ss_sex      = args.ss_sex;
+             ss_intl     = args.ss_intl;
+             ss_marry    = args.ss_marry;
+             ss_sda      = args.ss_sda;
+             ss_indept   = args.ss_indept;
+             ss_indepts  = args.ss_indepts; //size of map
+            
+             ss_merit    = args.ss_merit;
+             ss_academic = args.ss_academic;
+            
+             ss_fafsa    = args.ss_fafsa;
+             ss_calgrant = args.ss_calgrant;
+             ss_ealsu    = args.ss_ealsu;
+             ss_eanonlsu = args.ss_eanonlsu;
+             ss_efc      = args.ss_efc;
+             ss_noloans  = args.ss_noloans;
+             ss_dorm     = args.ss_dorm;
+             
+             ss_awd7     = args.ss_awd7;//"'"+args.ss_awd7+"'";
+             ss_awd8     = args.ss_awd8;
+             ss_awd9     = args.ss_awd9;
+            
+             ss_adjcal   = args.ss_adjcal;
+             ss_subloan  = args.ss_subloan;
+             ss_unsubloan= args.ss_unsubloan;
+             ss_fws      = args.ss_fws;
+            
+             ss_return   = args.ss_return;
+             ss_nc       = args.ss_nc;
+            
+             ss_ptab     = args.ss_ptab;             
+         }  
+ //        alert("sex1= " + args.ss_sex+" ptab="+ss_ptab);
+         do_sync_ss();         
+    }
+    
+    function sync_ss(xhr, status, args){       
+        if(args.validationFailed   ) {
+            //alert("js sync_ss() Validation Failed");  
+            null;
+        } else if (!(typeof args.ss_sex ==="undefined")){              
+            // alert("ex= " + args.ss_sex);//args.user.firstname + ", Lastname: " + args.user.lastname);              
+             ss_sex      = args.ss_sex;
+             ss_intl     = args.ss_intl;
+             ss_marry    = args.ss_marry;
+             ss_sda      = args.ss_sda;
+             ss_indept   = args.ss_indept;
+             ss_indepts  = args.ss_indepts; //size of map
+            
+             ss_merit    = args.ss_merit;
+             ss_academic = args.ss_academic;
+            
+             ss_fafsa    = args.ss_fafsa;
+             ss_calgrant = args.ss_calgrant;
+             ss_ealsu    = args.ss_ealsu;
+             ss_eanonlsu = args.ss_eanonlsu;
+             ss_efc      = args.ss_efc;
+             ss_noloans  = args.ss_noloans;
+             ss_dorm     = args.ss_dorm;
+             
+             ss_awd7     = args.ss_awd7;//"'"+args.ss_awd7+"'";
+             ss_awd8     = args.ss_awd8;
+             ss_awd9     = args.ss_awd9;
+            
+             ss_adjcal   = args.ss_adjcal;
+             ss_subloan  = args.ss_subloan;
+             ss_unsubloan= args.ss_unsubloan;
+             ss_fws      = args.ss_fws;
+            
+             
+             ss_return   = args.ss_return;
+             ss_nc       = args.ss_nc;   
+            
+             ss_ptab     = args.ss_ptab;             
+         }         
+         //alert("sex= " + args.ss_sex+" ptab="+ss_ptab);
+            //jquery1.6+: $input.prop('disabled', true); $input.prop('disabled', false);   //jquery1.5+: $input.attr('disabled','disabled'); $input.removeAttr('disabled');
+            //for select: jQuery("#idClient").attr("disabled","disabled");  jQuery("#idClient").removeAttr("disabled"); jQuery("#idClient").val('1'); jQuery("#idClient").val();
+            //for checkbox: jQuery("#yes").attr("checked","checked"); jQuery("#yes").removeAttr("checked");
+        do_sync_ss();
+        
+    }
+    function do_sync_ss(){
+         if(ss_ptab==0){   //@name to just name from jquery1.3+
+            //var obj_sex =  $("input[name=auth-sv-ptab-std_sex][type='radio']");//[type='checkbox'] $("input#auth-sv-ptab-std_sex"); .attr("checked", true) 
+            var obj_sex1 =  $("input#auth-sv-ptab-std_sex1");
+            var obj_sex2 =  $("input#auth-sv-ptab-std_sex2");
+            var obj_sex3 =  $("input#auth-sv-ptab-std_sex3");
+            if(obj_sex1 && obj_sex2 && obj_sex3){ 
+                $(obj_sex1).prop("checked", false);
+                $(obj_sex2).prop("checked", false);
+                $(obj_sex3).prop("checked", false);
+                switch(ss_sex){
+                    case "F":$(obj_sex1).prop("checked", true); break;
+                    case "M":$(obj_sex2).prop("checked", true); break;
+                    case "N":$(obj_sex3).prop("checked", true); break;
+                    default: break;
+                }
+                //$(obj_sex).val(ss_sex);
+                /*
+                for(var i=0; i<obj_sex.length; i++){
+                    $(obj_sex[i]).prop("checked", false);//obj_sex[i].checked = false; //.attr('checked',false); not work here ????
+                    if(obj_sex[i].value==ss_sex){
+                        $(obj_sex[i]).prop("checked", true);//$(obj_sex[i]).attr('checked',true);//obj_sex[i].checked=true;                        
+                    }
+                } */              
+            }
+            
+            var obj_intl = $("input#auth-sv-ptab-std_intl[type='checkbox']");
+            if(obj_intl){                           
+                $(obj_intl).prop('checked',ss_intl); //$(obj_intl).attr('checked',ss_intl);                
+                if(ss_fafsa==true || ss_calgrant==true ||ss_efc==true ){
+                    $(obj_intl).prop("checked", false);//$(obj_intl).removeAttr("checked"); //if removeProp, it will not be added back
+                    $(obj_intl).attr('disabled', true);//$(obj_intl).attr('disabled', 'disabled');
+                }               
+            }            
+            var obj_marry = $("input#auth-sv-ptab-std_marital[type='checkbox']");
+            if(obj_marry){                              
+                $(obj_marry).prop('checked', ss_marry);//$(obj_marry).attr('checked', ss_marry);                
+                //obj_marry.checked=ss_marry;              
+            }
+            var obj_sda = $("input#auth-sv-ptab-std_sda[type='checkbox']");
+            if(obj_sda){                
+                //alert("sda status was "+$(obj_sda).is(':checked') +"ss_sda="+ss_sda)  ;//obj_sda.checked is undefined, $(obj_sda).attr('checked') is also undefined                                
+                $(obj_sda).prop('checked',ss_sda);//$(obj_sda).attr('checked',ss_sda); //obj_sda.checked=ss_sda;  DOES NOT work!!!???                
+            }
+            var obj_indept = $("input#auth-sv-ptab-std_indept[type='checkbox']");
+            if(obj_indept){                
+                $(obj_indept).prop('checked',ss_indept);//$(obj_indept).attr('checked',ss_indept);                
+                if(ss_indepts>0 ){
+                    $(obj_indept).prop('disabled', true);//$(obj_indept).attr('disabled', 'disabled');
+                }else $(obj_indept).prop('disabled', false);//$(obj_indept).removeAttr('disabled');
+            }
+         }
+         
+         if(ss_ptab==1){    
+            //var obj_merit = $("input[name=auth-sv-ptab-std_merit][type='checkbox']"); //id=name-0 id=name-1....
+            var obj_merit1 = $("input#auth-sv-ptab-std_merit1");
+            var obj_merit2 = $("input#auth-sv-ptab-std_merit2");
+            var obj_merit3 = $("input#auth-sv-ptab-std_merit3");
+            if(obj_merit1 && obj_merit2 && obj_merit3){
+                //$(obj_merit).val([ss_merit]);
+                $(obj_merit1).prop("checked", false);
+                $(obj_merit2).prop("checked", false);
+                $(obj_merit3).prop("checked", false);
+                switch(ss_merit){
+                    case "MC":$(obj_merit1).prop("checked", true); break;
+                    case "MS":$(obj_merit2).prop("checked", true); break;
+                    case "MF":$(obj_merit3).prop("checked", true); break;
+                    default: break;
+                }       
+            }
+            var obj_academic = $("input[name=auth-sv-ptab-std_grade][type='radio']");
+            if( obj_academic){
+                $(obj_academic).val([ss_academic]);
+            }
+            
+            
+            var obj_rtn = $("input#auth-sv-ptab-std_returning");
+            if( obj_rtn){
+                $(obj_rtn).prop("checked", ss_return);
+            }
+            
+            var obj_nc = $("input#auth-sv-ptab-std_nc");
+            if( obj_nc){
+                $(obj_nc).prop("checked", ss_nc);
+            }
+           
+         }            
+         
+        if(ss_ptab==2){
+            var obj_fafsa = $("input#auth-sv-ptab-std_fafsa[type='checkbox']");
+            if(obj_fafsa){
+                $(obj_fafsa).prop('checked', ss_fafsa);
+                if( ss_intl==true){
+                    $(obj_fafsa).prop("disabled", true);
+                    $(obj_fafsa).prop('checked', false);
+                }//else $(obj_fafsa).prop("disabled", false);
+            }
+            var obj_calgrant = $("input#auth-sv-ptab-std_calgrant[type='checkbox']");
+            if(obj_calgrant){
+                $(obj_calgrant).prop("checked", ss_calgrant);
+                if( ss_intl==true){
+                    $(obj_calgrant).prop("checked", false);
+                    $(obj_calgrant).prop("disabled", true);
+                }//else $(obj_calgrant).prop("disabled", false);
+            }
+            var obj_ealsu = $("input#auth-sv-ptab-std_ealsu[type='checkbox']");
+            if(obj_ealsu){
+                $(obj_ealsu).prop("checked", ss_ealsu);
+            }
+            var obj_eanonlsu = $("input#auth-sv-ptab-std_eanonlsu[type='checkbox']");
+            if(obj_eanonlsu){
+                $(obj_eanonlsu).prop("checked", ss_eanonlsu);
+            }
+            var obj_efc = $("input#auth-sv-ptab-std_efc[type='checkbox']");
+            if(obj_efc){
+                $(obj_efc).prop("checked", ss_efc);
+                if( ss_intl==true){
+                    $(obj_efc).prop("checked", false);
+                    $(obj_efc).prop("disabled", true);
+                }//else $(obj_efc).prop("disabled", false);
+            }
+            var obj_efcamt = $("input#auth-sv-ptab-efc_amt");
+            if( obj_efcamt){
+                if( ss_intl==true || ss_fafsa==false || ss_efc==false) $(obj_efcamt).prop("disabled", true);
+            }
+            
+            var obj_noloans = $("input#auth-sv-ptab-std_noloans[type='checkbox']");
+            if(obj_noloans){
+                $(obj_noloans).prop("checked", ss_noloans);
+                
+            }
+            var obj_dorm = $("input#auth-sv-ptab-std_dorm[type='checkbox']");
+            if(obj_dorm){
+                $(obj_dorm).prop("checked", ss_dorm);
+            }
+        }  
+        
+        if(ss_ptab==3){
+            var obj_awd7 = $("select#auth-sv-ptab-scholarship7");
+            if(obj_awd7){ //$("#elementid").val("labelOranges").attr("selected","selected")  //Sets the selected option to option whose text=="xxx" 
+                //since jquery1.4+,  .val('not-an-option-value') will reset the select to the first option.
+                $(obj_awd7).val(ss_awd7); //Sets the selected option to option whose value is ss_awd7
+                if( $(obj_awd7).val()!=ss_awd7) //$(obj_awd7).val(ss_awd7); //or $(" xxx option:selected").val() 
+                    $("select#auth-sv-ptab-scholarship7 option").val(ss_awd7).prop("selected", true);
+                    
+            }
+            var obj_awd8 = $("select#auth-sv-ptab-scholarship8");
+            if(obj_awd8){
+                $(obj_awd8).val(ss_awd8);
+                //if( $(obj_awd8).val()!=ss_awd8) $("select#auth-sv-ptab-scholarship8_input option").val(ss_awd8).prop("selected", true);
+            }
+            var obj_awd9 = $("select#auth-sv-ptab-scholarship9");
+            if(obj_awd9){
+                $(obj_awd9).val(ss_awd9);
+                //if( $(obj_awd8).val()!=ss_awd8) $("select#auth-sv-ptab-scholarship9_input option").val(ss_awd9).prop("selected", true);
+            }
+        }
+        if(ss_ptab==4){
+            var obj_adjcal = $("input#auth-sv-ptab-calgrant_adjust");
+            if( obj_adjcal){
+                $(obj_adjcal).prop("checked", ss_adjcal);
+                if( ss_intl==true || ss_calgrant==false) $(obj_adjcal).prop("disabled", true);
+            }
+            var obj_subloan = $("input#auth-sv-ptab-inc_subloan");
+            if( obj_subloan){
+                $(obj_subloan).prop("checked", ss_subloan);
+            }
+            var obj_unsubloan = $("input#auth-sv-ptab-inc_unsubloan");
+            if( obj_unsubloan){
+                $(obj_unsubloan).prop("checked", ss_unsubloan);
+            }
+            var obj_fws = $("input#auth-sv-ptab-inc_fws");
+            if( obj_fws){
+                $(obj_fws).prop("checked", ss_fws);
+            }
+        }
+        
+        //onTabShow="delayResizeHeight(1);" onTabChange="adjustHeight();"
+        //adjustHeight();
+        delayResizeHeight();
+        
+    }
+    //get checkgrp val
+    ////var items = []; $("input[name='items[]']:checked").each(function(){items.push($(this).val());});  return items.join(", ");
+
+                //]]>
+            </script>   
+            
+            <style type="text/css" >
+                
+
+            </style>
+            <!-- h:input styleClass="#{not component.valid ? 'ui-input-invalid' : ''}" -->
+            
+            <!--<h2 style="padding-top:5px;margin-bottom: 0px; padding-bottom: 5px;">Real-Time #{estimator.stud.recid eq null? 'New':''} Estimate  #{estimator.stud.recid eq null?'':' (based on doc '}#{estimator.stud.recid}#{estimator.stud.recid eq null?'':')'} #{ref.fiscal_year eq estimator.stud.studentFisy? '':estimator.stud.studentFisy}</h2> -->
+            <h2 style="padding-top:5px;margin-bottom: 0px; padding-bottom: 5px;">Real-Time <h:outputText id="formtitle" value="#{ref.genFormTitleByRecid(estimator.stud.recid, estimator.stud, estimator.modStud)}" />  </h2>
+            <!--<h2 style="font-color:red;">#{estimator.stud.recid eq null? 'Need To Be Saved':''}</h2> -->
+            <p:messages  id="msgs" autoUpdate="false" redisplay="true"   globalOnly="false" /> <!-- styleClass="messages" -->
+            
+            <p:ajaxStatus style="width:32px;height:32px; float:right; margin-left:0px; margin-right:0px;" id="ajaxStatusPanel">  
+                <f:facet name="start">  
+                    <h:graphicImage library="img" name="ui-anim_basic_16x16.gif"  />  <!--value="../design/ajaxloading.gif"-->
+                </f:facet>  
+
+                <f:facet name="complete">  
+                    <h:outputText value="" />  
+                </f:facet>  
+            </p:ajaxStatus>
+            
+            <h:form id="nfrm"  prependId="false" style="width:800px; margin-top: 0px; padding-top: 0px;"> 
+    <!--      <p:ajaxStatus>
+                <f:facet name="start">Loading...</f:facet>
+                <f:facet name="success"><h:outputText value="" /></f:facet>
+                <f:facet name="error">An error has occurred!</f:facet>
+            </p:ajaxStatus>
+       -->     
+            <p style="margin-top:0px; margin-bottom: 2px; padding-bottom: 2px; padding-top: 0px;" >Based on form data, estimate is shown in the side bar. <span class="mark">*</span> indicates required fields.  
+                <p:commandButton id="save" value="Save Student Info" action="#{estimator.navSaveStud}" actionListener="#{estimator.savestudinfo}" oncomplete="sync_ss1(xhr, status, args);" >
+                    <!--<p:ajax event="submit" oncomplete="sync_ss1(xhr, status, args);"/>-->
+                </p:commandButton>
+     
+     </p> <!-- the callback works both for action and  actionListener="#{estimator.savestudinfo}"   action="#{estimator.savestudinfo}" -->
+ <!--                            
+       ss_sex=#{estimator.stdo_sex} ss_intl=#{estimator.stdo_intl} ss_marry=#{estimator.stdo_marry} ss_sda=#{estimator.stdo_sda} ss_indept=#{estimator.stdo_indept} ss_indepts=#{estimator.stdo_indepts} <br/>
+       ss_merits=#{estimator.stdo_merits}  ss_academic=#{estimator.stdo_academic}    ss_ptab=#{estimator.tab_index}<br/>
+       ss_fafsa=#{estimator.stdo_fafsa} ss_calgrant=#{estimator.stdo_calgrant} ss_ealsu=#{estimator.stdo_ealsu} ss_eanonlsu=#{estimator.stdo_eanonlsu} ss_efc=#{estimator.stdo_efc} ss_dorm=#{estimator.stdo_dorm} <br/>
+       ss_fund7=#{estimator.stdo_fundid7} ss_fund8=#{estimator.stdo_fundid8} ss_fund9=#{estimator.stdo_fundid9}<br/>
+       ss_adj=#{estimator.stdo_adjust_calgrantamt_ind} ss_subloan=#{estimator.stdo_in_subloan} ss_unsub=#{estimator.stdo_in_unsubloan} ss_fws=#{estimator.stdo_in_fws}
+      
+  <h:inputText id="ss_merit" value="#{estimator.mirr_merit}" />
+  <h:inputText id="ss_stdcat" value="#{estimator.mirr_academic}" />
+  <h:inputText id="ss_ptab" value="#{estimator.mirr_tabindex}" />  -->   
+  
+                 <!-- <p:ajax event="tabChange"  update="@form"/> listener="#{tabBean.onTabChange}" -->
+                   
+                    <!-- in 3.0M2 onTabShow is a after event callback, but in 3.0M3, it is a before event -->
+                    <!-- PF3.1  onTabChange=onclick onTabShow=inact_tab_became_active_to_be_shown-->
+<p:tabView  id="ptab" activeIndex="#{estimator.tab_index}" dynamic="true" cache="false">  <!--   onTabShow="delayResizeHeight(1);" onTabChange="adjustHeight();" BEFORE AJAX EVENT  effect="blind" effectDuration="normal"-->
+                 
+                    <p:ajax event="tabChange"  listener="#{estimator.tabChanged}"  oncomplete="sync_ss(xhr, status, args);" /> 
+                    
+                        
+            <p:tab title="Personal" id="t1"  >  
+                <table  border="0" cellpadding="0" cellspacing="0" width="100%" >
+                    <tr><td>La Sierra ID<br/>
+<p:inputText id="std_lsuid" value="#{estimator.stud.studentALsuid}" maxlength="7" style="width:97%;" label="Personal #{msg['layer']} La Sierra ID"  size="10" tabindex="1" >
+ 
+    <p:ajax event="blur" process="@this" update="popind pop @this -auth-sv-msgs" listener="#{estimator.chgedid}" oncomplete="popup();" />
+</p:inputText> 
+                        </td>
+                        <td colspan="2" style="vertical-align:middle; text-align: center;" >
+                            <fieldset title="Gender" style="width:97%; border:1px solid #666666;  padding:0px; margin-left: 20px;"> <!--"border-left: 0px; "  -->
+                                <legend align="left" style="border:1px solid #666666; padding:0px 2px 0px 2px;background-color:#EAECEE; margin-left:10px;" >Gender</legend> <!-- margin:0px 0px 0px -9px; -->                                           
+                                
+                                <h:selectBooleanCheckbox id="std_sex1" value="#{estimator.std_sex1}" tabindex="2">
+                                    <f:ajax event="change" execute="@this" render="-auth-bar std_sex2 std_sex3" listener="#{estimator.chgsex1}" />
+                                </h:selectBooleanCheckbox><h:outputLabel for="std_sex1" value="Female &nbsp;&nbsp;&nbsp;"/>
+                                
+                                <h:selectBooleanCheckbox id="std_sex2" value="#{estimator.std_sex2}" tabindex="3">
+                                    <f:ajax event="change" execute="@this" render="-auth-bar std_sex1 std_sex3" listener="#{estimator.chgsex2}" />
+                                </h:selectBooleanCheckbox><h:outputLabel for="std_sex2" value="Male &nbsp;&nbsp;&nbsp;"/>
+                                
+                                <h:selectBooleanCheckbox id="std_sex3" value="#{estimator.std_sex3}" tabindex="4">
+                                    <f:ajax event="change" execute="@this" render="-auth-bar @this std_sex1 std_sex2" listener="#{estimator.chgsex3}" />
+                                </h:selectBooleanCheckbox><h:outputLabel for="std_sex3" value="Unknown or N/A"/>
+                                
+                                <!-- #{empty estimator.std_sex  ? 'N': estimator.std_sex } -->
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <!--<p:spacer height="15px"   />  no use after 3.0M3 -->
+                    <tr><td colspan="3">&nbsp;</td></tr>
+                                        
+                    <tr>
+                        <td>First Name<span class="mark">*</span><br/>
+<p:inputText id="std_fname" value="#{estimator.std_fn}" style="width:97%;"  label="Personal #{msg['layer']} First Name"  maxlength="50" size="10" tabindex="5"> <!--stud.studentCFirstname required="true"-->
+    <p:ajax event="blur" process="@this" update="-auth-bar @this popind pop -auth-sv-msgs" listener="#{estimator.fnamechanged}"  oncomplete="popup();"   /> <!-- required="true" will not allow null to replace bean non-null val-->
+</p:inputText>
+                        </td>
+                        
+                        <td>Last Name<span class="mark">*</span><br/>
+<p:inputText id="std_lname" value="#{estimator.std_ln}" style="width:97%;" label="Personal #{msg['layer']} Last Name"  maxlength="50" size="10" tabindex="6"> <!--stud.studentBLastname required="true"-->
+    <!--<p:ajax event="keyup" process="@this" update="popind pop" listener="#{estimator.upln}"  oncomplete="javascript:popup();" />-->
+    <p:ajax event="blur" process="@this" update="-auth-bar @this popind pop -auth-sv-msgs" listener="#{estimator.lnamechanged}" oncomplete="popup();"/>
+</p:inputText> 
+                        </td>
+                        
+                        <td>Date of Birth (#{ref.dateInputShowStr})<span class="mark">*</span><br/> <!--styleClass="#{( !component.valid  ) ? 'ui-input-invalid' : ''}"   component.messageList.size() gt 0 (no such??)    or estimator.hasErrInd(component.clientId) (always false!!)-->
+<p:inputText id="std_dob" value="#{estimator.std_dob}" maxlength="10" style="width:99%;"  label="Personal #{msg['layer']} Date of Birth"  size="10" tabindex="7"> 
+    <!-- <f:attribute name="label" value="Personal #{msg['layer']} Date of Birth"/> value="#{ResourceBean.labels['label']}"/-->
+    <p:ajax event="blur" process="@this" update="-auth-bar -auth-sv-msgs std_indept @this popind pop" listener="#{estimator.dobchanged}" oncomplete="popup();delayResizeHeight(1); delayfocus();" />                                            
+</p:inputText>
+                        </td>
+                    </tr>  
+<tr><td colspan="3" style="padding:0px; margin:0px;">
+<p:dialog  widgetVar="auto" id="auto" style="padding:0px; margin:0px; width:785px; margin-top:7px;" visible="false" resizable="false" minimizable="false" maximizable="false" closable="true" draggable="false"  showHeader="true"   
+            modal="false"  onShow="adjustPositionning($('#auth-sv-ptab-std_fname'), $('#auth-sv-ptab-auto'))" onHide="popdown($('#auth-sv-ptab-auto'));"  onclick="javascript:focuspop=true;"> <!--position="350,400" rendered="#{querier.studs.size() gt 0}"   header="Matched Active Records by ID, Last Name, First Name, and DOB"-->
+    <p:dataTable id="pop" var="one" value="#{estimator.popDataModel}"   resizableColumns="true" paginator="false" scrollRows="12" scrollable="true" liveScroll="true"
+                 selectionMode="single" selection="#{estimator.chosenPopStud}" rowKey="#{one.studentFisy}.#{one.counselorId}.#{one.studentNumb}" appendToBody="true" 
+                 style="width:755px;font-size:small; padding:0px; margin:0px; font-size: smaller;" rowIndexVar="order"  emptyMessage="No Matches Found"   > <!--first="#{estimator.popDataModel.rowIndex}" scrollHeight="300" liveScroll="true"   rowStyleClass="#{(order mod 2) eq 0 ? 'odd-row' : 'even-row'}"-->
+        <p:ajax event="rowSelect" listener="#{estimator.pickpop}"   update="@form -auth-bar -auth-sv-msgs -auth-sv-formtitle" oncomplete="popup();adjustHeight();" />
+        <f:facet name="header">  
+                Matched: #{estimator.popups.size()}   &nbsp;&nbsp;&nbsp;(click one estimate to populate the form)
+        </f:facet>  
+<!--javax.faces.FacesException: Data type should be java.util.List or javax.faces.model.ListDataModel instance to be sortable.      rendered="#{estimator.popups.size() gt 0}" -->
+        <p:column  style="margin:0px;padding:1px;width:10px; font-size: smaller;" > 
+            <h:outputText value="#{order+1}" style="margin:0px;padding:1px;width:20px; font-size: smaller;" />
+        </p:column>
+        
+        <p:column headerText="ID" style="width:45px; padding:0px 0px 0px 3px;" sortBy="#{one.studentALsuid}" ><!--  filterBy="#{one.studentALsuid}" footerText="contains" filterMatchMode="contains"-->
+            <h:outputText value="#{one.studentALsuid}" />
+        </p:column>         
+        
+        <p:column headerText="First Name" style="width:120px; " sortBy="#{one.studentCFirstname}"> <!--  filterBy="#{one.studentCFirstname}" footerText="contains" filterMatchMode="contains"-->
+             
+            <h:outputText value="#{one.studentCFirstname}" /> 
+        </p:column>
+        
+        <p:column headerText="Last Name" style="width:120px;" sortBy="#{one.studentBLastname}"><!--  filterBy="#{one.studentBLastname}" footerText="contains" filterMatchMode="contains"-->
+            <h:outputText value="#{one.studentBLastname}" /> 
+        </p:column>
+        
+        <p:column headerText="DoB" style="width:63px; padding:0px 0px 0px 3px;" sortBy="#{one.studentDDob}" > <!---  -->
+            <h:outputText value="#{one.studentDDob}" /> <!--<f:convertDateTime  type="date" pattern="#{ref.dateInputShowStr}"   timeZone="#{ref.timeZone}"/> -->
+        </p:column>
+        
+        <p:column headerText="Address" style="width:250px; " sortBy="#{ref.showStudArea(one)}"> <!--  #{one.studentIState} #{one.studentJZip} -->
+            <h:outputText value="#{ref.showStudAddr(one)}" escape="false" />
+                <!--
+          <h:outputText value="#{one.homeAddrApt}#{empty one.homeAddrApt? '':', '}#{one.studentGStreet}&lt;br/&gt;#{one.studentHCity}#{empty one.studentHCity? '':', '}#{ref.showStudArea(one)} #{empty one.studentKCountry?'': (one.studentKCountry eq 'USA'? '':', ')}#{one.studentKCountry eq 'USA'? '':one.studentKCountry}" escape="false" /> 
+        --><!-- #{one.studentIState} #{one.studentJZip} -->
+        </p:column>        
+            
+        <p:column headerText="Doc" style="width:60px; padding:0px 0px 0px 3px; " sortBy="#{one.recid}"><!--  #{one.studentFisy}.#{one.counselorId}.#{one.studentNumb}-->
+            <h:outputText value="#{one.recid}" style="#{one.ncStdInd eq 0 ? '':'text-decoration:line-through;' } #{not empty(one.puser_id )? (one.puser_id eq one.studentALsuid? 'color:#e4bd3b;':'color:#68a5cb;'):''} "  /> <!-- #{one.studentFisy}.#{one.counselorId}.#{one.studentNumb} -->
+        </p:column>
+    </p:dataTable> 
+    <!--
+    <h:selectManyListbox id="pop" value="#{estimator.popup}" style="padding:0px; margin:0px;" required="false" size="10" >                                         
+        <f:selectItems value="#{estimator.popups}" />
+        <p:ajax event="change" process="@this" update="-auth-bar @all" listener="#{estimator.pickpop}" onstart="popdown();" />
+    </h:selectManyListbox>  -->
+    <!--
+    <p:selectManyMenu value="#{estimator.selectedStud}"  style="height:100px">  
+        <f:selectItems value="#{estimator.popstuds}"  var="one" itemLabel="#{one.name}"   itemValue="#{one}" />  
+    </p:selectManyMenu>  -->
+    
+</p:dialog>
+</td></tr>                    
+                    <tr>
+                        <td colspan="3"><h:inputText id="popind" value="#{estimator.popind}"   style="visibility: hidden; padding:0px; margin-top:10px; height:5px;" onkeydown="popdown4(this, event);" tabindex="8"  />
+                        <!--<h:inputText id="ind"   style="display:none;"  onkeydown="popdown3(event);"  onblur="popdown3(this);"  />--></td>
+                        <!--onkeypress if (event.keyCode == 9){popdown2(this); } readonly="true" onkeydown="popdown3(event);"  style="display:none;"-->
+                    </tr>
+                    
+                    <tr>                                    
+                        <td colspan="1">Best Telephone Number<span class="mark">*</span><br/><h:inputText id="std_phone" value="#{estimator.stud.studentFPhone}" style="width:100%;"  required="true" label="Personal #{msg['layer']} Telephone Number"  maxlength="30" size="20" tabindex="9">
+                                <!--<f:ajax event="change" execute="@this std_intl" render="-auth-bar @this  -auth-sv-msgs"  listener="#{estimator.phonechanged}" /> -->
+                                <p:ajax event="change" process="@this std_intl" update="-auth-bar @this  -auth-sv-msgs" listener="#{estimator.phonechanged}" oncomplete="resize_height();" />
+                            </h:inputText> </td>
+                        <td colspan="2">Best E-mail Address<span class="mark">*</span><br/><h:inputText id="std_email" value="#{estimator.stud.studentEEmail}" style="width:100%;"  required="true" label="Personal #{msg['layer']} E-mail Address"  maxlength="50" tabindex="10" >  
+                                <p:ajax event="change" process="@this"  update="@this -auth-sv-msgs"  oncomplete="resize_height();"  listener="#{estimator.emailchanged}"/>
+                            </h:inputText> </td>
+                    </tr>
+                    <p:spacer />
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Best Street Address<br/><h:inputText id="std_street" value="#{estimator.stud.studentGStreet}" style="width:100%;" maxlength="50"  tabindex="11">
+                                <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.addrchanged}" />
+                            </h:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Apartment Number (if any)<br/><h:inputText id="std_apt" value="#{estimator.stud.homeAddrApt}" style="width:100%;"  maxlength="7"  tabindex="12">
+                                <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.aptchanged}" />
+                            </h:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>City<span class="mark"> </span><br/><h:inputText id="std_city" value="#{estimator.stud.studentHCity}" style="width:100%;" maxlength="50" size="20" tabindex="13">
+                                <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.citychanged}" />
+                            </h:inputText>
+                        </td>
+                        <td>State/Province<span class="mark">*</span><br/><h:inputText id="std_state" value="#{estimator.stud.studentIState}"  required="true"  label="Personal #{msg['layer']} State/Province" style="width:100%;" maxlength="50"  tabindex="14">
+                            <p:ajax event="change" process="@this"  update="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.std_state_changed}"   oncomplete="resize_height();"/>
+                            </h:inputText> </td>
+                        <td>Zip/Postal Code<span class="mark">*</span><br/><h:inputText id="std_zip" value="#{estimator.stud.studentJZip}"  required="true"  label="Personal #{msg['layer']} Postal Code" style="width:100%;" maxlength="30"  tabindex="15">
+                            <p:ajax event="change" process="@this"  update="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.std_zip_changed}"  oncomplete="resize_height();"/>
+                            </h:inputText>  </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Country<br/><h:inputText id="std_country" value="#{estimator.stud.studentKCountry}" style="width:100%;" maxlength="50" tabindex="16">
+                                <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.countrychanged}" />
+                            </h:inputText>
+                        </td>                                    
+                    </tr>                                                                
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_intl" value="#{estimator.std_intl}" disabled="#{estimator.std_calgrant eq true or estimator.std_fafsa eq true}"  tabindex="17">
+                                <f:ajax event="change" execute="@this" render="-auth-bar std_phone -auth-sv-msgs std_fafsa std_calgrant std_efc calgrantab_adjust std_calgranta std_calgrantb"  listener="#{estimator.stdintlchanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_intl" value="Is an International Student (not U.S.A. domestic student)"/></td>                                    
+                    </tr>
+                    <p:spacer />
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                    
+                    <!--
+                    <tr>
+                        <td colspan="3"><p:separator style="width:100%" /></td>
+                    </tr>
+                    -->                    
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_returning" value="#{estimator.return_std_ind}"  tabindex="18">
+                                <f:ajax event="change" execute="@this"   render="-auth-bar"  listener="#{estimator.returningIndChanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_returning" value="Returning Student"/></td>
+                    </tr>  
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_nc" value="#{estimator.nc_std_ind}"  tabindex="19">
+                                <f:ajax event="change" execute="@this"   listener="#{estimator.ncIndChanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_nc" value="Never Comes or Not Coming"/></td>
+                    </tr> 
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_marital" value="#{estimator.std_marry}"  tabindex="20">
+                                <f:ajax event="change" execute="@this" render="-auth-bar std_indept"  listener="#{estimator.maritalchanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_marital" value="Married"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_sda" value="#{estimator.std_sda}" tabindex="21">
+                                <f:ajax event="change" execute="@this" render="-auth-bar"  listener="#{estimator.sdachanged}" />
+                            </h:selectBooleanCheckbox>
+                                <h:outputLabel for="std_sda" value="Seventh-day Adventist"/></td>
+                    </tr>
+                     <tr>
+                               <td colspan="3"><h:selectBooleanCheckbox  id="std_tf" value="#{estimator.std_tf}" tabindex="21">
+                                <f:ajax event="change" execute="@this" render="-auth-bar"  listener="#{estimator.stdtfchanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_tf" value="Starting/started at La Sierra as a transfer student"/></td>                                    
+                    </tr>
+
+                           <tr>
+                               <td colspan="3"><h:selectBooleanCheckbox  id="std_ftfr" value="#{estimator.std_ftfr}" tabindex="21">
+                               <f:ajax event="change" execute="@this" render="-auth-bar"  listener="#{estimator.stdftfrchanged}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_ftfr" value="New-freshmen"/></td>                                    
+                    </tr>
+
+<!--<tr>  <td colspan="1" >Student-is-
+        <td> 
+                              <h:selectOneRadio id="std_ftfr"  value="#{estimator.std_ftfr}" layout="pageDirection" >
+                                               <f:selectItem itemLabel=".first-time-freshmen" itemValue="0"  itemDisabled="false" />  
+                                                <p:ajax event="change" process="@this" update="-auth-bar" listener="#{estimator.stdftfrchanged}" oncomplete="resize_height();"/>
+                              </h:selectOneRadio>   </td>
+          <td>  <h:selectOneRadio id="std_tf"  value="#{estimator.std_tf}" layout="pageDirection" >
+                                                 <f:selectItem itemLabel=".new-transfer" itemValue="0"  itemDisabled="false" />  
+                                                <p:ajax event="change" process="@this" update="-auth-bar" listener="#{estimator.stdtfchanged}" oncomplete="resize_height();"/>
+              </h:selectOneRadio>   </td>     
+        <td> <h:selectOneRadio id="std_returning"  value="#{estimator.return_std_ind}" layout="pageDirection" >
+                                                 <f:selectItem itemLabel=".returning" itemValue="0"  itemDisabled="false" />  
+                                                <p:ajax event="change" process="@this" update="-auth-bar" listener="#{estimator.returningIndChanged}" oncomplete="resize_height();"/>
+                                 </h:selectOneRadio></td>    </td>
+    
+                    </tr>-->
+                            
+                                            
+                  
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_indept" value="#{estimator.std_indept}" disabled="#{estimator.std_indepts.size() gt 0}"   tabindex="22"> 
+                                <f:ajax event="click" execute="@this" render="-auth-bar"   listener="#{estimator.indeptclicked}" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputLabel for="std_indept" value="Considered as independent because at least one of the following statement is true:"/><br/> <!-- #{estimator.std_indepts} -->
+                            <ul style="margin-top:0px;" >
+                                <li>Married</li>
+                                <li>Born before <h:outputText value="#{ref.indept_dob}"><f:convertDateTime pattern="#{ref.mdateFmtStr}"/></h:outputText></li>
+                                <li>Serving on active duty in the U.S. Armed Forces or is a U.S. veteran</li>
+                                <li>Has non-spouse dependents that receive more than half of their financial support from the student</li>
+                                <li>Has been formally declared independent by a governing body</li>
+                            </ul>
+
+                        </td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td colspan="3"><h:selectBooleanCheckbox  id="std_dorm" value="#{estimator.std_dorm}">
+                            <f:ajax event="change" execute="@this" render="-auth-bar eanonlsu_perc"  listener="#{estimator.dormchanged}" />
+                            </h:selectBooleanCheckbox>
+                                <h:outputLabel for="std_dorm" value="Will live in a residence hall"/> </td>
+                    </tr> -->
+                </table>
+            </p:tab>
+                    
+                   
+                        <p:tab title="Academic" id="t2">
+                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" >
+                                <tr>
+                                    <td colspan="3">School Previously Attended (Academy or High School)<br/>
+                                        <p:inputText id="std_preschool" value="#{estimator.stud.studentOLastSchool}" style="width:100%;" maxlength="50"  >
+                                             <p:ajax event="change" process="@this"  update="@this" listener="#{estimator.highschoolchanged}"/>
+                                        </p:inputText>
+                                    </td> <!-- mask="9?.99" -->
+                                    <!--
+                                    <td >GPA (Cumulative)<span class="mark">*</span><br/><p:inputText id="std_gpa"  value="#{estimator.stud.studentPGpa}" style="width:100%;" label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.gpa.label']}" >
+                                            <f:ajax event="change" execute="@this" render="-auth-bar  -auth-sv-msgs"   listener="#{estimator.gpachanged}" />
+                                        </p:inputText> </td>
+                                    -->
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr><!-- mask="9?99"  -->
+                                    <td >GPA (Cumulative)<span class="mark">*</span><br/><p:inputText id="std_gpa"  value="#{estimator.stud.studentPGpa}" style="width:97%;" label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.gpa.label']}" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  -auth-sv-msgs @this"   listener="#{estimator.gpachanged}"   oncomplete="resize_height();" />
+                                            <f:convertNumber integerOnly="false" maxIntegerDigits="1" minIntegerDigits="1" maxFractionDigits="2" minFractionDigits="0"  />
+                                        </p:inputText> </td>
+                                    <td>SAT Score (Composite)<span class="mark"> </span><br/><p:inputText id="std_sat_math" maxlength="4" value="#{estimator.stud.studentQSat}" style="width:97%;" label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.sat.math.label']}" >
+                                            <f:ajax event="change" execute="@this" render="-auth-bar  -auth-sv-msgs @this"   listener="#{estimator.satmathchanged}"/>
+                                            <f:convertNumber integerOnly="true" maxIntegerDigits="4"   />
+                                        </p:inputText> </td> <!-- mask="9?99" -->
+                                        <!--
+                                    <td>SAT Score (Verbal Only)<br/><p:inputText id="std_sat_verb"  maxlength="4" value="#{estimator.stud.studentQSatV}" style="width:99%;"  label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.sat.verbal.label']}"  >
+                                            <f:ajax event="change" execute="@this" render="-auth-bar  -auth-sv-msgs"   listener="#{estimator.satverbchanged}"/>
+                                        </p:inputText> </td> 
+                                        --><!-- was (Math Only) mask="9?9"  -->
+                                    <td>ACT Score (Composite)<span class="mark"> </span><br/><p:inputText id="std_act" maxlength="4" value="#{estimator.stud.studentRAct}" style="width:100%;"  label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.act.label']}" >
+                                            <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this"   listener="#{estimator.actchanged}"/>
+                                            <f:convertNumber integerOnly="true" maxIntegerDigits="2"    />
+                                        </p:inputText> </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <p:fieldset legend="National Merit"  style="width:97%;"> 
+                                           <!-- <p:selectManyCheckbox selectBooleanCheckbox-->
+                                           <!--
+                                            <p:selectManyCheckbox id="std_merit" value="#{estimator.std_merits}" layout="lineDirection" >
+                                                <f:selectItem itemLabel="Commended &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" itemValue="MC" />  
+                                                <f:selectItem itemLabel="Semifinalist &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" itemValue="MS" />  
+                                                <f:selectItem itemLabel="Finalist" itemValue="MF" />  
+                                                <f:ajax event="change" execute="@this" render="-auth-bar @this"   listener="#{estimator.meritschanged}"  oncomplete="resize_height();" />
+                                            </p:selectManyCheckbox>
+                                           --> <!--<p:selectBooleanCheckbox-->
+                                           <h:selectBooleanCheckbox id="std_merit1" value="#{estimator.std_merit1}">
+                                               <p:ajax event="change" process="@this" update="-auth-bar @this std_merit2 std_merit3"   listener="#{estimator.merit1changed}"  oncomplete="resize_height();" />
+                                           </h:selectBooleanCheckbox><h:outputLabel for="std_merit1" value="Commended &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                                           
+                                            <h:selectBooleanCheckbox id="std_merit2" value="#{estimator.std_merit2}">
+                                               <p:ajax event="change" process="@this" update="-auth-bar @this std_merit1 std_merit3"   listener="#{estimator.merit2changed}"  oncomplete="resize_height();" />
+                                            </h:selectBooleanCheckbox><h:outputLabel for="std_merit2" value="Semifinalist &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/>
+                                           
+                                            <h:selectBooleanCheckbox id="std_merit3" value="#{estimator.std_merit3}">
+                                               <p:ajax event="change" process="@this" update="-auth-bar @this std_merit1 std_merit2"   listener="#{estimator.merit3changed}"  oncomplete="resize_height();" />
+                                            </h:selectBooleanCheckbox><h:outputLabel for="std_merit3" value="Finalist"/>
+                                           
+                                        </p:fieldset>
+                                    </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">La Sierra Major<br/><p:inputText id="std_major" value="#{estimator.stud.studentTMajor}" style="width:100%"  maxlength="50"  >
+                                             <p:ajax event="change" process="@this"  update="@this"     listener="#{estimator.majorchanged}"/>
+                                        </p:inputText>
+                                    </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>                                    
+                                    <td colspan="2">Family member(s) attending La Sierra<small><i>---Name, ID and Relationship</i></small><br/>
+                                        <p:inputText id="std_aluminus" value="#{estimator.stud.studentVFamily}"  style="width:98%;" maxlength="50" >
+                                             <p:ajax event="change" process="@this"  update="@this -auth-bar std_aluminumb"  listener="#{estimator.familyinlsuchanged}"/>
+                                        </p:inputText>
+                                    </td>
+                                    <td>Quantity<br/><p:inputMask id="std_aluminumb" mask="9" value="#{estimator.costudents}"  style="width:100%;" label="Academic #{msg['layer']} #{msg['EstimateForm.Academical.familymembers.label']}">
+                                            <f:ajax event="change" execute="@this" render="-auth-bar  -auth-sv-msgs @this"/>
+                                        </p:inputMask> </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <p:fieldset id="stdcats" legend="Academic Level"  style="width:97%;  ">
+                                            <div style="font-size:0.9em; line-height: 1.2em; font-weight:ligher;"> 
+                                            <h:selectOneRadio id="std_grade"  value="#{estimator.stud.studentUAcademic}" layout="pageDirection" >
+                                                <f:selectItem itemLabel="Will be a 1st year Student (Freshman)" itemValue="FR"  itemDisabled="false" />  
+                                                    <f:selectItem itemLabel="Will be a continuing Freshman (has completed between 12 and 44 hours)" itemValue="F2"  itemDisabled="false" />  
+                                                
+                                                <f:selectItem itemLabel="Will be a Sophomore" itemValue="SO"  itemDisabled="false"  />
+                                                <f:selectItem itemLabel="Will be a Junior" itemValue="JR"  itemDisabled="false"  />  
+                                                <f:selectItem itemLabel="Will be a Senior" itemValue="SR"  itemDisabled="false"  /> 
+                                                
+                                                <f:selectItem itemLabel="Will be an undergrad who has previously completed a Bachelor's degree (coming soon)" itemValue="PB"  itemDisabled="true"  /> 
+                                                <f:selectItem itemLabel="Will be a MBA student (coming soon)" itemValue="MBA"   itemDisabled="true" />  
+                                                <f:selectItem itemLabel="Will be a Graduate Student (coming soon)" itemValue="GR" itemDisabled="true" /> 
+                                                <f:selectItem itemLabel="Will be part of the Criminal Justice Program (coming soon)"  itemValue="CJ" itemDisabled="false"   /> 
+                                                <f:selectItem itemLabel="Will be part of the English as a Second Language (ESL) Program (coming soon)" itemValue="ESL" itemDisabled="#{true}"   /> 
+                                                
+                                                <p:ajax event="change" process="@this" update="-auth-bar" listener="#{estimator.academiclevel_changed}" oncomplete="resize_height();"/>
+                                            </h:selectOneRadio>
+                                            </div>
+                                         
+                                        </p:fieldset> 
+                                    </td>
+                                </tr>
+                            </table>
+                        </p:tab>
+                    
+                        <p:tab title="Financial" id="t3">
+                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" >                                
+                                <tr>
+                                    <td colspan="3">
+                                        <p:fieldset legend="Eligibility and Qualification" style="width:96%;">
+                                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" >
+                                                <tr><td><h:selectBooleanCheckbox id="std_fafsa" value="#{estimator.std_fafsa}" disabled="#{estimator.std_intl eq true}" >
+                                                            <p:ajax event="change" process="@this" update="-auth-bar std_intl std_efc" listener="#{estimator.std_fafsachanged}"   oncomplete="resize_height();"  />
+                                                        </h:selectBooleanCheckbox> <h:outputLabel for="std_fafsa" value="FAFSA Eligible"/></td>
+                                                    <td></td>
+                                                </tr>
+                                                 <!-- Pell Eligible -->
+                                                   <tr><td><h:selectBooleanCheckbox id="std_pellGrant" value="#{estimator.std_pellGrant}">
+                                                          <p:ajax event="change" process="@this" update="-auth-bar std_intl std_calgrant" listener="#{estimator.std_pellgrantchanged}"/>
+                                                        </h:selectBooleanCheckbox> <h:outputLabel for="std_pellGrant" value="Pell Grant Eligible"/></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr><td><h:selectBooleanCheckbox id="std_calgrant" value="#{estimator.std_calgrant}" disabled="#{estimator.std_intl eq true  or  estimator.std_pellGrant eq false or estimator.std_pellGrant_value eq 0 }" >
+                                                          <p:ajax event="change" process="@this" update="-auth-bar std_intl calgrantab_adjust std_calgranta std_calgrantb" listener="#{estimator.std_calgrantchanged}"/>
+                                                        </h:selectBooleanCheckbox> <h:outputLabel for="std_calgrant" value="Cal Grant Eligible"/></td>
+                                                    <td></td>
+                                                </tr>
+                                               
+                                                
+                                                <tr><td><h:selectBooleanCheckbox id="std_ealsu" value="#{estimator.std_ealsu}">
+                                                            <p:ajax event="change" process="@this" update="-auth-bar ealsu_perc -auth-sv-msgs"  listener="#{estimator.ealsuchanged}"   oncomplete="chg_ealsu_ind();" /> <!--resize_height();"  /> -->
+                                                        </h:selectBooleanCheckbox>                                                        
+                                                        <h:outputLabel for="std_ealsu" value="Qualify for Educational Allowance from La Sierra"/></td>
+                                                    <td><!--<h:inputText id="ealsu_perc" disabled="true" value="100%" size="6" style="text-align:right" /> -->
+                                                        <h:inputText id="ealsu_perc" disabled="#{estimator.std_ealsu eq true? 'false':'true'}" value="#{estimator.stud.ea_lsu_perc}" size="6" style="text-align:right" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.ealsupercamt.label']} ">
+                                                            <p:ajax event="change" process="@this" update="-auth-bar @this -auth-sv-msgs" listener="#{estimator.ealsuperc_changed}"  oncomplete="resize_height();"  />
+                                                        </h:inputText>%     
+                                                    </td>
+                                                </tr>
+                                                
+                                                <tr><td style="width:78%;" nowarp="true" ><h:selectBooleanCheckbox id="std_eanonlsu" value="#{estimator.std_eanonlsu}">
+                                                            <p:ajax event="change" process="@this" update="-auth-bar eanonlsu_perc"  listener="#{estimator.eanonlsuchanged}"   oncomplete="resize_height();" />
+                                                        </h:selectBooleanCheckbox>
+                                                        <h:outputLabel for="std_eanonlsu" value="Qualify for EA from others (parent's non-La Sierra SDA employer)"/></td>
+                                                    <td style="width:22%;"><!--<p:inputMask mask="9?99.9" id="eanonlsu_perc" value="#{estimator.stud.studentAiEduAllowPer}" size="5" label="Non-LSU Educational Allowance Percentage" >
+                                                            <f:ajax event="change" execute="@this" render="@this -auth-bar  -auth-sv-msgs" />                                                        
+                                                        </p:inputMask>-->
+                                                        
+                                                        <h:inputText id="eanonlsu_perc" disabled="true" value="#{estimator.stud.studentAiEduAllowPer}" size="6"  style="text-align:right">
+                                                        <f:convertNumber type="percent" />
+                                                        </h:inputText> </td><!--f:convertNumber type="percent" maxFractionDigits="1" /-->
+                                                </tr>
+                                                
+                                                <tr><td><h:selectBooleanCheckbox id="std_efc" value="#{estimator.std_efc}" >
+                                                            <!--<f:ajax event="change"  execute="@this" render="-auth-bar  efc_amt std_fafsa  std_intl" listener="#{estimator.efc_indchanged}"/>-->
+                                                            <p:ajax event="change"  process="@this efc_amt" update="-auth-bar  efc_amt std_fafsa  std_intl"  listener="#{estimator.efc_indchanged}"   oncomplete="chg_efc_ind();" /> <!-- chg_efc_ind(); -->
+<!--                                                        </h:selectBooleanCheckbox><h:outputLabel for="std_efc" value="Received EFC or EFC quote"/></td>-->
+                                                    </h:selectBooleanCheckbox><h:outputLabel for="std_efc" value="Received SAI or SAI quote"/></td>
+                                                    <td><p:inputText disabled="#{estimator.std_efc eq true? 'false':'true'}"   id="efc_amt" value="#{estimator.stud.studentAfFamilyContrib}" size="5"  
+                                                                     style="text-align:right" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.efcamt.label']} ">
+                                                            <p:ajax event="change" process="@this" update="-auth-bar std_pellGrant @this std_efc std_calgrant -auth-sv-msgs" listener="#{estimator.efc_amtchanged}"   oncomplete="resize_height();" />
+                                                             <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                                        </p:inputText>Amount</td>
+                                                </tr>
+                                                
+                                                <tr><td><h:selectBooleanCheckbox id="std_noloans" value="#{estimator.std_noloans}">
+                                                            <p:ajax event="change" process="@this" update="-auth-bar inc_subloan inc_unsubloan" listener="#{estimator.noloanschanged}"  oncomplete="resize_height();" />
+                                                        </h:selectBooleanCheckbox>                                                            
+                                                            <h:outputLabel for="std_noloans" value="Exclude loans from this estimate"/></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                <td colspan="2"><h:selectBooleanCheckbox  id="std_dorm" value="#{estimator.std_dorm}">
+                                                <p:ajax event="change" process="@this" update="-auth-bar eanonlsu_perc"  listener="#{estimator.dormchanged}"   oncomplete="resize_height();" />
+                                                </h:selectBooleanCheckbox>
+                                                 <h:outputLabel for="std_dorm" value="Will live in a residence hall"/> </td>
+                                                </tr>
+                                            </table>                                     
+                                        </p:fieldset>
+                                    </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <p:fieldset legend="Family Situation" style="width:96%;  padding-bottom:20px;">
+                                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" align="center" >
+                                                <tr>
+                                                    <td>Number in Family:<br/><p:inputText id="std_homemems" value="#{estimator.stud.studentAcFamilySize}" maxlength="3" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.familysize.label']}">
+                                                            <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this" listener="#{estimator.familymemberschanged}" />
+                                                        </p:inputText> </td>
+                                                    <td>Family Annual Income:<br/><p:inputText  id="std_homeincome" value="#{estimator.stud.studentAdFamilyIncome}" maxlength="10" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.familyincome.label']}">
+                                                             <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.familyincomechanged}"/>
+                                                        <f:convertNumber   integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                                    </p:inputText> </td>
+                                                    <td>Family Asset Value:<br/><p:inputText  id="std_homeasset" value="#{estimator.stud.studentAeFamilyAsset}" maxlength="10" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.familyasset.label']}">
+                                                             <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.familyassetchanged}"/>
+                                                        <f:convertNumber  integerOnly="true" minFractionDigits="0" pattern="#,###" /> <!-- currencySymbol="$" type="currency"  pattern="$#,###" -->
+                                                    </p:inputText> </td>
+                                                </tr> <!-- studentAfFamilyContrib -->
+                                            </table>                                                                                      
+                                        </p:fieldset>
+                                    </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <p:fieldset legend="External Assistance" style="width:96%;  padding-bottom:20px;">
+                                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" align="center" >
+                                                <tr>
+                                                    <td width="80%" >Non-California State Grant:<br/><p:inputText id="noncal_notes" value="#{estimator.stud.studentAjHomeState}" style="width:98%;" maxlength="50"  >
+                                                                    <p:ajax event="change" process="@this"  update="@this -auth-bar  -auth-sv-msgs"  listener="#{estimator.noncahelpchanged}"  oncomplete="resize_height();" />
+                                                        </p:inputText>
+                                                   </td>
+                                                    <td>Amount:<br/><p:inputText   value="#{estimator.stud.studentAkNoncalGrant}"  maxlength="6" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.noncagrant.label']}" >
+                                                             <p:ajax event="change" process="@this" update="-auth-bar  -auth-sv-msgs @this noncal_notes"   listener="#{estimator.noncahelpamtchanged}"   oncomplete="resize_height();"/>
+                                                        <f:convertNumber  integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                                    </p:inputText> </td>
+                                                </tr>
+                                                <p:spacer />
+                                                <tr>
+                                                    <td colspan="2">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Other Scholarships---Outside:<br/><p:inputText  value="#{estimator.stud.studentAlOutScholarships}" style="width:98%;" maxlength="50"  >
+                                                            <p:ajax event="change" process="@this"  update="@this"  listener="#{estimator.nonlsuhelpchanged}"   oncomplete="resize_height();"/>
+                                                    </p:inputText>
+                                                    </td>
+                                                    <td>Amount:<br/><p:inputText   value="#{estimator.stud.studentAmOutScholarshipAmt}" maxlength="6" label="Financial #{msg['layer']} #{msg['EstimateForm.financial.outscholarshipamt.label']}">
+                                                            <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this"   listener="#{estimator.outsidehelpamtchanged}"/>
+                                                        <f:convertNumber  integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                                    </p:inputText> 
+                                                      <!--  <p:inputText   value="#{estimator.stud.studentAmOutScholarshipAmt}" label="Financial ==> Other Scholarships Amount" >
+                                                            <f:ajax event="change" execute="@this" render="-auth-bar -auth-sv-msgs @this"  />
+                                                        <f:convertNumber type="currency" integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                                    </p:inputText>-->
+    
+    <!-- listener="#{estimator.valChangedCheckForNullToZero}" only is triggered on "invoke app" phase, while the binding (type matching) 1st, validation 2nd, convertion ? so, it is useless here-->
+                                                    </td>
+                                                </tr>
+                                            </table>                                                                                 
+                                        </p:fieldset>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p:tab>
+                    
+                       <p:tab title="Institutional" id="t4">                              
+                           <table id="holder4" border="0" cellpadding="0" cellspacing="0" width="100%"  >    <!-- currencySymbol="$" type="currency" pattern="$#,###" -->                             
+                               <tbody style="display:#{estimator.ifshowscholar(1)};" id="scholar1" class="holder #{estimator.sumrow(1)}" >
+                           
+                                <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship1note">#{estimator.stud.studentAsScholarship1Name}<font size="-1"><i>#{estimator.fund1extra}</i></font></label><br/>
+                                        <p:inputText id="ship1note"  value="#{estimator.stud.studentAtScholarship1Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" readonly="false" disabled="#{ref.fundMaxOutIndById(estimator.stud.fund1id) lt 0 ? 'true': 'false'}">
+                                            <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.lsuawardnoteschanged1}" />
+                                        </p:inputText>
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship1amt">Amount:</label><br/>
+                                        <p:inputText  id="ship1amt"  value="#{estimator.stud.studentAuScholarship1Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship1amt.label']}"   readonly="false" disabled="#{ref.fundMaxOutIndById(estimator.stud.fund1id) lt 0 ? 'true': 'false'}" onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged1}"   oncomplete="resize_height();"/>
+                                            
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                                </tr>
+                               </tbody>
+                                                           
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(2)}"  id="scholar2"   class="holder #{estimator.sumrow()}" >
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship2note">#{estimator.stud.studentAvScholarship2Name}<font size="-1"><i>#{estimator.fund2extra}</i></font></label><br/>
+                                        <p:inputText id="ship2note"  value="#{estimator.stud.studentAwScholarship2Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged2}" />
+                                        </p:inputText>                                          
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship2amt">Amount:</label><br/>
+                                       <p:inputText  id="ship2amt"  value="#{estimator.stud.studentAxScholarship2Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship2amt.label']}"  onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged2}"   oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                               </tr>                               
+                                </tbody>
+                                
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(3)}"  id="scholar3"  class="holder #{estimator.sumrow()}">
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship3note">#{estimator.stud.studentAyScholarship3Name}<font size="-1"><i>#{estimator.fund3extra}</i></font></label><br/>
+                                        <p:inputText id="ship3note"  value="#{estimator.stud.studentAzScholarship3Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged3}" />
+                                        </p:inputText>                                          
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship3amt">Amount:</label><br/>
+                                       <p:inputText  id="ship3amt"  value="#{estimator.stud.studentBaScholarship3Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship3amt.label']}"  onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged3}"   oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                               </tr>                               
+                               </tbody>
+                                
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(4)}"  id="scholar4" class="holder #{estimator.sumrow()}">
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship4note">#{estimator.stud.studentBbScholarship4Name}<font size="-1"><i>#{estimator.fund4extra}</i></font></label><br/>
+                                        <p:inputText id="ship4note"  value="#{estimator.stud.studentBcScholarship4Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged4}" />
+                                        </p:inputText>                                          
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship4amt">Amount:</label><br/>
+                                       <p:inputText  id="ship4amt"  value="#{estimator.stud.studentBdScholarship4Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship4amt.label']}"  onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged4}"   oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                               </tr>
+                               </tbody>
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(5)}"  id="scholar5" class="holder #{estimator.sumrow()}">
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship5note">#{estimator.stud.studentBeScholarship5Name}<font size="-1"><i>#{estimator.fund5extra}</i></font></label><br/>
+                                        <p:inputText id="ship5note"  value="#{estimator.stud.studentBfScholarship5Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged5}" />
+                                        </p:inputText>                                          
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship5amt">Amount:</label><br/>
+                                       <p:inputText  id="ship5amt"  value="#{estimator.stud.studentBgScholarship5Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship5amt.label']}"  onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged5}"   oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                               </tr>
+                               </tbody>
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(6)}"  id="scholar6" class="holder #{estimator.sumrow()}">
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-ship6note">#{estimator.stud.studentBhScholarship6Name}<font size="-1"><i>#{estimator.fund6extra}</i></font></label><br/>
+                                        <p:inputText id="ship6note"  value="#{estimator.stud.studentBiScholarship6Note}" style="width:99%" onfocus="setSpecParentNode(this);"  maxlength="250" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged6}" />
+                                        </p:inputText>                                          
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship6amt">Amount:</label><br/>
+                                       <p:inputText  id="ship6amt"  value="#{estimator.stud.studentBjScholarship6Amt}" style="width:99%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship6amt.label']}"  onfocus="setSpecParentNode(this);" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"   listener="#{estimator.lsuawardamtchanged6}"   oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>                                       
+                                    </td>
+                               </tr>
+                               </tbody>
+                               
+                               
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(7)}"  id="scholar7" class="holder #{estimator.sumrow()}">
+                               <tr><!--
+                                    <td width="90%"><label for="auth-sv-ptab-scholarship7">Scholarship #7, including Matching and Endowment:</label><br/>
+                                        <p:inputText id="scholarship7" value="#{estimator.stud.studentBkScholarship7Name}" style="width:99%;" onfocus="setSpecParentNode(this);" maxlength="70" >
+                                               <f:ajax  event="change" execute="@this" render="-auth-bar" listener="#{estimator.lsuawardnamechanged7}" />
+                                           </p:inputText> 
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship7amt">Amount:</label><br/>
+                                        <p:inputText id="ship7amt" value="#{estimator.stud.studentBmScholarship7Amt}" onfocus="setSpecParentNode(this);" style="width:100%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship7amt.label']}">
+                                            <f:ajax event="change" execute="@this" render="-auth-bar  @this -auth-sv-msgs ship7note scholarship7"    listener="#{estimator.lsuawardamtchanged7}"  />
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>
+                                    </td>
+                                </tr>
+                               <tr><td colspan="2" ><label for="auth-sv-ptab-ship7note">Notes:</label><br/>
+                                       <p:inputText id="ship7note" value="#{estimator.stud.studentBlScholarship7Note}" style="width:100%"  maxlength="250"  onfocus="setSpecParentNode(this);"/> 
+                                   </td>-->
+                                   <td width="92%"><label for="auth-sv-ptab-scholarship7">Scholarship #7, including Matching and Endowment:</label><br/>                                       
+                                       <h:selectOneMenu  id="scholarship7"  value="#{estimator.stud.fund7id}" onfocus="setSpecParentNode(this);"     >
+                                           <f:selectItems value="#{ref.a_funds}" />
+                                           <!--<f:converter converterId="lasu.selectone.converter"/>-->
+                                           <f:ajax  event="change" execute="@this" render="-auth-bar ship7amt ship7reqnote" listener="#{estimator.lsuawardnamechanged7}" />
+                                       </h:selectOneMenu>                                         
+                                    </td>
+                                    <td><label for="auth-sv-ptab-ship7amt">Amount:</label><br/>
+                                        <p:inputText id="ship7amt" value="#{estimator.stud.studentBmScholarship7Amt}" onfocus="setSpecParentNode(this);" style="width:100%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship7amt.label']}">
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"    listener="#{estimator.lsuawardamtchanged7}"    oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText>
+                                    </td>
+                                </tr>
+                                   <tr><td colspan="2" ><label for="auth-sv-ptab-ship7note">Notes:<h:outputText id="ship7reqnote" value="(required)" style="color:red; display:#{ref.fundNotesReqById(estimator.stud.fund7id) gt 0 ? 'inline':'none'};}" /></label> <br/>
+                                       <p:inputText id="ship7note" value="#{estimator.stud.studentBlScholarship7Note}" style="width:100%"  maxlength="250"  onfocus="setSpecParentNode(this);">
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged7}" />
+                                        </p:inputText> 
+                                   </td>
+                               </tr>                                   
+                               </tbody>
+                               
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(8)}"  id="scholar8" class="holder #{estimator.sumrow()}">
+                               <tr>
+                                    <td width="92%"><label for="auth-sv-ptab-scholarship8">Scholarship #8, including Matching and Endowment:</label><br/>
+                                        <h:selectOneMenu  id="scholarship8"   value="#{estimator.stud.fund8id}" onfocus="setSpecParentNode(this);"    >
+                                           <f:selectItems value="#{ref.a_funds}" />
+                                           <f:ajax  event="change" execute="@this" render="-auth-bar ship8amt ship8reqnote" listener="#{estimator.lsuawardnamechanged8}" />
+                                       </h:selectOneMenu>   
+                                        </td>
+                                    <td><label for="auth-sv-ptab-ship8amt">Amount:</label><br/>
+                                        <p:inputText id="ship8amt" value="#{estimator.stud.studentBpScholarship8Amt}" onfocus="setSpecParentNode(this);" style="width:100%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship8amt.label']}">
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"    listener="#{estimator.lsuawardamtchanged8}"    oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText> </td>
+                                </tr>
+                               <tr><td colspan="2" ><label for="auth-sv-ptab-ship8note">Notes:<h:outputText id="ship8reqnote" value="(required)" style="color:red; display:#{ref.fundNotesReqById(estimator.stud.fund8id) gt 0 ? 'inline':'none'};}" /> </label><br/>
+                                       <p:inputText id="ship8note" value="#{estimator.stud.studentBoScholarship8Note}" style="width:100%"  maxlength="250" onfocus="setSpecParentNode(this);" >
+                                            <f:ajax event="change" execute="@this"  render="@this"  listener="#{estimator.lsuawardnoteschanged8}" />
+                                        </p:inputText> 
+                                   </td>
+                               </tr>
+                               </tbody>
+                               
+                               
+                               <tbody style="display:#{estimator.ifshowscholar(9)}"  id="scholar9" class="holder #{estimator.sumrow()}">
+                               <tr>
+                                   <td width="92%"><label for="auth-sv-ptab-scholarship9">Scholarship #9, including Matching and Endowment:</label><br/>
+                                       <h:selectOneMenu  id="scholarship9"   value="#{estimator.stud.fund9id}" onfocus="setSpecParentNode(this);"    >
+                                           <f:selectItems value="#{ref.a_funds}" />
+                                           <f:ajax  event="change" execute="@this" render="-auth-bar ship9amt ship9reqnote" listener="#{estimator.lsuawardnamechanged9}" />
+                                       </h:selectOneMenu>   
+                                       
+                                           </td>
+                                    <td><label for="auth-sv-ptab-ship9amt">Amount:</label><br/>
+                                        <p:inputText id="ship9amt" value="#{estimator.stud.studentBsScholarship9Amt}" onfocus="setSpecParentNode(this);" style="width:100%" label="Institutional #{msg['layer']} #{msg['EstimateForm.institute.scholarship9amt.label']}">
+                                            <p:ajax event="change" process="@this" update="-auth-bar  @this -auth-sv-msgs"    listener="#{estimator.lsuawardamtchanged9}"    oncomplete="resize_height();"/>
+                                        <f:convertNumber integerOnly="true" minFractionDigits="0" pattern="#,###" />
+                                        </p:inputText> </td>
+                                </tr>
+                               <tr><td colspan="2" ><label for="auth-sv-ptab-ship9note">Notes:<h:outputText id="ship9reqnote" value="(required)" style="color:red; display:#{ref.fundNotesReqById(estimator.stud.fund9id) gt 0 ? 'inline':'none'};}" /></label> <br/>
+                                       <p:inputText id="ship9note" value="#{estimator.stud.studentBrScholarship9Note}" style="width:100%"  maxlength="250"  onfocus="setSpecParentNode(this);">
+                                           <f:ajax event="change" execute="@this" render="@this"   listener="#{estimator.lsuawardnoteschanged9}" />
+                                        </p:inputText> 
+                                   </td>
+                               </tr>
+                               </tbody>
+                               
+                              
+                               </table> 
+                              
+                           <!--
+                           <p:commandButton value="Estimate" image="ui-icon ui-icon-pencil" />
+                           <h:button image="#{resource['img/notes-icon.png']}" style="border:0px; height:28px;  vertical-align:middle;  cursor:pointer;"> click me </h:button> -->
+                             <h:graphicImage library="img" 
+                                             id="awardicon"
+                                             name="notes-icon.png" 
+                                             alt="one more scholarship entry" 
+                                             title="click me to add one more scholarship entry" 
+                                             onclick="delayResizeHeight(0);"
+                                             rendered="#{estimator.shownotes lt estimator.notestot}" 
+                                             style="margin-left:10px; margin-top:20px; border:0px; width:28px;height:28px;  vertical-align:middle; cursor: pointer;"  > 
+                                 <f:ajax event="click" render="@form" listener="#{estimator.clickformorescholar}" />  
+                             </h:graphicImage><h:outputText rendered="#{estimator.shownotes lt estimator.notestot}" value="click the image to add one more scholarship" /> 
+                             
+                                   <!-- @form will cause some checkbox lost their value or status.   @this holder4 ??? 
+                                   unknown id 'auth-sv-ptab-t4' unknown id '-auth-sv-ptab-t4' unknown id 'holder4'  unknown id '-holder4'-->
+                                 
+                           
+                                                          
+                       </p:tab>
+                    
+                    
+                        <p:tab title="Notes and Adjustment" id="t5">
+                            <table  border="0" cellpadding="0" cellspacing="0" width="100%" >                                
+                                <tr>
+                                    <td>Cal Grant A:<br/><p:inputMask mask="$9?9999" id="std_calgranta" value="#{estimator.stud.studentAaCalgrantA}"  style="width:98%;" label="Adjustment #{msg['layer']} #{msg['EstimateForm.Adjustment.calgrantaamt.label']}" disabled="#{estimator.std_intl eq true or estimator.std_calgrant eq false or estimator.adjust_calgrantamt_ind eq false}">
+                                            <p:ajax event="change" process="@this" update="-auth-bar  -auth-sv-msgs @this std_calgrantb" listener="#{estimator.calgrantaamtchanged}" oncomplete="resize_height();"/>
+                                            <f:convertNumber currencySymbol="$" type="currency" integerOnly="true" minFractionDigits="0" pattern="$#,###" />
+                                        </p:inputMask>  </td>
+                                    <td>Cal Grant B:<br/><p:inputMask mask="$9?9999" id="std_calgrantb"  value="#{estimator.stud.studentAbCalgrantB}"  style="width:99%;" label="Adjustment #{msg['layer']} #{msg['EstimateForm.Adjustment.calgrantbamt.label']}" disabled="#{estimator.std_intl eq true or estimator.std_calgrant eq false or estimator.adjust_calgrantamt_ind eq false}"  > <!-- placeHolder=" "  -->
+                                            <p:ajax event="change" process="@this" update="-auth-bar  -auth-sv-msgs @this std_calgranta" listener="#{estimator.calgrantbamtchanged}" oncomplete="resize_height();"/>
+                                            <f:convertNumber currencySymbol="$" type="currency" integerOnly="true" minFractionDigits="0" pattern="$#,###" />
+                                            <!--<f:convertNumber type="number" integerOnly="true" minFractionDigits="0" pattern="#,###" /> -->
+                                           <!--   with the converter: '$01435' is not a number pattern.  w/o: '$1435' must be a number consisting of one or more digits.  -->                                            
+                                            <!-- val=0.1 <f:convertNumber type="percent" /> will give 10%
+                                                <f:convertNumber pattern="#0.000" /> == 0.100
+                                                <f:convertNumber minFractionDigits="2" /> ==0.10
+                                            <f:convertNumber currencySymbol="$" type="currency" /> -->
+                                        </p:inputMask> </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" >
+                                        <h:selectBooleanCheckbox id="calgrantab_adjust" value="#{estimator.adjust_calgrantamt_ind}"  disabled="#{estimator.std_intl eq true or estimator.std_calgrant eq false}" >
+                                            <p:ajax event="change" process="@this" update="-auth-bar std_calgrantb std_calgranta" listener="#{estimator.calgrantadjustindchanged}"  oncomplete="resize_height();"/>
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputLabel for="calgrantab_adjust" value="Adjust CalGrant Amount"/>                                        
+                                    </td>
+                                </tr>
+                                <p:spacer />
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" >
+                                        <h:selectBooleanCheckbox id="inc_subloan" value="#{estimator.in_subloan}" disabled="#{estimator.std_noloans eq true}">
+                                            <f:ajax  event="change" execute="@this" render="-auth-bar" listener="#{estimator.subloanindchanged}" />
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputLabel for="inc_subloan" value="Include Subsidized Loans"/><br/>
+                                        
+                                        <h:selectBooleanCheckbox id="inc_unsubloan" value="#{estimator.in_unsubloan}" disabled="#{estimator.std_noloans eq true}">
+                                            <f:ajax  event="change" execute="@this" render="-auth-bar" listener="#{estimator.unsubloanindchanged}" />
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputLabel for="inc_unsubloan" value="Include Unsubsidized Loans"/><br/>
+                                        
+                                        <h:selectBooleanCheckbox id="inc_fws" value="#{estimator.in_fws}" >
+                                            <p:ajax  event="change" process="@this" update="-auth-bar" listener="#{estimator.fwsindchanged}"  oncomplete="resize_height();"  />
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputLabel for="inc_fws" value="Include Federal Work-Study (FWS)"/><br/>
+                                    </td>
+                                </tr>
+                                <p:spacer/>
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                </tr>
+                                <p:spacer/>
+                                <tr>
+                                    <td colspan="2" >
+                                        <p:fieldset legend="Notes" style="width:97%; padding-right:20px;" >
+                                            Public Notes (printed on the estimate, no more than 512 characters):<br/>
+                                            <p:inputTextarea id="notes_pub" value="#{estimator.stud.studentAnPubNotes}" autoResize="true" maxlength="512" style="width:100%; " label="Adjustment #{msg['layer']} Public Notes" onkeypress="resize_height();" onblur="resize_height();" onfocus="resize_height();" onclick="resize_height();">
+                                                <f:ajax event="change" execute="@this" render="@this"  listener="#{estimator.chgpubnotes}"/>
+                                                <!--<p:ajax event="focus" process="@this" update="@this"   oncomplete="resize_height();"/>
+                                                <p:ajax event="blur" process="@this"  update="@this"  oncomplete="resize_height();"/> -->
+                                            </p:inputTextarea>
+                                            
+                                            <p:spacer/>   
+                                            <br/>
+                                            
+                                            Other Notes (not printed on the estimate, no more than 512 characters):<br/>
+                                            <p:inputTextarea id="notes_pri" value="#{estimator.stud.studentAoPriNotes}" autoResize="true" maxlength="512"  style="width:100%; margin-bottom:10px;" label="Adjustment #{msg['layer']} Other Notes"  onkeypress="resize_height();"  onblur="resize_height();" onfocus="resize_height();" onclick="resize_height();">
+                                                <f:ajax    event="change" execute="@this" render="@this"  listener="#{estimator.chgprinotes}"/>
+                                                
+                                            </p:inputTextarea>
+                                        </p:fieldset>   
+                                    </td>
+                                </tr>                                
+                            </table>
+                            </p:tab>
+                    
+                    <!--
+                            <p:tab title="Save" id="t6" >
+                                <h:commandButton id="save" value="Save Student Info"  actionListener="#{estimator.savest udinfo}"  > -->
+                                   <!-- <p:ajax event="click" process="@form" update="-auth-sv-msgs" listener="#{estimator.savestudinfo}" /> -->
+                                    <!--<f:ajax event="click" execute="@form" render="-auth-sv-msgs" listener="#{estimator.savestudinfo}" /> -->
+                           <!--     </h:commandButton>                                
+                            </p:tab> -->
+                         
+                </p:tabView>    
+                
+            </h:form>
+            
+            
+            
+        </f:subview>
+        
+        
+        
+    </ui:define>
+    
+</ui:composition>
+
+<!-- xmlns:o="http://openfaces.org/" -->

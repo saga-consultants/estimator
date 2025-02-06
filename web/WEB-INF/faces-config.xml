@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://lestimator.lasierra.edu/estimator/loc/web-facesconfig_2_0.xsd">
+   
+   
+   <application>
+       <locale-config>
+           <default-locale>en_US</default-locale>
+       </locale-config>
+       
+       <resource-bundle>
+           <base-name>/JSFmessages</base-name> <!-- pkg.filename w/o .properties -->
+           <var>msg</var>
+       </resource-bundle>
+   
+        <message-bundle>BVmessages</message-bundle>
+        
+<!--        <lifecycle>
+    <phase-listener>edu.lsu.estimator.PostValidationListener</phase-listener>
+</lifecycle>-->
+        <!-- <view-handler>com.sun.facelets.FaceletViewHandler</view-handler> -->
+        
+       <system-event-listener>            
+             <source-class>javax.faces.component.html.HtmlInputSecret</source-class>             
+             <system-event-class>javax.faces.event.PostValidateEvent</system-event-class>
+             <system-event-listener-class>edu.lsu.estimator.PostValidationListener</system-event-listener-class>
+        </system-event-listener>
+        
+        <system-event-listener>
+             <source-class>javax.faces.component.html.HtmlInputText</source-class>             
+             <system-event-class>javax.faces.event.PostValidateEvent</system-event-class>
+             <system-event-listener-class>edu.lsu.estimator.PostValidationListener</system-event-listener-class>
+        </system-event-listener>
+        <system-event-listener>
+             <source-class>javax.faces.component.html.HtmlInputText</source-class>             
+             <system-event-class>javax.faces.event.PreRenderComponentEvent</system-event-class>
+             <system-event-listener-class>edu.lsu.estimator.PostValidationListener</system-event-listener-class>
+        </system-event-listener>
+        <system-event-listener>
+             <source-class>javax.faces.component.html.HtmlInputText</source-class>             
+             <system-event-class>javax.faces.event.AjaxBehaviorListener</system-event-class>
+             <system-event-listener-class>edu.lsu.estimator.PostValidationListener</system-event-listener-class>
+        </system-event-listener>
+        
+        <system-event-listener>             
+             <source-class>org.primefaces.component.inputmask.InputMask</source-class> 
+             <system-event-class>javax.faces.event.PostValidateEvent</system-event-class>
+             <system-event-listener-class>edu.lsu.estimator.PostValidationListener</system-event-listener-class>
+        </system-event-listener>
+        
+                
+         Application is started 
+    	<system-event-listener>
+		<system-event-listener-class>edu.lsu.estimator.FacesAppListener</system-event-listener-class>
+		<system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>    					
+    	</system-event-listener> 	 
+ 
+    	 Before Application is shut down 
+    	<system-event-listener>
+		<system-event-listener-class>edu.lsu.estimator.FacesAppListener</system-event-listener-class>
+		<system-event-class>javax.faces.event.PreDestroyApplicationEvent</system-event-class>    					
+    	</system-event-listener> 	
+        
+          
+   </application>
+  
+  
+  <!-- renderer-type:   define renderer-type of the original component. -<renderer-type>org.primefaces.component.SelectOneRadioRenderer</renderer-type> 
+        <render-kit>
+            <renderer>
+                <component-family>org.primefaces.component.selectoneradio.SelectOneRadioRenderer</component-family>
+                <renderer-type>org.primefaces.component.selectoneradio.SelectOneRadio</renderer-type> 
+                <renderer-class>edu.lsu.estimator.SelectOneRadioRenderer</renderer-class>
+            </renderer>
+        </render-kit> 
+        
+        orig in PF faces-config.xml:
+        <renderer>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>org.primefaces.component.SelectOneRadioRenderer</renderer-type>
+			<renderer-class>org.primefaces.component.selectoneradio.SelectOneRadioRenderer</renderer-class>
+		</renderer>
+       
+        
+        
+        <render-kit>
+            <renderer>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>org.primefaces.component.SelectOneRadioRenderer</renderer-type>
+			<renderer-class>edu.lsu.estimator.SelectOneRadioRenderer</renderer-class>
+		</renderer>
+            <renderer>
+                <component-family>org.primefaces.component.SelectOneRadioRenderer</component-family>
+                <renderer-type>org.primefaces.component.SelectOneRadioRenderer</renderer-type> 
+                <renderer-class>edu.lsu.estimator.SelectOneRadioRenderer</renderer-class>
+            </renderer>
+        </render-kit>  -->
+         <!-- Unable to create a new instance of 'edu.lsu.estimator.SelectOneRadioRenderer': java.lang.RuntimeException: 
+         Uncompilable source code - Erroneous tree type: org.primefaces.component.selectoneradio.SelectOneRadio.-->
+</faces-config>
+
+
+
+<!--
+To load the properties file locally, or for specified page only. Declare the <f:loadBundle /> tag in the page that need to access the message in the messages.properties.
+<f:loadBundle basename="com.developer.am.messages" var="msg"/>
+-->
+
+
+<!--
+Access Resources bundle From Code
+
+Typically, in your application you will generate messages for the user that also needs to be obtained from the resource bundle. To do this, we will create a bean that can fetch the resource bundle for us and extract strings from it.
+view source
+print?
+01.public class MessageProvider {
+02. 
+03.private ResourceBundle bundle;
+04. 
+05.public ResourceBundle getBundle() {
+06.if (bundle == null) {
+07.FacesContext context = FacesContext.getCurrentInstance();
+08.bundle = context.getApplication().getResourceBundle(context, "msgs");
+09.}
+10.return bundle;
+11.}
+12. 
+13.public String getValue(String key) {
+14. 
+15.String result = null;
+16.try {
+17.result = getBundle().getString(key);
+18.} catch (MissingResourceException e) {
+19.result = "???" + key + "??? not found";
+20.}
+21.return result;
+22.}
+23. 
+24.}
+
+In our home.jsf page, we display our message by adding
+view source
+print?
+1.Message = #{someBean.message}
+
+Which results in the following phrase being displayed :
+view source
+print?
+1.Message = SomeValue is not valid
+-->

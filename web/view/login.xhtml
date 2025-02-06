@@ -1,0 +1,212 @@
+<!--<?xml version="1.0" encoding="UTF-8"?> -->
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://lestimator.lasierra.edu/loc/xhtml1-transitional.dtd">  
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:f="http://java.sun.com/jsf/core"   
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:p="http://primefaces.org/ui"
+   template="/view/template.xhtml">
+
+     <!--  xmlns:p="http://primefaces.prime.com.tr/ui" is for PF 3.0 M3, higher ones use xmlns:p="http://primefaces.org/ui" -->
+   <ui:define name="content">       
+       
+       <h2 style="padding-top:7px;">Welcome! Thank you for choosing La Sierra University!</h2>
+      <p>You can utilize this new <code>Financial Aid Estimator</code> web application to make your work and life easier. Enjoy!</p>
+      
+      <style type="text/css">
+    
+      </style>
+        
+      
+    
+       <f:subview id="loginview"  rendered="#{!login.loggedIn}"> 
+            <h:form id="guest">
+            <p:commandButton id="guest"  value="#{msg['LoginForm.GuestButton.Value']}" action="#{login.login}"
+                             style="margin:10px 0px 20px 5px; width: 70%;" rendered="#{ref.clientid gt 0 and ref.sys_blk_ind le 0 and ref.sys_cfg_ind gt 0 }" disabled="disabled"  tabindex="4" /> 
+            <div id="guestip" class="tooltip2" style="display:none;">
+                <p>#{msg['LoginForm.GuestButton.Title']}</p>
+                <table style="margin:0px; padding:0px; width: 100%;">
+                    <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:0px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Awards Unlisted to Visitors:</td>
+                                <td>Leadership Scholarship, University Grant and 120+ more</td>
+                        </tr>
+                     <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:2px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Visitor Can Query Data:</td>
+                                <td>No</td>
+                        </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:2px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Visitor Can Save Data:</td>
+                                <td>Yes, but data will be marked as inactive</td>
+                        </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:2px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Supported Student Types:</td>
+                                <td>Full Year Undergraduate</td>
+                        </tr>	
+                    <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:2px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Graduate Student Type:</td>
+                                <td>Coming soon</td>
+                        </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr size="1" style="margin:2px 0px 2px 0px; padding:0px;" />
+                        </td>
+                    </tr>
+                        <tr>
+                                <td class="label">Program Student Type:</td>
+                                <td>Coming soon</td>
+                        </tr>
+                </table>
+               
+            </div>
+            </h:form>
+           
+           
+           <h:form id="bv">
+           <f:subview id="init" rendered="#{ref.clientid le 0}" >
+               <p:panel header="Initialization is required"   visible="true" style="width:70%;" >                   
+                    <p>This Estimator software has not been initialized, and its database is empty except the seed record.</p>
+                    <h:outputText id="nready" value="You need to make the master server reachable to perfom initilization." rendered="#{ref.master_up_ind le 0}"/>                                                            
+                    
+                    <f:subview id="readyinit" rendered="#{ref.master_up_ind gt 0}">
+                        <p>Please click the button below to initialize it if the master server is reachable and this estimator is a NEW installation.</p>                        
+                        <p:separator  />
+                        <!--<hr size="1" style="height:1px; width:100%; border:0px; color:silver;" />-->
+                        <h:commandButton id="btn" value="Initialize Estimetor" action="#{sync.init}"   onclick="this.blur();"  disabled="disabled" /> 
+<!-- disabled="#{sync.init_on_ind gt 0}"-->
+                        
+                        <!--p:poll interval="1" update="msg btn" widgetVar="poll" autoStart="false"/--> 
+                    </f:subview>
+                    <h:outputText id="msg" value="#{sync.init_step_msg}" style="color:blue; border:0px;" escape="false"/>   <!--  rendered="#{sync.init_on_ind gt 0}"-->
+               </p:panel>  
+           </f:subview> 
+           
+           <f:subview id="valid" rendered="#{ref.clientid gt 0 and ref.sys_blk_ind le 0 and ref.sys_cfg_ind gt 0 and ref.sys_usr_ind gt 0}" >
+           <p:panel header="La Sierra University Counselor Login Form"   visible="true" style="width:70%; height: 330px;"  >            
+            Please identify yourself to the system if you are an authorized user.<br/>
+            <p:messages globalOnly="true" layout="table" styleClass="messages" style="margin-top:0px; margin-bottom:0px;padding:2px;" />             
+            <table style="background-color: #f8faff; border:1px solid #adadad; margin-top: 10px;" cellspacing="5" cellpadding="2" align="left"  >
+                <tr>
+                <td  style="margin:20px 90px 30px 30px; padding:10px 90px 10px 10px;" >
+                    <h:outputLabel id="uname" for="username" value="#{msg['LoginForm.UserNamelabel']}"  title="#{msg['LoginForm.Username.Title']}"/> <!-- Letters: -->
+                <br/>
+                <h:inputText id="username" required="true" value="#{credentials.username}" label="#{msg['LoginForm.UserNamelabel']}" style="margin-top: 0px; padding:3px;" tabindex="1"  />
+                    <h:message for="username" errorClass="invalid"/>
+                </td>
+                </tr>
+
+                <tr>
+                    <td style="margin:10px 90px 20px 30px; padding:10px;" >
+                    <h:outputLabel id="upass" for="password" value="#{msg['LoginForm.Passwdlabel']}" title="#{msg['LoginForm.Password.Title']}"/> <!-- Numbers: -->
+                <br/>
+                    <h:inputSecret id="password" required="true" value="#{credentials.password}"  label="#{msg['LoginForm.Passwdlabel']}" style="margin-top: 0px; padding:3px;"  tabindex="2"  />
+                    <h:message for="password" errorClass="invalid"/>
+                </td>
+                </tr>
+
+                <tr>               
+                <td   style="margin:0px 90px 0px 30px; padding:0px 10px 0px 10px;">
+                    <!--<h:selectBooleanCheckbox id="xautosync" value="#{login.no_autosync}"  label="#{msg['LoginForm.autosynclabel']}" /><h:outputLabel for="xautosync" value="#{msg['LoginForm.autosynclabel']}"/>
+                    <br/>-->
+                    <hr size="1" style="border:0px; border-top:1px solid #adadad; padding:0px;margin:0px;" />
+                </td>
+                </tr>
+
+                <tr>
+                    <td style="margin:0px 90px 30px 30px; padding:10px 10px 10px 10px;">
+                        <h:commandButton id="btn" type="submit" value="#{msg['LoginForm.SigninButton']}" action="#{login.login}" rendered="#{!login.loggedIn}"  tabindex="3" />
+                    </td>
+                </tr>
+            </table>            
+            </p:panel>
+            <script type="text/javascript">
+             //<![CDATA[
+            //$(document).ready(function() {alert('Hi');});
+            $(window).load(function() {
+                var obj = $("#loginview-bv-valid-username")[0];//document.getElementById(id) returns raw DOM obj, while $(id)  jQuery object that wraps the DOM object and provides jQuery methods
+                obj.focus();             
+            });
+            $(document).ready(function() {
+                $("#loginview-bv-valid-uname").tooltip({ position: "center right", opacity: 0.7, effect: "fade", offset: [0, 0], delay:0, predelay:0});
+                $("#loginview-bv-valid-upass").tooltip({ position: "center right", opacity: 0.7, effect: "fade", offset: [0, 0], delay:0});
+                $("#loginview-guest-guest").tooltip({ position: "bottom center", opacity: 0.9, effect: "fade", offset: [-5,0], delay:0, predelay:0, tipClass:"tooltip2",relative:"true"  });
+                //tip (spec existing element as tip) and tipClass (css style the tip element)  tip:"#guestip", tipClass:"tooltip2", relative:true
+            });
+          /*  
+            $('#clientId').bind('eventname', function(event, ui) { 
+                    wheteveJSFcallsHere(); 
+            }); */
+            //unobtrusive. $('#selectlist option:selected').val()
+            ////$('#'+clientId).closest('tr').toggleClass("selectedRow");
+            //
+            /* primefaces also let's you use the attribute widgetvar to tie your component to a javascript object.
+            so for instance:
+            <p:inputText widgetvar="tom" id="tom" />
+            then in your javascript code or some javascript callback you could do:
+            tom.disable() or tom.focus()
+            */
+            //]]>
+         </script>         
+         </f:subview>  <!-- valid -->
+           
+         
+         
+         <p:panel id="status" header="Server And Estimator Availability and Status "                  
+                    footer="checking and refreshing serever status every #{ref.seed eq null ? 0 : ref.seed.pollInterval} minutes"
+                    style="width:70%; margin-top:32px; margin-bottom: 5px;">             
+               <span>Master server "#{ref.seed.mastername}" is <b>#{ref.master_up_ind gt 0? 'up':'not reachable at present'}</b>.<br/>             
+               Authentication server "#{ref.seed.ldapserver}" is <b>#{ref.ldap_up_ind gt 0? 'up':'not reachable. Will try your last success password'}</b>.<br/>
+               Estimator <b>#{ref.seed.clientid gt 0? ref.getVerStr() :"needs initialization"}</b>.        </span>  <br/>  
+               <div style="color: red; border:0px; margin:0px; padding:0px;">
+               <h:outputText id="clkmsg" value="#{ref.sys_clk_msg}"   escape="false" rendered="#{ref.sys_clk_ind ne 0}"/>
+               <h:outputText id="blkmsg" value="#{ref.sys_blk_msg}"   escape="false" rendered="#{ref.sys_blk_ind gt 0}"/>
+               <h:outputText id="cfgmsg" value="#{ref.sys_cfg_msg}"   escape="false" rendered="#{ref.sys_cfg_ind le 0}"/>
+               <h:outputText id="usrmsg" value="#{ref.sys_usr_msg}"   escape="false" rendered="#{ref.sys_usr_ind le 0}"/>
+               </div>
+           </p:panel>
+            <p:poll interval="2" update="status"  autoStart="true" /> <!-- widgetVar="poll" listener="#{counterBean.increment}"  -->
+         
+            </h:form>
+     </f:subview>
+          
+       
+      
+          <f:subview id="signedin"   rendered="#{login.loggedIn}">
+              <h2 style="margin-top: 90px;">Sign Out?</h2>
+              <p>You have signed into the system. If you need to sign out, click the button below.</p>
+              <p/>
+              <h:form>
+              <p>
+              <h:commandButton value="#{msg['SignoutButton']}" action="#{login.logout}" rendered="#{login.loggedIn}"/>
+              </p>
+              </h:form>
+          </f:subview>
+        
+      
+     
+   </ui:define>
+</ui:composition>

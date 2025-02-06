@@ -1,0 +1,24 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<div>
+<p style="padding-top:7px; padding-bottom:8px; margin:0px auto; text-align:center; vertical-align: middle; border:0px;">
+    Copyright&#169; 2011-#{ref.fiscal_year } &#160;&#160;<a href="http://www.lasierra.edu">La Sierra University</a> &#160;&#160; | 
+&#160;&#160;  
+    <a href="http://www.lasierra.edu/enrollment">Enrollment Services Office</a>  &#160;&#160; | 
+&#160;&#160;  
+    <a href="http://www.lasierra.edu/sfs">Student Finiancial Services Office</a> &#160;&#160; 
+</p>
+<p style="padding-top:7px; padding-bottom:8px; margin:0px auto; text-align:center; vertical-align: middle; border:0px;">
+   
+&#160;&#160; All Rights Reserved &#160;&#160; <i>Financial Aid Estimator Version #{ref.clientverions}&#160;&#160;ID #{ref.seed.clientid}</i>
+</p>
+</div>
+
+<!--
+<root>
+    
+</root>
+-->
