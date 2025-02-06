@@ -124,8 +124,8 @@ import edu.lsu.estimator.Counselor;
         /* 117 */ env.put("java.naming.factory.initial", "com.sun.jndi.ldap.LdapCtxFactory");
         /*     */
  /*     */
- /* 120 */ env.put("java.naming.provider.url", "ldaps://ldap.lasierra.edu:636");
- //env.put("java.naming.provider.url", "ldaps://ad.lasierra.edu:636");
+ /* 120 */// env.put("java.naming.provider.url", "ldaps://ldap.lasierra.edu:636");
+ env.put("java.naming.provider.url", "ldaps://ad.lasierra.edu:636");
         /*     */
  /* 122 */ env.put("java.naming.security.protocol", "ssl");
         /*     */
