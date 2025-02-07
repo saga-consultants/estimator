@@ -1378,7 +1378,8 @@ if (this.std.getStudentAgNonlsuAllowrance()!=null && !this.std.getStudentAgNonls
             /* 1306 */ _grd = _grd.toUpperCase();
             /*      */        }
         /*      */
- /* 1309 */ if (this.std.getStudentStudType()!=null && this.std.getStudentStudType().equalsIgnoreCase("UGFY") || _grd.equals("FR") || _grd.equals("F2") || _grd.equals("SO") || _grd.equals("JR") || _grd.equals("SR")) {
+ /* 1309 */ if (this.std.getStudentStudType()!=null && this.std.getStudentStudType().equalsIgnoreCase("UGFY") || _grd.equals("FR") 
+         || _grd.equals("F2") || _grd.equals("SO") || _grd.equals("JR") || _grd.equals("SR")) {
             /* 1310 */ int _efcAmt = this.std.getStudentAfFamilyContrib() !=null ? this.std.getStudentAfFamilyContrib().intValue() :0;
             // if (this.std.getIndEfc() !=null && this.std.getIndEfc().equalsIgnoreCase("Yes") && _efcAmt >= 0 && _efcAmt <= 12000) {
                 if (this.std.getIndEfc() !=null && this.std.getIndEfc().equalsIgnoreCase("Yes") &&  _efcAmt <= 12000) {
@@ -3955,7 +3956,7 @@ if (maxaid2 < maxaid1) {
  /* 3481 */ this.lsuAllowance = this.actor.getLsuAllowance();
         /* 3482 */ this.familyDiscount = this.actor.getFamilyDiscount();
         /*      */
- /* 3484 */ this.lsuNeedGrant = this.actor.getLsuNeedGrantAmt();
+ /* 3484 */  this.lsuNeedGrant = 0;//this.actor.getLsuNeedGrantAmt();
         /*      */
  /*      */
  /*      */
@@ -3974,13 +3975,13 @@ if (maxaid2 < maxaid1) {
  /* 3497 */ if (this.nationalMerit > 0) {
             /* 3498 */ this.lsuAchievement = 0;
             /*      */        } else {
-            /* 3500 */ this.lsuAchievement = this.actor.getLsuAchievement();
+            /* 3500 */ this.lsuAchievement = 0;//this.actor.getLsuAchievement();
             /*      */        }
         /*      */
  /* 3503 */ 
         /*      */
  /*      */
- /* 3506 */ if (this.lsu4yRenewable > this.lsuAchievement +  this.nationalMerit) {
+ /* 3506 */ if (this.lsu4yRenewable >   this.nationalMerit) {
             /* 3507 */ this.lsuAchievement = 0; 
             /* 3508 */ this.nationalMerit = 0;
             /*      */        } else {
