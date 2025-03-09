@@ -313,6 +313,7 @@
 /* 305 */   public static final BigDecimal nationalMeritMS = new BigDecimal("0.5");
 /* 306 */   public static final BigDecimal nationalMeritMF = new BigDecimal(1);
 /*     */   
+//-1500 6655
            //Fr means freshMan Gpa is Gpa 2De74 means 2.74 //this.showEFC() sai -1500 to 6550
             public static final int Lsu4yRenewableFrGpa2_2De74_sai_1=8000;//3400;//3300//3100;
            public static final int Lsu4yRenewableFrGpa2De75_3De24_sai_1=10000;//6600;//6400// 6100;
@@ -335,7 +336,7 @@
            public static final int Lsu4yRenewableRGpa3De50_3De74_sai_1=10000;
             public static final int Lsu4yRenewableRGpa3De75_4_sai_1=12000;
             
-            //sai 6551+
+            //sai 6656+
            
                  public static final int Lsu4yRenewableFrGpa2_2De74_sai_2=6000;//3400;//3300//3100;
            public static final int Lsu4yRenewableFrGpa2De75_3De24_sai_2=8000;//6600;//6400// 6100;

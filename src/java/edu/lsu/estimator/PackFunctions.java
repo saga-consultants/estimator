@@ -674,6 +674,7 @@ public void resetValues() {
         /*      */    }
 
     /*      */ public final int getMPA() {
+        //showFaidAmt
         /*  639 */ if (this.use_need_ind > 0) {
             /*  640 */ int amt = getOtherExpenses() - getEFC();
             /*  641 */ return (amt > 0.01D) ? amt : 0;
@@ -1457,7 +1458,7 @@ if (this.std.getStudentAgNonlsuAllowrance()!=null && !this.std.getStudentAgNonls
         /*      */
  /*      */    boolean student_freshMan_transfer= this.std.getStd_transfer_ind()==1?true:false;
  /*      */    boolean student_freshMan_returning= this.std.getReturnStdInd()==1 ? true:false;
- /*      */
+ /*      */    boolean student_freshman=this.std.getStd_1st_freshmen()==1?true:false;
  /*      */
  /*      */
  /* 1350 */ if (this.SAVE_STUDENT_U_ACADEMIC!=null && (this.SAVE_STUDENT_U_ACADEMIC.equalsIgnoreCase("FR") || 
@@ -1471,7 +1472,7 @@ if (this.std.getStudentAgNonlsuAllowrance()!=null && !this.std.getStudentAgNonls
             /*      */        }
  if(na.equalsIgnoreCase("n/a")){
  
-     /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && !student_freshMan_transfer ) /* 2.50     */
+     /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && student_freshman ) /* 2.50     */
         {
            
             
@@ -1532,8 +1533,8 @@ if (this.std.getStudentAgNonlsuAllowrance()!=null && !this.std.getStudentAgNonls
      
  }
  
- else if(sai>=-1500 && sai<=6550){
-        /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && !student_freshMan_transfer ) /* 2.50     */
+ else if(sai>=-1500 && sai<=6655){
+        /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && student_freshman ) /* 2.50     */
         {
            
             
@@ -1590,8 +1591,8 @@ if (this.std.getStudentAgNonlsuAllowrance()!=null && !this.std.getStudentAgNonls
             }
             
         }
- }else if(sai>=6551){
-     /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && !student_freshMan_transfer ) /* 2.50     */
+ }else if(sai>=6656){
+     /* 1357 */ if (_gpa.compareTo("2.0") >= 0 && student_freshman ) /* 2.50     */
         {
            
             
@@ -4512,8 +4513,12 @@ if (maxaid2 < maxaid1) {
     /*      */
  /*      */
  /*      */ public String showFaidAmt() {
-        /* 3915 */ return this.fmt.format((this.maxAid - this.fwsAmount));
-        /*      */    }
+         //Normlaize to be less than equal to getMPA
+         int needAmt = this.getMPA();
+         int financialAmt = this.maxAid - this.fwsAmount;
+         int actualAid = needAmt <= financialAmt ? needAmt : financialAmt;
+         return this.fmt.format(actualAid);
+     }
 
     /*      */ public int getFaidExtAmt() {
         /* 3918 */ return this.maxAid - this.fwsAmount;

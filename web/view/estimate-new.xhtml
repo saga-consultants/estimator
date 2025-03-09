@@ -1118,12 +1118,19 @@ $myForm.find(':input:disabled').prop('disabled',false)
                         <!--onkeypress if (event.keyCode == 9){popdown2(this); } readonly="true" onkeydown="popdown3(event);"  style="display:none;"-->
                     </tr>
                     
-                    <tr>                                    
-                        <td colspan="1">Best Telephone Number<span class="mark">*</span><br/><h:inputText id="std_phone" value="#{estimator.stud.studentFPhone}" style="width:100%;"  required="true" label="Personal #{msg['layer']} Telephone Number"  maxlength="30" size="20" tabindex="9">
-                                <!--<f:ajax event="change" execute="@this std_intl" render="-auth-bar @this  -auth-sv-msgs"  listener="#{estimator.phonechanged}" /> -->
+                    <tr>    
+<!--                        <td colspan="1">Best Telephone Number<span class="mark">*</span><br/><h:inputText id="std_phone" value="#{estimator.stud.studentFPhone}" style="width:100%;"  required="true" label="Personal #{msg['layer']} Telephone Number"  maxlength="30" size="20" tabindex="9">
+                                <f:ajax event="change" execute="@this std_intl" render="-auth-bar @this  -auth-sv-msgs"  listener="#{estimator.phonechanged}" /> 
                                 <p:ajax event="change" process="@this std_intl" update="-auth-bar @this  -auth-sv-msgs" listener="#{estimator.phonechanged}" oncomplete="resize_height();" />
                             </h:inputText> </td>
                         <td colspan="2">Best E-mail Address<span class="mark">*</span><br/><h:inputText id="std_email" value="#{estimator.stud.studentEEmail}" style="width:100%;"  required="true" label="Personal #{msg['layer']} E-mail Address"  maxlength="50" tabindex="10" >  
+                                <p:ajax event="change" process="@this"  update="@this -auth-sv-msgs"  oncomplete="resize_height();"  listener="#{estimator.emailchanged}"/>
+                            </h:inputText> </td>-->
+                        <td colspan="1">Best Telephone Number<br/><h:inputText id="std_phone" value="#{estimator.stud.studentFPhone}" style="width:100%;"   label="Personal #{msg['layer']} Telephone Number"  maxlength="30" size="20" tabindex="9">
+                                <!--<f:ajax event="change" execute="@this std_intl" render="-auth-bar @this  -auth-sv-msgs"  listener="#{estimator.phonechanged}" /> -->
+                                <p:ajax event="change" process="@this std_intl" update="-auth-bar @this  -auth-sv-msgs" listener="#{estimator.phonechanged}" oncomplete="resize_height();" />
+                            </h:inputText> </td>
+                        <td colspan="2">Best E-mail Address<br/><h:inputText id="std_email" value="#{estimator.stud.studentEEmail}" style="width:100%;"   label="Personal #{msg['layer']} E-mail Address"  maxlength="50" tabindex="10" >  
                                 <p:ajax event="change" process="@this"  update="@this -auth-sv-msgs"  oncomplete="resize_height();"  listener="#{estimator.emailchanged}"/>
                             </h:inputText> </td>
                     </tr>
@@ -1148,10 +1155,10 @@ $myForm.find(':input:disabled').prop('disabled',false)
                                 <f:ajax event="change" execute="@this" render="@this" listener="#{estimator.citychanged}" />
                             </h:inputText>
                         </td>
-                        <td>State/Province<span class="mark">*</span><br/><h:inputText id="std_state" value="#{estimator.stud.studentIState}"  required="true"  label="Personal #{msg['layer']} State/Province" style="width:100%;" maxlength="50"  tabindex="14">
+                        <td>State/Province<br/><h:inputText id="std_state" value="#{estimator.stud.studentIState}"    label="Personal #{msg['layer']} State/Province" style="width:100%;" maxlength="50"  tabindex="14">
                             <p:ajax event="change" process="@this"  update="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.std_state_changed}"   oncomplete="resize_height();"/>
                             </h:inputText> </td>
-                        <td>Zip/Postal Code<span class="mark">*</span><br/><h:inputText id="std_zip" value="#{estimator.stud.studentJZip}"  required="true"  label="Personal #{msg['layer']} Postal Code" style="width:100%;" maxlength="30"  tabindex="15">
+                        <td>Zip/Postal Code<br/><h:inputText id="std_zip" value="#{estimator.stud.studentJZip}"    label="Personal #{msg['layer']} Postal Code" style="width:100%;" maxlength="30"  tabindex="15">
                             <p:ajax event="change" process="@this"  update="-auth-bar -auth-sv-msgs @this"  listener="#{estimator.std_zip_changed}"  oncomplete="resize_height();"/>
                             </h:inputText>  </td>
                     </tr>
